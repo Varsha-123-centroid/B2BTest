@@ -1431,7 +1431,7 @@ const handleBaggageClickFirstIb = (event) => {
                                           <th style={{width:"15%",paddingLeft: "1rem"}}>
                                           {/* <p>{seggm?.Destination?.Airport?.AirportCode}{seggm?.FlightStatus}{seggm?.StopPointArrivalTime}cc</p> */} 
                                             {/* <i className="fa fa-square onemenu" aria-hidden="true"></i>  */}
-                                            <img className="flight-info-airline__logo airline-logo" src={`assets/images/AirlineLogo_25x25/${seggm?.Airline?.AirlineCode}.GIF`} style={{height:"50px",width:"auto"}} alt="" />
+                                            <img className="flight-info-airline__logo airline-logo" src={`assets/images/AirlineLogo_25x25/${seggm?.Airline?.AirlineCode}.gif`} style={{height:"50px",width:"auto"}} alt="" />
                                             <div className="filghtsdetails">
                                              
                                               <p>{seggm?.Airline?.AirlineName}<br />  {seggm?.Airline?.AirlineCode}- {seggm?.Airline?.FlightNumber}</p>
@@ -1508,7 +1508,7 @@ const handleBaggageClickFirstIb = (event) => {
                                           <th style={{width:"15%",paddingLeft: "1rem"}}>
                                           {/* <p>{seggm?.Destination?.Airport?.AirportCode}{seggm?.FlightStatus}{seggm?.StopPointArrivalTime}cc</p> */}
                                             {/* <i className="fa fa-square onemenu" aria-hidden="true"></i>  */}
-                                            <img className="flight-info-airline__logo airline-logo" src={`assets/images/AirlineLogo_25x25/${seggm?.Airline?.AirlineCode}.GIF`} style={{height:"50px",width:"auto"}} alt="" />
+                                            <img className="flight-info-airline__logo airline-logo" src={`assets/images/AirlineLogo_25x25/${seggm?.Airline?.AirlineCode}.gif`} style={{height:"50px",width:"auto"}} alt="" />
                                             <div className="filghtsdetails">
                                              
                                               <p>{seggm?.Airline?.AirlineName}<br />  {seggm?.Airline?.AirlineCode}- {seggm?.Airline?.FlightNumber}</p>

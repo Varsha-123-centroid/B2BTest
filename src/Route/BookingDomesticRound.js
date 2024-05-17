@@ -92,7 +92,7 @@ const BookingDomesticRound = () => {
 
   const concatByTwo = (value) => {
     
-    return 'assets/images/AirlineLogo_25x25/'+value+'.GIF';
+    return 'assets/images/AirlineLogo_25x25/'+value+'.gif';
   };
   const convertJ=(vl) =>{
     let x="";

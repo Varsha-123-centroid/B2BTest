@@ -1209,7 +1209,7 @@ const AirlineListMulticity = () => {
                                                     }
 
                                                     <th style={{ width: "20%", paddingLeft: "1rem", textAlign: "center" }}>
-                                                            <img src={`assets/images/AirlineLogo_25x25/${airlineCode}.GIF`} style={{height:"80",width:"20%",border: '0px solid black' }} alt=""/>
+                                                            <img src={`assets/images/AirlineLogo_25x25/${airlineCode}.gif`} style={{height:"80",width:"20%",border: '0px solid black' }} alt=""/>
                                                               <div className="filghtsdetails pt-2">
                                                               <p>{airlineName}</p>
                                                                <h5>{airlineCode}-{flightNumber}</h5>
@@ -1301,7 +1301,7 @@ const AirlineListMulticity = () => {
             <h5>Fare Breakup </h5> 
             <div className="row">
             <div className="col-lg-3 form-group" >
-            <img src={`assets/images/AirlineLogo_25x25/${selectedRow.resu.AirlineCode}.GIF`} style={{border: '1px solid black' ,height:"100px",width:"auto"}} alt=""/>
+            <img src={`assets/images/AirlineLogo_25x25/${selectedRow.resu.AirlineCode}.gif`} style={{border: '1px solid black' ,height:"100px",width:"auto"}} alt=""/>
 
             </div>
             <div className="col-lg-1 form-group" >

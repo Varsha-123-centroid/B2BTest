@@ -1047,7 +1047,7 @@ console.log("datttttttttttttt"+JSON.stringify(data));
                                           {/* {segmentIndex === 1 && <h4>RETURN</h4>} */}
                                           {/* <p>{seggm?.Destination?.Airport?.AirportCode}{seggm?.FlightStatus}{seggm?.StopPointArrivalTime}cc</p> */} 
                                             {/* <i className="fa fa-square onemenu" aria-hidden="true"></i>  */}
-                                            <img className="flight-info-airline__logo airline-logo" src={`assets/images/AirlineLogo_25x25/${seggm?.Airline?.AirlineCode}.GIF`} style={{height:"50px",width:"auto"}} alt="" />
+                                            <img className="flight-info-airline__logo airline-logo" src={`assets/images/AirlineLogo_25x25/${seggm?.Airline?.AirlineCode}.gif`} style={{height:"50px",width:"auto"}} alt="" />
                                             <div className="filghtsdetails">
                                              
                                               <p>{seggm?.Airline?.AirlineName}<br />  {seggm?.Airline?.AirlineCode}- {seggm?.Airline?.FlightNumber}</p>
