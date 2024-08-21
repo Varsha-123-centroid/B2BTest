@@ -8,15 +8,89 @@ import Slider from '@mui/material/Slider';
 import moment from 'moment/moment';
 const AirLineRoundCombo = () => {
     const location = useLocation();
-    const responseget = location.state?.responsee;
-    const [response,setResponse] = useState(responseget);
+    const responseget1 = location.state?.responsee;
+    const [response,setResponse] = useState(responseget1);
+    const [responseget,setResponseget]= useState(location.state?.responsee);
+    const [jsonResponse,setJsonResponse]= useState(location.state?.responsee);
+    const [data, setData] = useState(response?.Response?.Results?.[0] || []);
+    const [result, setResult] = useState(response);
     const [value, setValue] = useState('');
     const [passenStr, setPassenStr] = useState('');
+    const [balance, setBalance] = useState(sessionStorage.getItem('Balance'));
     const navigate = useNavigate();
     let markup = sessionStorage.getItem('Markup');
     let markuppercent = sessionStorage.getItem('Markuppercent');
-    const [balance, setBalance] = useState(sessionStorage.getItem('Balance'));
     const [showModalMessage, setShowModalMessage] = useState(false);
+    const [flights, setFlights] = useState([]);
+    useEffect(() => {  
+      //  alert(2);
+        if (jsonResponse && jsonResponse.Response && jsonResponse.Response.Results) {
+          const processedFlights = processFlights(jsonResponse.Response.Results[0]);
+      //    console.log(JSON.stringify(processedFlights));
+          setFlights(processedFlights);
+          setResponse(prevState => ({
+            ...prevState,
+            Response: {
+              ...prevState.Response,
+              Results: [processedFlights]
+            }
+          }));
+          setResponseget(prevState => ({
+            ...prevState,
+            Response: {
+              ...prevState.Response,
+              Results: [processedFlights]
+            }
+          }));
+        }
+      }, [jsonResponse]);
+  
+      useEffect(() => {
+        setData(response.Response.Results[0]);
+        setResult(response);
+        //alert(9);
+        //setResponseget(response);
+      }, [response]);
+    
+    
+      const processFlights = (results) => {
+        const flightMap = new Map();
+      
+        results.forEach(result => {
+          const segments = result.Segments[0];
+          const firstSegment = segments[0];
+          const flightNumber = `${firstSegment.Airline.AirlineCode}${firstSegment.Airline.FlightNumber}`;
+      
+          if (!flightMap.has(flightNumber)) {
+            flightMap.set(flightNumber, {
+              ...result,
+              Options: []
+            });
+          }
+      
+          // Add this result as an option
+          flightMap.get(flightNumber).Options.push({
+            ResultIndex: result.ResultIndex,
+            Fare: result.Fare,
+            FareBreakdown: result.FareBreakdown,
+            LastTicketDate: result.LastTicketDate,
+            TicketAdvisory: result.TicketAdvisory,
+            FareRules: result.FareRules,
+            AirlineCode: result.AirlineCode,
+            ValidatingAirline: result.ValidatingAirline,
+            FareClassification: result.FareClassification,
+            PenaltyCharges:result.PenaltyCharges
+          });
+        });
+      
+        return Array.from(flightMap.values());
+      };
+      const [isVisible, setIsVisible] = useState(true);
+  
+      // Step 2: Create toggle function
+      const toggleVisibility = () => {
+        setIsVisible(!isVisible);
+      };
   const openModalMessage = () => { 
     setShowModalMessage(true);  
     };
@@ -83,8 +157,8 @@ const AirLineRoundCombo = () => {
   //  console.log("My data");
    console.log(response); 
   //  const data = JSON.stringify(response.Response.Results);
-  const [data,setData] = useState(response.Response.Results[0]);
-    const [result,setResult]=useState(response);
+ // const [data,setData] = useState(response.Response.Results[0]);
+ //   const [result,setResult]=useState(response);
     console.log("result",result);
     
     const lowestPublishedFare = data.reduce((min, result) => {
@@ -775,6 +849,11 @@ const AirLineRoundCombo = () => {
         month: '2-digit',
         year: 'numeric',
       };
+      let reissueCharge='';
+      let cancellationCharge='';
+          let handbagwt='';
+          let bagwt='';
+          let seats='';
     let originairport='';
     let destinationairport='';
     let airlineCode='';
@@ -1164,6 +1243,11 @@ const AirLineRoundCombo = () => {
                                                                 <>
                                                                 <td style={{display:"none"}}>
                                                                     {dur=0}
+                                                                    {reissueCharge = resu?.PenaltyCharges?.ReissueCharge ?? '0.00'}
+                                                                    {cancellationCharge = resu?.PenaltyCharges?.CancellationCharge ?? '0.00'}
+                                                                    {handbagwt=data?.CabinBaggage}
+                                                                      {bagwt=data?.Baggage}
+                                                                      {seats=data?.NoOfSeatAvailable}
                                                                     {basefare=resu?.Fare.BaseFare}
                                                                     {refund=resu?.IsRefundable}
                                                                     {refund===true&&(refund1='Refundable')}
@@ -1293,10 +1377,13 @@ const AirLineRoundCombo = () => {
                                                               <p>{airlineName}</p>
                                                                <h5>{airlineCode}-{flightNumber}</h5>
                                                                <p>{connectionflightString}</p>
+                                                               <p style={{fontSize:"9px"}}>{`Cabin Baggage: ${handbagwt}`}</p>
+                                                               <p style={{fontSize:"9px"}}>{`Baggage: ${bagwt}`}</p>
+                                                               <p style={{fontSize:"9px"}}>{` ${seats} Seats Avilable`}</p>
                                                              {/* return....  */}
                                                               </div>
                                                            
-                                                              <img src={`https://content.airhex.com/content/logos/airlines_${airlineCode_r}_40_40_r.png`} style={{height:"70",width:"auto",border: '0px solid black' }} alt=""/>
+                                                              <img src={`assets/images/AirlineLogo_25x25/${airlineCode_r}.gif`} style={{height:"70",width:"auto",border: '0px solid black' }} alt=""/>
                                                               <div className="filghtsdetails pt-2">
                                                                <h5>{airlineCode_r}-{airlineName_r}</h5>
                                                                <p>{connectionflightString_r}</p>
@@ -1348,11 +1435,14 @@ const AirLineRoundCombo = () => {
                                                             <th style={{ width: "20%" }}>
                                                                 <br /><br />
                                                               <div className="filghtsdetails editProfileSubmitBtns">
-                                                                 <h4>INR {resu?.Fare.PublishedFare+parseFloat(resu?.Fare.PublishedFare*markuppercent+markup)}</h4>
+                                                              <span className="text-info" >Reissue Chargee </span>
+                                                                  <span className="f-recommend__label-v2">{`${reissueCharge}`}</span><br />
+                                                                  <span className="text-info" >Cancellation Chargee </span>
+                                                                  <span className="f-recommend__label-v2">{`${cancellationCharge}`}</span><br />
                                                                <a className="btn" href="javasript:void(0);"  onClick={() => openModalR({resu})}>Direct Ticket</a><br />
                                                             <span className="text-danger">{refund1}-{lcc1}</span> <br />
-                                                            <a  href="javasript:void(0);" onClick={() => openModalR({resu})}>View More</a><br /> 
-                                                                <button  className="bg-danger btn text-white"  style={{ padding: "2px 5px", marginTop: "0.41rem" }}   onClick={() => handleButtonClick(resu?.ResultIndex,result.Response.TraceId,resu?.IsLCC,(parseFloat(resu?.Fare.PublishedFare)))}>book your Flight</button> 
+                                                            <a  href="javasript:void(0);"  className="bg-danger btn text-white"  style={{ padding: "2px 5px", marginTop: "0.41rem" }}  onClick={() => openModalR({resu})}>View Fare</a><br /> 
+                                                                
                                                               
                                                               </div>
                                                               
@@ -1384,46 +1474,96 @@ const AirLineRoundCombo = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          overflow: 'hidden', // Prevents content from overflowing the modal
         }}
       >
+        
         <div  className="modal-content" 
-          style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '5px',
-            maxWidth: '900px', 
-            maxHeight: '1000px', 
-          }}
+            style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '5px',
+              maxWidth: '900px', 
+              maxHeight: '80vh', // Use viewport height to make sure the modal content fits well on the screen
+              overflowY: 'auto', // Enables vertical scrolling if content exceeds modal height
+              boxSizing: 'border-box', // Ensures padding is included in the element's height and width
+            }}
         >
-            <h2>Fare Details</h2>
+          <div className="row">
+            <div className="col-lg-10 form-group" >
+            </div>
+            <div className="col-lg-2 form-group" >
+      <button onClick={() => setShowModal(false)} style={{color:"red"}} >
+      CLOSE <i className="fa fa-window-close" aria-hidden="true"></i>
+        </button> 
+      </div>
+      </div>
+            <h2>Fare Type Details</h2>
             <div className="row">
             <div className="col-lg-12 form-group" >  
             <p>{selectedRow.resu.IsRefundable ? 'Refundable' : 'Non Refundable'} | {selectedRow.resu.IsLCC ? 'LCC' : 'Non LCC'}
             </p> 
-            <h5>Fare Breakup </h5> 
+           
             <div className="row">
             <div className="col-lg-3 form-group" >
             <img src={`assets/images/AirlineLogo_25x25/${selectedRow.resu.AirlineCode}.gif`} style={{border: '1px solid black' ,height:"100px",width:"auto"}} alt=""/>
 
             </div>
-            <div className="col-lg-1 form-group" >
-              </div>
-            <div className="col-lg-6 form-group" >
-            <table style={{width:"100%"}}>
-              <thead>
-              <th>Fare Type</th><th  style={{textAlign:"right"}}>Price</th>
-
-              </thead> 
-              <tbody style={{fontSize:"12px"}}>
-              <tr><td><br />Base Fare</td><td style={{textAlign:"right"}}><br />{selectedRow.resu.Fare.BaseFare}</td></tr>
-              <tr><td>Tax</td><td  style={{textAlign:"right"}}>{selectedRow.resu.Fare.Tax}</td></tr>
-              <tr><td>Other Charges</td><td  style={{textAlign:"right"}}>{selectedRow.resu.Fare.OtherCharges}</td></tr> 
-              <tr><td>Service Charges</td><td  style={{textAlign:"right"}}>{selectedRow.resu.Fare.ServiceFee+parseFloat(selectedRow.resu.Fare.PublishedFare*markuppercent+markup)}</td></tr>
-              <tr><td><br /><strong>Total</strong></td><td  style={{textAlign:"right"}}><br /><strong>{selectedRow.resu.Fare.PublishedFare+parseFloat(selectedRow.resu.Fare.PublishedFare*markuppercent+markup)}</strong></td></tr>
-             </tbody>
-             </table> 
+            
              </div>
-             </div> 
+{/* ........................ */}
+<div data-testid="u_policy_wrapper_2-0" className="policy-wrapper is-v2" style={{ display: isVisible ? "block" : "none" }}>
+  <div className="policy-wrapper_content-wrapper">
+    {selectedRow.resu?.Options ? (
+      <table  style={{width:"100%"}}>
+        <thead>
+          <tr>
+            <th>Fare Classification</th>
+            <th>Offered Fare</th>
+            <th>Published Fare</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selectedRow.resu.Options.map((option, index) => (
+            <tr key={index}>
+              <td>
+                <span 
+                  className="f-recommend__label-v2 btn" 
+                  style={{
+                    color: "black",
+                    backgroundColor: option.FareClassification?.Color || '#ffff' 
+                  }}
+                >
+                  {option.FareClassification?.Type || 'Default'}
+                </span>
+              </td>
+              <td style={{ textAlign: "center" }}>
+                ₹ {parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                ₹ {parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)}
+              </td>
+              <td>
+                <div className="flex item-con-policy-loading__btn-wrapper">
+                  &nbsp;&nbsp;<div className="c-result-operate">
+                    
+                    <span onClick={() => handleButtonClick(option.ResultIndex, result.Response.TraceId, selectedRow.resu?.IsLCC, parseFloat(option.Fare.PublishedFare))} className="c-result-operate__btn is-v2 flex-column-center user-select closeDropDowns f-14">
+                      <span className="btn btn-info">Book</span>
+                    </span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>No results found.</p>
+    )}
+  </div>
+</div>
+
             <p>Bagage info:<br />
             </p>
             <table style={{width:"100%"}}> 
@@ -1454,7 +1594,9 @@ const AirLineRoundCombo = () => {
             <div className="col-lg-10 form-group" >
             </div>
             <div className="col-lg-2 form-group" >
-      <button onClick={() => setShowModal(false)}>Close</button> 
+      <button onClick={() => setShowModal(false)} style={{color:"red"}} >
+      CLOSE <i className="fa fa-window-close" aria-hidden="true"></i>
+        </button> 
       </div>
       </div>
           </div>

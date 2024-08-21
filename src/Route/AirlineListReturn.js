@@ -8,15 +8,90 @@ import Slider from '@mui/material/Slider';
 import moment from 'moment/moment';
 const AirlineListReturn = () => {
     const location = useLocation();
-    const responseget = location.state?.responsee;
-    const [response,setResponse] = useState(responseget);
+    const responseget1 = location.state?.responsee;
+    console.log(">>>>>>>>>>>>"+responseget1);
+    const [response,setResponse] = useState(responseget1);
+    const [responseget,setResponseget]= useState(location.state?.responsee);
+    const [jsonResponse,setJsonResponse]= useState(location.state?.responsee);
+    const [data, setData] = useState(response?.Response?.Results?.[1] || []);
+  const [result, setResult] = useState(response);
     const [value, setValue] = useState('');
-    const [passenStr, setPassenStr] = useState(''); 
+    const [passenStr, setPassenStr] = useState('');
+    const [balance, setBalance] = useState(sessionStorage.getItem('Balance'));
+    const [flights, setFlights] = useState([]);
     const navigate = useNavigate();
     let markup = sessionStorage.getItem('Markup');
     let markuppercent = sessionStorage.getItem('Markuppercent');
-    const [balance, setBalance] = useState(sessionStorage.getItem('Balance'));
     const [showModalMessage, setShowModalMessage] = useState(false);
+    useEffect(() => {
+      if (jsonResponse?.Response?.Results) {
+          const processedFlights = processFlights(jsonResponse.Response.Results[1]);
+          setFlights(processedFlights);
+
+          const updatedResponse = {
+              ...jsonResponse,
+              Response: {
+                  ...jsonResponse.Response,
+                  Results: [
+                      jsonResponse.Response.Results[0], // Keep the original first results
+                      processedFlights // Update the second results with processed flights
+                  ]
+              },
+          };
+          setResponse(updatedResponse);
+          setResponseget(updatedResponse);
+      }
+  }, [jsonResponse]);
+
+  useEffect(() => {
+      if (response?.Response?.Results) {
+          setData(response.Response.Results[1]);
+          setResult(response);
+      } else {
+          setData([]); // Handle the case where the structure is missing
+      }
+  }, [response]);
+
+  const processFlights = (results) => {
+    const flightMap = new Map();
+
+    results.forEach((result) => {
+        const segments = result.Segments[0];
+        const firstSegment = segments[0];
+        const flightNumber = `${firstSegment.Airline.AirlineCode}${firstSegment.Airline.FlightNumber}`;
+
+        if (!flightMap.has(flightNumber)) {
+            flightMap.set(flightNumber, {
+                ...result,
+                Options: [],
+            });
+        }
+
+        flightMap.get(flightNumber).Options.push({
+            ResultIndex: result.ResultIndex,
+            Fare: result.Fare,
+            FareBreakdown: result.FareBreakdown,
+            LastTicketDate: result.LastTicketDate,
+            TicketAdvisory: result.TicketAdvisory,
+            FareRules: result.FareRules,
+            AirlineCode: result.AirlineCode,
+            ValidatingAirline: result.ValidatingAirline,
+            FareClassification: result.FareClassification,
+            PenaltyCharges: result.PenaltyCharges,
+        });
+    });
+
+    return Array.from(flightMap.values());
+};
+
+      const [isVisible, setIsVisible] = useState(true);
+  
+      // Step 2: Create toggle function
+      const toggleVisibility = () => {
+        setIsVisible(!isVisible);
+      };
+  
+      
   const openModalMessage = () => { 
     setShowModalMessage(true);  
     };
@@ -80,42 +155,51 @@ const AirlineListReturn = () => {
   //  console.log("My data");
    console.log("ttttttttt"+response); 
   //  const data = JSON.stringify(response.Response.Results);
-  const [data,setData] = useState(response.Response.Results[1]);
-    const [result,setResult]=useState(response);
-    console.log("result",result);
+
+    console.log("result...",result);
     
 
-    const lowestPublishedFare = data.reduce((min, result) => {
-        const publishedFare = result.Fare.PublishedFare;
-        return publishedFare < min ? publishedFare : min;
+    const lowestPublishedFare = (data || []).reduce((min, result) => {
+      const publishedFare = result?.Fare?.PublishedFare;
+      if (publishedFare === undefined) return min;
+      return publishedFare < min ? publishedFare : min;
       }, Infinity);
-      
-      const [leastPrice, setLeastPrice] = useState(lowestPublishedFare);
-      const highestPublishedFare = data.reduce((max, result) => {
-        const publishedFare1 = result.Fare.PublishedFare;
-        return publishedFare1 > max ? publishedFare1 : max;
-      }, -Infinity);
-      
-      const [highPrice, setHighPrice] = useState(highestPublishedFare);
-      const earliestDepTime = data.reduce((minTime, result) => {
-        const depTime = result.Segments[0][0].Origin.DepTime;
-        return depTime < minTime ? depTime : minTime;
-      },  data[1].Segments[0][0].Origin.DepTime);
+
+  const [leastPrice, setLeastPrice] = useState(lowestPublishedFare);
+
+  const highestPublishedFare = (data || []).reduce((max, result) => {
+	const publishedFare1 = result?.Fare?.PublishedFare;
+  if (publishedFare1 === undefined) return max;
+	return publishedFare1 > max ? publishedFare1 : max;
+  }, -Infinity);
+
+  const [highPrice, setHighPrice] = useState(highestPublishedFare);
   
+  const earliestDepTime = (data || []).reduce((minTime, result) => {
+    // Safely access the nested properties using optional chaining
+   
+    const depTime = result?.Segments?.[0]?.[0]?.Origin?.DepTime;
+    console.log(">>>>>>>>>>>>"+depTime);
+    // If depTime is undefined, skip this iteration
+    if (!depTime) return minTime;
+
+    return depTime < minTime ? depTime : minTime;
+}, data?.[0]?.Segments?.[0]?.[0]?.Origin?.DepTime || Infinity);
+
       const [datePart, timePart] = earliestDepTime.split('T');
       const [year, month, day] = datePart.split('-');
       const formattedDate = [day, month, year].join('-');
       const [miniTime, setMiniTime] = useState(formattedDate +" :: "+timePart);
   
       const shortDuration = data.reduce((minTime, result) => {
-  
+
         const shortTime = result.Segments[0][0].Duration;
         
-        return shortTime < minTime ? shortTime : minTime;
-      },  data[1].Segments[0][0].Duration);
-  
-  
-      const [shortDur, setShortDur] = useState(shortDuration);
+        return shortTime < minTime ? shortTime : minTime; 
+        },  data[0].Segments[0][0].Duration);
+      
+      
+        const [shortDur, setShortDur] = useState(shortDuration);
   
       const [timeFilt,setTimeFilt]=useState("");
       const [timeFiltArr,setTimeFiltArr]=useState("");
@@ -771,7 +855,11 @@ const AirlineListReturn = () => {
         minute: '2-digit',
         second: '2-digit',
       };
-
+      let reissueCharge='';
+      let cancellationCharge='';
+          let handbagwt='';
+          let bagwt='';
+          let seats='';
     let originairport='';
     let destinationairport='';
     let airlineCode='';
@@ -1135,6 +1223,11 @@ const AirlineListReturn = () => {
                                                                 <>
                                                                 <td style={{display:"none"}}>
                                                                 {dur=0}
+                                                                {reissueCharge = resu?.PenaltyCharges?.ReissueCharge ?? '0.00'}
+            {cancellationCharge = resu?.PenaltyCharges?.CancellationCharge ?? '0.00'}
+            {handbagwt=data?.CabinBaggage}
+              {bagwt=data?.Baggage}
+              {seats=data?.NoOfSeatAvailable}
                                                                     {basefare=resu?.Fare.BaseFare}
                                                                     {refund=resu?.IsRefundable}
                                                                     {refund===true&&(refund1='Refundable')}
@@ -1196,9 +1289,13 @@ const AirlineListReturn = () => {
                                                     <th style={{ width: "20%", paddingLeft: "1rem", textAlign: "center" }}>
                                                             <img src={`assets/images/AirlineLogo_25x25/${airlineCode}.gif`} style={{height:"80",width:"20%",border: '0px solid black' }} alt=""/>
                                                               <div className="filghtsdetails pt-2">
+                                                              
                                                               <p>{airlineName}</p>
                                                                <h5>{airlineCode}-{flightNumber}</h5>
                                                                <p>{connectionflightString}</p>
+                                                               <p style={{fontSize:"9px"}}>{`Cabin Baggage: ${handbagwt}`}</p>
+                                                               <p style={{fontSize:"9px"}}>{`Baggage: ${bagwt}`}</p>
+                                                               <p style={{fontSize:"9px"}}>{` ${seats} Seats Avilable`}</p>
                                                              {/*   {rindex=nestedItem.ResultIndex}
                                                                 Flight Number: {flightNumber}
                                                                 <br />
@@ -1228,11 +1325,15 @@ const AirlineListReturn = () => {
                                                             </th>
                                                             <th style={{ width: "20%" }}>
                                                               <div className="filghtsdetails editProfileSubmitBtns">
-                                                                 <h4>INR {resu?.Fare.PublishedFare+parseFloat(resu?.Fare.PublishedFare*markuppercent+markup)}</h4>
+                                                                 <span className="text-info" >Reissue Chargee </span>
+                                                                  <span className="f-recommend__label-v2">{`${reissueCharge}`}</span><br />
+                                                                  <span className="text-info" >Cancellation Chargee </span>
+                                                                  <span className="f-recommend__label-v2">{`${cancellationCharge}`}</span><br />
+                                                                 
                                                                <a className="btn" href="javasript:void(0);" onClick={() => openModalR({resu})}>Direct Ticket</a><br />
                                                             <span className="text-danger">{refund1}-{lcc1}</span> <br />
-                                                            <a  href="javasript:void(0);" onClick={() => openModalR({resu})}>View More</a><br /> 
-                                                                <button  className="bg-danger btn text-white"  style={{ padding: "2px 5px", marginTop: "0.41rem" }}   onClick={() => handleButtonClick(resu?.ResultIndex,result.Response.TraceId,resu?.IsLCC,(parseFloat(resu?.Fare.PublishedFare)))}>book your Flight</button> 
+                                                            <a  href="javasript:void(0);" className="bg-danger btn text-white"  style={{ padding: "2px 5px", marginTop: "0.41rem" }}  onClick={() => openModalR({resu})}>View Return Fare</a><br /> 
+                                                              
                                                                 {/* 
                                                                 <br />
                                                                
@@ -1258,56 +1359,103 @@ const AirlineListReturn = () => {
                                 
                     </div>
                     {showModal && (
-        <div  className="modal"
-        style={{
-          position: 'fixed',
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <div  className="modal-content" 
+      <div  className="modal"
+      style={{
+        position: 'fixed',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden', // Prevents content from overflowing the modal
+      }}
+    >
+      <div  className="modal-content" 
           style={{
             backgroundColor: 'white',
             padding: '20px',
             borderRadius: '5px',
             maxWidth: '900px', 
-            maxHeight: '1000px', 
+            maxHeight: '80vh', // Use viewport height to make sure the modal content fits well on the screen
+            overflowY: 'auto', // Enables vertical scrolling if content exceeds modal height
+            boxSizing: 'border-box', // Ensures padding is included in the element's height and width
           }}
-        >
-            <h2>Fare Details</h2>
+      >
+        <div className="row">
+            <div className="col-lg-10 form-group" >
+            </div>
+            <div className="col-lg-2 form-group" >
+      <button onClick={() => setShowModal(false)} style={{color:"red"}} >
+      CLOSE <i className="fa fa-window-close" aria-hidden="true"></i>
+        </button> 
+      </div>
+      </div>
+            <h2>Fare Type Details</h2>
             <div className="row">
             <div className="col-lg-12 form-group" >  
             <p>{selectedRow.resu.IsRefundable ? 'Refundable' : 'Non Refundable'} | {selectedRow.resu.IsLCC ? 'LCC' : 'Non LCC'}
             </p> 
-            <h5>Fare Breakup </h5> 
+ 
             <div className="row">
             
             <div className="col-lg-3 form-group" >
             <img src={`assets/images/AirlineLogo_25x25/${selectedRow.resu.AirlineCode}.gif`} style={{border: '1px solid black' ,height:"100px",width:"auto"}} alt=""/>
 
             </div>
-            <div className="col-lg-1 form-group" >
-              </div>
-            <div className="col-lg-6 form-group" >
-            <table style={{width:"100%"}}>
-              <thead>
-              <th>Fare Type</th><th  style={{textAlign:"right"}}>Price</th>
-
-              </thead> 
-              <tbody style={{fontSize:"12px"}}>
-              <tr><td><br />Base Fare</td><td style={{textAlign:"right"}}><br />{selectedRow.resu.Fare.BaseFare}</td></tr>
-              <tr><td>Tax</td><td  style={{textAlign:"right"}}>{selectedRow.resu.Fare.Tax}</td></tr>
-              <tr><td>Other Charges</td><td  style={{textAlign:"right"}}>{selectedRow.resu.Fare.OtherCharges}</td></tr> 
-              <tr><td>Service Charges</td><td  style={{textAlign:"right"}}>{selectedRow.resu.Fare.ServiceFee+parseFloat(selectedRow.resu.Fare.PublishedFare*markuppercent+markup)}</td></tr>
-              <tr><td><br /><strong>Total</strong></td><td  style={{textAlign:"right"}}><br /><strong>{selectedRow.resu.Fare.PublishedFare+parseFloat(selectedRow.resu.Fare.PublishedFare*markuppercent+markup)}</strong></td></tr>
-             </tbody>
-             </table> 
-             </div>
+            
              </div> 
+ <div data-testid="u_policy_wrapper_2-0" className="policy-wrapper is-v2" style={{ display: isVisible ? "block" : "none" }}>
+  <div className="policy-wrapper_content-wrapper">
+    {selectedRow.resu?.Options ? (
+      <table  style={{width:"100%"}}>
+        <thead>
+          <tr>
+            <th>Fare Classification</th>
+            <th>Offered Fare</th>
+            <th>Published Fare</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selectedRow.resu.Options.map((option, index) => (
+            <tr key={index}>
+              <td>
+                <span 
+                  className="f-recommend__label-v2 btn" 
+                  style={{
+                    color: "black",
+                    backgroundColor: option.FareClassification?.Color || '#ffff' 
+                  }}
+                >
+                  {option.FareClassification?.Type || 'Default'}
+                </span>
+              </td>
+              <td style={{ textAlign: "center" }}>
+                ₹ {parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)}
+              </td>
+              <td style={{ textAlign: "center" }}>
+                ₹ {parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)}
+              </td>
+              <td>
+                <div className="flex item-con-policy-loading__btn-wrapper">
+                  &nbsp;&nbsp;<div className="c-result-operate">
+                    
+                    <span onClick={() => handleButtonClick(option.ResultIndex, result.Response.TraceId, selectedRow.resu?.IsLCC, parseFloat(option.Fare.PublishedFare))} className="c-result-operate__btn is-v2 flex-column-center user-select closeDropDowns f-14">
+                      <span className="btn btn-info">Book</span>
+                    </span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p>No results found.</p>
+    )}
+  </div>
+</div>
             <p>Bagage info:<br />
             </p>
             <table style={{width:"100%"}}> 
@@ -1338,7 +1486,9 @@ const AirlineListReturn = () => {
             <div className="col-lg-10 form-group" >
             </div>
             <div className="col-lg-2 form-group" >
-      <button onClick={() => setShowModal(false)}>Close</button> 
+      <button onClick={() => setShowModal(false)} style={{color:"red"}} >
+      CLOSE <i className="fa fa-window-close" aria-hidden="true"></i>
+        </button> 
       </div>
       </div>
           </div>

@@ -62,7 +62,8 @@ const CustomerInfoRound = () => {
    const [editedBagDynamicIb, setEditedBagDynamicIb] = useState([]);
    const [editedFare, setEditedFare] = useState([]);
    const [editedFareIb, setEditedFareIb] = useState([]);
- 
+   const [tboService, setTboService] = useState(0.00);
+   const [tboDiscount, setTboDiscount] = useState(0.00);
    const [passengers,setPassengers] =useState(passeng);
    const [heading,setHeading]=useState("Adult Passenger");
    const [resultindex,setResultindex]=useState('');
@@ -305,8 +306,9 @@ const CustomerInfoRound = () => {
                      if(responseqt.data.Response.Error.ErrorCode=="0")
                             { 
                               const reff=responseqt.data.Response.Results.IsRefundable;
+                              const tboserice=responseqt.data.Response.Results.Fare.ServiceFee;
                               const basef=responseqt.data.Response.Results.Fare.PublishedFare;
-                             
+                              //setTboService(tboserice);
                               setBasefare(basef);
                               setServicefare(markup);
 
@@ -318,6 +320,19 @@ const CustomerInfoRound = () => {
                               setFarequote(responseqt.data);
                               const fareBreakdown=responseqt.data.Response.Results.FareBreakdown ;
                           fareBreakdown.forEach(item => {
+                            if (item.PassengerCount > 1) {
+                              item.BaseFare = item.BaseFare / item.PassengerCount;
+                              item.Tax = item.Tax / item.PassengerCount;
+                          
+                              if (item.TaxBreakUp && item.TaxBreakUp !== null) {
+                                item.TaxBreakUp = item.TaxBreakUp.map(taxItem => ({
+                                  ...taxItem,
+                                  value: taxItem.value / item.PassengerCount
+                                }));
+                              }
+                          
+                              item.PassengerCount = 1;
+                            }
                             switch(item.PassengerType) {
                               case 1:
                                 setAdultFare(item);
@@ -457,6 +472,19 @@ const CustomerInfoRound = () => {
                                            //console.log("Dataquote---"+JSON.stringify(responseqt.data.Response.Results.Segments)) ;
                                            const fareBreakdown=responseqtIb.data.Response.Results.FareBreakdown ;
                                            fareBreakdown.forEach(item => {
+                                            if (item.PassengerCount > 1) {
+                                              item.BaseFare = item.BaseFare / item.PassengerCount;
+                                              item.Tax = item.Tax / item.PassengerCount;
+                                          
+                                              if (item.TaxBreakUp && item.TaxBreakUp !== null) {
+                                                item.TaxBreakUp = item.TaxBreakUp.map(taxItem => ({
+                                                  ...taxItem,
+                                                  value: taxItem.value / item.PassengerCount
+                                                }));
+                                              }
+                                          
+                                              item.PassengerCount = 1;
+                                            }
                                              switch(item.PassengerType) {
                                                case 1:
                                                  setAdultFareIb(item);
@@ -497,19 +525,92 @@ const CustomerInfoRound = () => {
     //mnDate.setFullYear(currentDate.getFullYear() - 112);
     // setMinDate(mnDate);
     // setMaxDate(mxDate);
+    useEffect(() => {
+      if (Array.isArray(ssrbag) && ssrbag.length > 0) {
+      const initialSelected = ssrbag.findIndex(item => item.Price === 0.00);
+      if (initialSelected !== -1) {
+        const updatedSelection = Array(ssrbag.length).fill(false);
+        updatedSelection[initialSelected] = true;
+        const selectedBag = ssrbag[initialSelected];
+        const price = parseFloat(selectedBag.Price);
+        setSelectedItems(updatedSelection);
+        setTotalBags(price);
 
+      }
+    }
+    }, [ssrbag]);
+
+    useEffect(() => {
+      if (Array.isArray(ssrbagIb) && ssrbagIb.length > 0) {
+      const initialSelected = ssrbagIb.findIndex(item => item.Price === 0.00);
+      if (initialSelected !== -1) {
+        const updatedSelection = Array(ssrbagIb.length).fill(false);
+        updatedSelection[initialSelected] = true;
+        const selectedBag = ssrbagIb[initialSelected];
+        const price = parseFloat(selectedBag.Price);
+        setSelectedItemsIb(updatedSelection);
+        setTotalBagsIb(price);
+
+      }
+    }
+    }, [ssrbagIb]);
+
+    useEffect(() => {
+      if (Array.isArray(ssrmeal) && ssrmeal.length > 0) {
+      const initialSelected = ssrmeal.findIndex(item => item.Price === 0);
+      if (initialSelected !== -1) {
+        const updatedSelectionMeal =Array(ssrmeal.length).fill(false);// [...selectedMeals];
+          updatedSelectionMeal[initialSelected] = true;//!updatedSelectionMeal[index];
+          const selectedMeal = ssrmeal[initialSelected];
+          const price = parseFloat(selectedMeal.Price);
+
+        setSelectedMeals(updatedSelectionMeal);
+        setTotalMeal(price);
+      }
+      }
+    }, [ssrmeal]);
+    useEffect(() => {
+      if (Array.isArray(ssrmealIb) && ssrmealIb.length > 0) {
+      const initialSelected = ssrmealIb.findIndex(item => item.Price === 0);
+      if (initialSelected !== -1) {
+        const updatedSelectionMeal =Array(ssrmealIb.length).fill(false);// [...selectedMeals];
+          updatedSelectionMeal[initialSelected] = true;//!updatedSelectionMeal[index];
+          const selectedMeal = ssrmealIb[initialSelected];
+          const price = parseFloat(selectedMeal.Price);
+
+        setSelectedMealsIb(updatedSelectionMeal);
+        setTotalMealIb(price);
+      }
+      }
+    }, [ssrmealIb]);
+    const handleInputChange = (event) => {
+      const value = event.target.value;
+      // Convert the input value to a float and update the state
+      setTboService(value !== '' ? parseFloat(value) : '0.00');
+    };
+    const handleInputChangeDiscount = (event) => {
+      const value = event.target.value;
+      // Convert the input value to a float and update the state
+      setTboDiscount(value !== '' ? parseFloat(value) : '0.00');
+    };
     const validationSchema = yup.object({
         title:yup
           .string()
           .required('Required'),
-        customerfName: yup
+          customerfName: yup
           .string()
-          .max(20, 'Must be 20 characters or less')
-          .required('Required'),
-        customerlName: yup
+          .max(20, 'Must be 20 characters or less') 
+          .required('First Name is required')
+          .test('different-from-lastname', 'First Name cannot be the same as Last Name', function(value) {
+            return value !== this.parent.customerlName;
+          }),
+          customerlName: yup
           .string()
-          .max(20, 'Must be 20 characters or less')
-          .required('Required'), 
+          .max(20, 'Must be 20 characters or less') 
+          .required('Last Name is required')
+          .test('no-spaces', 'Last Name cannot contain spaces', function(value) {
+            return !/\s/.test(value);
+          }), 
         dob: yup
           .date('Invalid date of Birth')
           .required('Required')
@@ -840,6 +941,8 @@ const CustomerInfoRound = () => {
               const { FareIb, MealDynamicIb, BaggageIb, ...rest } = finalUpdatedPassenger;
               return rest;
             });
+            const service1 = parseFloat(tboService)/2;
+            const discount1 = parseFloat(tboDiscount)/2;
                         const data=
                         {
                             "ResultIndex": resultindex,
@@ -855,7 +958,9 @@ const CustomerInfoRound = () => {
                             "infantCount":parseInt(infants1),
                             "Passengers": updatedPassengersob,
                             "IsLCC":isLCC,
-                            "TraceId": traceId
+                            "TraceId": traceId,
+                            "additional_service":parseFloat(service1),
+                            "additional_discount":parseFloat(discount1)
                         };
                         const dataobib=
                         {
@@ -872,7 +977,9 @@ const CustomerInfoRound = () => {
                             "infantCount":parseInt(infants1),
                             "Passengers": updatedPassengersibib,
                             "IsLCC":isLCCIb,
-                            "TraceId": traceId
+                            "TraceId": traceId,
+                            "additional_service":parseFloat(service1),
+                            "additional_discount":parseFloat(discount1)
                         };
 //console.log('11111111111111'+JSON.stringify(data));
 //console.log('22222222222222'+JSON.stringify(dataobib));
@@ -1567,8 +1674,9 @@ const handleBaggageClickFirstIb = (event) => {
                     </div>
                     <div className="cardsection">
                       <div className="row">
-                        <div className="col-lg-12 nbtext">
-                          <h5>Fare Rules</h5>
+                      <h5>Fare Rules</h5>
+                        <div className="col-lg-12 nbtext"  style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                        
                           {fare && fare.Response.FareRules.map((resu, index) => (
                           <p key={index}>{parseHTMLString(resu?.FareRuleDetail)}</p>
                           ))} 
@@ -1593,8 +1701,7 @@ const handleBaggageClickFirstIb = (event) => {
                           </div>
                       </div>
                     </div>
-                    <hr />
-                    <p className="p-3">Was the information helpful?  Yes / No</p>
+                   
                   </div>
                 </div>
 				
@@ -1615,16 +1722,13 @@ const handleBaggageClickFirstIb = (event) => {
                           <tbody>
                           <tr>
                         <td>Base fare + Tax</td>
-                        <td className="text-right">{parseFloat(basefare).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
+                        <td className="text-right">{(parseFloat(basefare)+parseFloat(servicefare)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                       </tr>
                             <tr>
                               <td></td>
                               <td></td>
                             </tr>
-                            <tr>
-                        <td>Service Charge</td>
-                        <td className="text-right">{parseFloat(servicefare).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
-                      </tr>
+                       
                       <tr>
                                                 <td></td>
                                                 <td></td>
@@ -1668,16 +1772,13 @@ const handleBaggageClickFirstIb = (event) => {
                           <tbody>
                           <tr>
                         <td>Base fare + Tax</td>
-                        <td className="text-right">{parseFloat(basefareIb).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
+                        <td className="text-right">{(parseFloat(basefareIb)+parseFloat(servicefare)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                       </tr>
                             <tr>
                               <td></td>
                               <td></td>
                             </tr>
-                            <tr>
-                        <td>Service Charge</td>
-                        <td className="text-right">{parseFloat(servicefare).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
-                      </tr>
+                         
                       <tr>
                                                 <td></td>
                                                 <td></td>
@@ -1700,9 +1801,30 @@ const handleBaggageClickFirstIb = (event) => {
                                                 <td><h5>Total</h5></td>
                                                 <td  className="text-right"><h5>{(parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</h5></td>
                                               </tr>
+                                              <tr>
+                                                <td></td>
+                                                <td></td>
+                                              </tr>
+                                              <tr>
+                        <td>Service Charge</td>
+                        <td className="text-right">{parseFloat(tboService).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
+                      </tr>
+                      <tr>
+                                                <td></td>
+                                                <td></td>
+                                              </tr>
+                      
+                      <tr>
+                        <td>Discount Offered</td>
+                        <td className="text-right">{parseFloat(tboDiscount).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
+                      </tr>
+                      <tr>
+                                                <td></td>
+                                                <td></td>
+                                              </tr>
                             <tr>
-                              <td><h5>Grand Total<span style={{fontSize:"12px"}}>({(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)).toFixed(2)} + {(parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toFixed(2)})</span></h5></td>
-                              <td  className="text-right"><h5>{(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)+parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</h5></td>
+                              <td><h5>Grand Total<span style={{fontSize:"12px"}}>({(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)).toFixed(2)} + {(parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toFixed(2)}+{(parseFloat(tboService)).toFixed(2)}-{(parseFloat(tboDiscount)).toFixed(2)})</span></h5></td>
+                              <td  className="text-right"><h5>{(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)+parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)+parseFloat(tboService)-parseFloat(tboDiscount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</h5></td>
                             </tr>
                           </tbody>
                           </table>
@@ -2025,7 +2147,7 @@ const handleBaggageClickFirstIb = (event) => {
                                   
 
 {ssrbag && ssrbag.map((item, index) => (
-  item.Weight > 0 && (
+ // item.Weight > 0 && (
     <div key={index} className="col-md-4">
       <div className="row">
         
@@ -2049,7 +2171,7 @@ const handleBaggageClickFirstIb = (event) => {
       </div>
       <br />
     </div>
-  )
+ // )
 ))}
                                  
                       </div>
@@ -2094,7 +2216,7 @@ const handleBaggageClickFirstIb = (event) => {
                       <div className="row"> 
                         <div className="col-lg-12 nbtext"></div> 
                         {ssrmeal && ssrmeal.map((items, index) => (
-  items.Code !== 'NoMeal' && (
+  //items.Code !== 'NoMeal' && (
     <div key={index} className="col-md-4">
       <div className="row">
         
@@ -2131,7 +2253,7 @@ const handleBaggageClickFirstIb = (event) => {
       </div>
       <br />
     </div>
-  )
+ // )
 ))}
                                  
                       </div>
@@ -2180,7 +2302,7 @@ const handleBaggageClickFirstIb = (event) => {
                                   
 
 {ssrbagIb && ssrbagIb.map((item, indexIb) => (
-  item.Weight > 0 && (
+ // item.Weight > 0 && (
     <div key={indexIb} className="col-md-4">
       <div className="row">
         
@@ -2204,7 +2326,7 @@ const handleBaggageClickFirstIb = (event) => {
       </div>
       <br />
     </div>
-  )
+ // )
 ))}
                                  
                       </div>
@@ -2249,7 +2371,7 @@ const handleBaggageClickFirstIb = (event) => {
                       <div className="row"> 
                         <div className="col-lg-12 nbtext"></div> 
                         {ssrmealIb && ssrmealIb.map((items, indexIb) => (
-  items.Code !== 'NoMeal' && (
+ // items.Code !== 'NoMeal' && (
     <div key={indexIb} className="col-md-4">
       <div className="row">
         
@@ -2286,7 +2408,7 @@ const handleBaggageClickFirstIb = (event) => {
       </div>
       <br />
     </div>
-  )
+  //)
 ))}
                                  
                       </div>
@@ -2325,7 +2447,39 @@ const handleBaggageClickFirstIb = (event) => {
 
 
                         </div>
-
+                        <div className="clearDiv row">
+ <div className="col-lg-4">
+                      
+                      <label style={{marginLeft: '15px'}}>SERVICE CHARGE (INR):</label>
+                     </div>
+                      <div className="col-lg-4">             
+                      <input
+                            type="text"
+                            id="service"
+                            value={tboService}
+                            onChange={handleInputChange}
+                            style={{marginLeft: '15px',width:"200px",height:"35px", textAlign:"right",border: '1px solid #ddc8c8'}}
+                            
+                          />
+            </div>
+ </div>
+ <div className="clearDiv row">&nbsp;</div>
+ <div className="clearDiv row">
+ <div className="col-lg-4">
+                      
+                      <label style={{marginLeft: '15px'}}>DISCOUNT OFFERED (INR):</label>
+                     </div>
+                      <div className="col-lg-4">             
+                      <input
+                            type="text"
+                            id="discount"
+                            value={tboDiscount}
+                            onChange={handleInputChangeDiscount}
+                            style={{marginLeft: '15px',width:"200px",height:"35px", textAlign:"right",border: '1px solid #ddc8c8'}}
+                            
+                          />
+            </div>
+ </div>
                             <div className="clearDiv row" style={{display: editView}}>
                                <table id="datatable" className="table dt-responsive table-bordered nowrap airlisttable" style={{borderCollapse: "collapse", borderSpacing: "0", width: "100%",textAlign:"center"}}>
                                     <thead  style={{backgroundColor: "rgb(146 150 153)",color:"rgb(62 86 112)"}}>

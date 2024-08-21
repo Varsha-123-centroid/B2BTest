@@ -40,6 +40,7 @@ const Home = () => {
     const initialValues = {
         password : 'aaaaaaaaaaa',
       };
+      const [totPassengers,setTotPassengers]	=useState(1);
       const radioButtonRef = useRef(null);
       const navigate = useNavigate();
       const location = useLocation();
@@ -123,7 +124,23 @@ const Home = () => {
              // if(journeyType==1){
                 localStorage.setItem('adultCount', adultss); 
                 localStorage.setItem('childCount', childss); 
-                localStorage.setItem('infantCount', infantss);   
+                localStorage.setItem('infantCount', infantss);  
+           
+                if(totPassengers>9)
+                    {
+                       alert("Total Passengers should not Exceed 9..");
+                       return;
+                    } 
+                    if(depart==='' && journeyType < 3)
+                        {
+                           alert("Departure And Arrival Should be Enter..");
+                           return;	
+                        }
+                        if(arrive==='' && journeyType < 3)
+                           {
+                              alert("Departure And Arrival Should be Enter..");
+                              return;	
+                           }
                 if(journeyType==1) 
                 {
                     segm=[
@@ -345,6 +362,12 @@ const Home = () => {
 
           },
       });
+      const handleClick = () => {
+        const element = document.getElementById('traveller_flight_box');
+        if (element) {
+          element.style.display = 'none';
+        }
+      };
     const [adultss,setAdultss] = useState("1");
     const [childss,setChildss] = useState("0");
     const [infantss,setInfantss] = useState("0");
@@ -494,59 +517,83 @@ const Home = () => {
     const setadlt = event => {
         setAdultss(event.target.value);
         let ad=event.target.value+" Adults, ";
-        if(event.target.value==1)
+        if(event.target.value===1)
         ad=event.target.value+" Adult, ";
-        if(event.target.value==0)
+        if(event.target.value===0)
         ad="";
         let ch=childss+" Children, ";
-        if(childss==1)
+        if(childss===1)
         ch=childss+" Child, ";
-        if(childss==0)
+        if(childss===0)
         ch="";
         let inf=infantss+" Infants, ";
-        if(infantss==1)
+        if(infantss===1)
         inf=infantss+" Infant, ";
-        if(infantss==0)
+        if(infantss===0)
         inf="";
         setAllss(ad+ch+inf);
+       
+        const passcount = parseInt(event.target.value, 10) + parseInt(childss, 10) + parseInt(infantss, 10);
+		if(passcount>9)
+		{
+alert("Total Passengers can not exceed than 9. ")
+
+		}
+        setTotPassengers(passcount);
     };
     const setchild = event => {
         setChildss(event.target.value);
         let ad=adultss+" Adults, ";
-        if(adultss==1)
+        if(adultss===1)
         ad=adultss+" Adult, ";
-        if(adultss==0)
+        if(adultss===0)
         ad="";
         let ch=event.target.value+" Children, ";
-        if(event.target.value==1)
+        if(event.target.value===1)
         ch=event.target.value+" Child, ";
-        if(event.target.value==0)
+        if(event.target.value===0)
         ch="";
         let inf=infantss+" Infants. ";
-        if(infantss==1)
+        if(infantss===1)
         inf=infantss+" Infant. ";
-        if(infantss==0)
+        if(infantss===0)
         inf="";
         setAllss(ad+ch+inf);
+        const passcount = parseInt(adultss, 10)+ parseInt(event.target.value, 10) +  parseInt(infantss, 10);
+        
+		if(passcount>9)
+		{
+alert("Total Passengers can not exceed than 9. ")
+
+		}
+        setTotPassengers(passcount);
     };
     const setinfant = event => {
         setInfantss(event.target.value);
         let ad=adultss+" Adults, ";
-        if(adultss==1)
+        if(adultss===1)
         ad=adultss+" Adult, ";
-        if(adultss==0)
+        if(adultss===0)
         ad="";
         let ch=childss+" Children, ";
-        if(childss==1)
+        if(childss===1)
         ch=childss+" Child, ";
-        if(childss==0)
+        if(childss===0)
         ch="";
         let inf=event.target.value+" Infants, ";
-        if(event.target.value==1)
+        if(event.target.value===1)
         inf=event.target.value+" Infant, ";
-        if(event.target.value==0)
+        if(event.target.value===0)
         inf="";
         setAllss(ad+ch+inf);
+        const passcount = parseInt(adultss, 10)+  parseInt(childss, 10)+ parseInt(event.target.value, 10) ;
+      
+		if(passcount>9)
+		{
+alert("Total Passengers can not exceed than 9. ")
+
+		}
+        setTotPassengers(passcount);
     };
     const setCabin = event => {
        // alert(event.target.value);
@@ -639,7 +686,7 @@ const Home = () => {
                              //navigate('/dashboard');
                           }
                           else {
-                             toast.error("Sorry Some Technichal Error");
+                             toast.error("Sorry Some Technichal Error..");
                           }
                        
                          } catch (error) {
@@ -1446,7 +1493,7 @@ const Home = () => {
                                                                         </div>
                                                                         <div className="pax-bottom-box">
                                                                             <div className="cmn_btn">
-                                                                                <a className="pull-right" onclick="$('#traveller_flight_box').hide()">Done</a>
+                                                                                <a className="pull-right" onClick={handleClick}>Done</a>
                                                                             </div>
                                                                         </div>
                                                                         </div>
