@@ -88,6 +88,8 @@ const CustomerInfo = () => {
   const [useremail, setUseremail] = useState(sessionStorage.getItem('emailll'));
   let passString=sessionStorage.getItem('passString');
   const [isLCC, setIsLCC] = useState(true);
+  const [documentDetails, setDocumentDetails] = useState([]);
+  const [resultFareType, setResultFareType] = useState("RegularFare");
   const [totalMeal, setTotalMeal] = useState(0.00);
   const [totalBags, setTotalBags] = useState(0.00);
   const [selectedMealDynamic, setSelectedMealDynamic] = useState([]);
@@ -311,6 +313,8 @@ useEffect(() => {
                         setServicefare(markup);
                           const reff=responseqt.data.Response.Results.IsRefundable;
                           const lcc=responseqt.data.Response.Results.IsLCC;
+                          const resultFareType1=responseqt.data.Response.Results.ResultFareType;
+                          setResultFareType(resultFareType1);
                           setIsLCC(lcc);
                           if(reff==false)
                           {
@@ -1060,6 +1064,48 @@ console.log("datttttttttttttt"+JSON.stringify(data));
     setPriceOb(basefare+totalMealPrice+totalBagPrice+servicefare);
    // setFlightcharge(flightcharge+totalMealPrice+totalBagPrice);
   }, [passengers]);
+const [documentId, setDocumentId] = useState("");
+const handleDocumentIdChange = (e) => {
+  setDocumentId(e.target.value);
+  const docid=e.target.value;
+  let typeid='';
+  if(resultFareType==3)
+  {typeid='StudentId';}
+  else if(resultFareType==4)
+    {typeid='MilitaryId';}
+  else if(resultFareType==5)
+    {typeid='SeniorCitizenId';}
+  setDocumentDetails([
+    {
+      "DocumentTypeId": typeid,
+      "DocumentNumber": docid
+    }
+  ]);
+
+};
+const renderDocumentIdInput = () => {
+  if (resultFareType !== "RegularFare") {
+    return (
+      <div>
+        <div className="col-lg-5 col-md-5 col-sm-5 col-xs-5 form-group">
+        <label htmlFor="documentId">{resultFareType} Document ID:</label>
+        <div className="input_icon">
+        <TextField
+          type="text"
+          className='form-control'
+          id="documentId"
+          value={documentId}
+          onChange={handleDocumentIdChange}
+          inputProps={{ style: { width: '250px' } }}
+          required
+        />
+        </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
   
   return (
     <div>
@@ -1393,7 +1439,7 @@ console.log("datttttttttttttt"+JSON.stringify(data));
                                         onBlur={formik.handleBlur}
                                         error={formik.touched.address1 && Boolean(formik.errors.address1)}
                                         helperText={formik.touched.address1 && formik.errors.address1}
-                                        inputProps={{ style: { width: '250px' } }}
+                                        inputProps={{ style: { width: '200px' } }}
                                     /> 
                                
                                     </div>
@@ -1422,6 +1468,9 @@ console.log("datttttttttttttt"+JSON.stringify(data));
                                 
                                
                                 
+                            </div>
+                            <div className="clearDiv row">
+                            {renderDocumentIdInput()}
                             </div>
                             <br /><i className="fa fa-user" aria-hidden="true"></i> <span> {heading} </span>
                             <div class="row">

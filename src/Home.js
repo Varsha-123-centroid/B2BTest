@@ -60,8 +60,9 @@ const Home = () => {
       const [minimDate3, setMinimDate3] = useState(today);
       const [minimDate4, setMinimDate4] = useState(today);
       const [minimDate5, setMinimDate5] = useState(today);
-   
-      
+      const [fType, setFType] = useState('block');
+      const [selectedFareType, setSelectedFareType] = useState(null);
+	  const [resultFareType, setResultFareType] = useState(0);
 
       useEffect(() => {
         let params;
@@ -299,7 +300,7 @@ const Home = () => {
                     "DirectFlight": directFlight,
                     "OneStopFlight": oneStopFlight,
                     "JourneyType": journeyType,
-                
+                    "ResultFareType":resultFareType,
                     "Segments": segm,
                     "Sources": null
                 };
@@ -539,6 +540,7 @@ const Home = () => {
 alert("Total Passengers can not exceed than 9. ")
 
 		}
+      
         setTotPassengers(passcount);
     };
     const setchild = event => {
@@ -566,8 +568,10 @@ alert("Total Passengers can not exceed than 9. ")
 alert("Total Passengers can not exceed than 9. ")
 
 		}
+       
         setTotPassengers(passcount);
     };
+
     const setinfant = event => {
         setInfantss(event.target.value);
         let ad=adultss+" Adults, ";
@@ -594,6 +598,7 @@ alert("Total Passengers can not exceed than 9. ")
 
 		}
         setTotPassengers(passcount);
+       
     };
     const setCabin = event => {
        // alert(event.target.value);
@@ -611,6 +616,18 @@ alert("Total Passengers can not exceed than 9. ")
           radioButtonRef.current.click();
         }
       }, []);
+  useEffect(() => {
+    
+      if(adultss==1 && totPassengers==1){
+     
+        setFType("block");
+    }
+    else{
+        setResultFareType(0);
+        setSelectedFareType(parseInt(null)); 
+        setFType("none");
+    }
+}, [adultss,totPassengers]);
       useEffect(() => {
         localStorage.removeItem('tokenValue');
         async function fetchData() {
@@ -928,6 +945,12 @@ alert("Total Passengers can not exceed than 9. ")
         setFrom5Label(prevFrom5Label => to5Label);
         setTo5Label(tempLabel => from5Label);
       }
+
+	  const handleOptionChangeFare = (event) => {
+		const { value } = event.target;
+		setSelectedFareType(parseInt(value)); 
+		setResultFareType(parseInt(value));
+	  };
   return (
     <div>
         <div className="main-contents">
@@ -975,14 +998,32 @@ alert("Total Passengers can not exceed than 9. ")
                                                                     </div>
                                                                     <div className="radio-inline iataStatus">
                                                                         <input type="radio" id="round_trip" name="rad_iata_status" value="2"  onChange={handleOptionChange}  />
-                                                                        <label for="approve_iata" className=" ">  &nbsp;<strong>Round Trip</strong></label>
+                                                                        <label for="approve_iata" className=" pl-1">  &nbsp;<strong>Round Trip</strong></label>
                                                                     </div>
                                                                     <div className="radio-inline iataStatus">
                                                                         <input type="radio" id="multy_city" name="rad_iata_status" value="3" onChange={handleOptionChange}  />
                                                                         <label for="not_approve_iata" className=" pl-1">  &nbsp;<strong>Multy City</strong> </label>
                                                                     </div>
                                                                 </div>
+                                                                
+
                                                             </div>
+ <div className="row" style={{ display: fType }}>
+	<div className="edit_Profile d-flex">
+		<div className="radio-inline iataStatus">
+			<input type="checkbox" name="fareOption" value="3" checked={selectedFareType === 3}onChange={handleOptionChangeFare}/>
+			<label for="not_approve_iata" className=" pl-1"> &nbsp;Student Fare</label>
+		</div>
+		<div className="radio-inline iataStatus">
+			<input type="checkbox" name="fareOption" value="4" checked={selectedFareType === 4} onChange={handleOptionChangeFare}/>
+			<label for="approve_iata" className=" pl-1">  &nbsp;Armed Force</label>
+		</div>
+		<div className="radio-inline iataStatus">
+			<input type="checkbox" name="fareOption" value="5" checked={selectedFareType === 5} onChange={handleOptionChangeFare}/>
+			<label for="not_approve_iata" className=" pl-1">  &nbsp;Senior Citizen </label>
+		</div>
+	</div>
+</div>
                                                             <div style={{display:rtnview3}}>
                                                             <div style={{display:rtnview1}}>
                                                                 <div className="row">

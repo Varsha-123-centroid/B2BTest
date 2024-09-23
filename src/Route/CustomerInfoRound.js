@@ -47,6 +47,8 @@ const CustomerInfoRound = () => {
    const [editedPassType, setEditedPassType] = useState(" Adult ");
    const [editView, setEditView] = useState("none");
    const [isLCC, setIsLCC] = useState(true);
+   const [documentDetails, setDocumentDetails] = useState([]);
+   const [resultFareType, setResultFareType] = useState("RegularFare");
    const [isLCCIb, setIsLCCIb] = useState(true);
    const [totalMeal, setTotalMeal] = useState(0.00);
    const [totalBags, setTotalBags] = useState(0.00);
@@ -308,6 +310,8 @@ const CustomerInfoRound = () => {
                               const reff=responseqt.data.Response.Results.IsRefundable;
                               const tboserice=responseqt.data.Response.Results.Fare.ServiceFee;
                               const basef=responseqt.data.Response.Results.Fare.PublishedFare;
+                              const resultFareType1=responseqt.data.Response.Results.ResultFareType;
+                              setResultFareType(resultFareType1);
                               //setTboService(tboserice);
                               setBasefare(basef);
                               setServicefare(markup);
@@ -857,6 +861,7 @@ const CustomerInfoRound = () => {
                           "BaggageIb":selectedBagDynamic1Ib,
                           "MealDynamic":selectedMealDynamic1,
                           "MealDynamicIb":selectedMealDynamic1Ib,
+                          "DocumentDetails":documentDetails,
                           "Fare":adultFare,
                           "FareIb":adultFareIb,
                         "GSTCompanyAddress": "",
@@ -1495,6 +1500,48 @@ const handleBaggageClickFirstIb = (event) => {
   setShowMealsFirstIb(false);
   
 };
+const [documentId, setDocumentId] = useState("");
+const handleDocumentIdChange = (e) => {
+  setDocumentId(e.target.value);
+  const docid=e.target.value;
+  let typeid='';
+  if(resultFareType==3)
+  {typeid='StudentId';}
+  else if(resultFareType==4)
+    {typeid='MilitaryId';}
+  else if(resultFareType==5)
+    {typeid='SeniorCitizenId';}
+  setDocumentDetails([
+    {
+      "DocumentTypeId": typeid,
+      "DocumentNumber": docid
+    }
+  ]);
+
+};
+const renderDocumentIdInput = () => {
+  if (resultFareType !== "RegularFare") {
+    return (
+      <div>
+        <div className="col-lg-5 col-md-5 col-sm-5 col-xs-5 form-group">
+        <label htmlFor="documentId">{resultFareType} Document ID:</label>
+        <div className="input_icon">
+        <TextField
+          type="text"
+          className='form-control'
+          id="documentId"
+          value={documentId}
+          onChange={handleDocumentIdChange}
+          inputProps={{ style: { width: '250px' } }}
+          required
+        />
+        </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
   return (
     <div>
         <Navbar />
@@ -1949,7 +1996,7 @@ const handleBaggageClickFirstIb = (event) => {
                                     </div>
                                 </div>
 
-                                <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
+                                <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
                                      <label>Address1</label>
                                     <div className="input_icon">
                                     <TextField
@@ -1961,13 +2008,13 @@ const handleBaggageClickFirstIb = (event) => {
                                         onBlur={formik.handleBlur}
                                         error={formik.touched.address1 && Boolean(formik.errors.address1)}
                                         helperText={formik.touched.address1 && formik.errors.address1}
-                                        inputProps={{ style: { width: '250px' } }}
+                                        inputProps={{ style: { width: '200px' } }}
                                     /> 
                                
                                     </div>
                                 </div>
 
-                                <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
+                                <div className="col-lg-5 col-md-5 col-sm-5 col-xs-5 form-group">
                                 <label>Address2</label>
                                     <div className="input_icon">
                                     <TextField
@@ -1984,7 +2031,9 @@ const handleBaggageClickFirstIb = (event) => {
                                
                                     </div>
                                 </div>
-
+                                <div className="clearDiv row">
+                            {renderDocumentIdInput()}
+                            </div>
                         <div className="clearDiv"><br />
                         <i className="fa fa-user" aria-hidden="true"></i> <span> {heading} </span>
                             <div class="row">
