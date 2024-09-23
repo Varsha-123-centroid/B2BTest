@@ -669,6 +669,7 @@ useEffect(() => {
                         "FFNumber": "",
                         "Baggage":selectedBagDynamic1,
                         "MealDynamic":selectedMealDynamic1,
+                        "DocumentDetails":documentDetails,
                         "Fare":adultFare,
                         "GSTCompanyAddress": "",
                         "GSTCompanyContactNumber": "",
