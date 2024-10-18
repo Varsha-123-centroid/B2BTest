@@ -40,6 +40,10 @@ const CustomerInfo = () => {
    const [minDate, setMinDate] = useState(mnDate);
    const [maxDate, setMaxDate] = useState(mxDate);
    const [data,setData]=useState();
+   const [expoMarkup,setExpoMarkup]=useState(0.00);
+   const [agentMarkup,setAgentMarkup]=useState(0.00);
+   const [subAgentMarkup,setSubAgentMarkup]=useState(0.00);
+   const [airlineCode,setAirlineCode]=useState('');
    
    let passeng =[];
 //const farerule=fare.FareRules;
@@ -143,6 +147,93 @@ const CustomerInfo = () => {
         setEditedPPExpireDate(dd);
         }
     //mnDate.setDate(currentDate.getDate() - 729);
+    useEffect(() => {   
+      const fetchmarkup = async () => {
+        if(basefare>0){
+       try {
+          const datt={
+              "branchid": branchId
+              }
+         const response = await axios.post('https://b2b.travelxpo.in/api/get-markup-data',datt);	 
+        // console.log("mmmmmmmm..."+JSON.stringify(response.data));
+         const agent_type=response.data[0].agent_type;
+          let markup_percent= 0.00;
+          let branch_markup = 0;
+          let mrkup_t=0.00;
+          let mrkup_m=0.00;
+          let mrkup_s=0.00;
+         if(agent_type=="txpo")
+         {
+          //only travelxpo
+          const markup_type_t = response.data[0].markup_type;
+          const markup_percent_t = response.data[0].markup_percent;
+          const branch_markup_t = response.data[0].branch_markup;
+         // markup_percent=parseFloat(markup_percent_t);
+         // branch_markup=parseInt(branch_markup_t);
+          mrkup_t=parseFloat(basefare)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkup(mrkup_t);
+         }
+         else if(agent_type=="main")
+         {
+          //txpo and main                
+          const markup_type_m = response.data[0].markup_type;
+          const markup_percent_m = response.data[0].markup_percent;
+          const branch_markup_m = response.data[0].branch_markup;
+          
+          const markup_type_t = response.data[1][0].markup_type;
+          const markup_percent_t = response.data[1][0].markup_percent;
+          const branch_markup_t = response.data[1][0].branch_markup;
+          //markup_percent=parseFloat(markup_percent_m)+parseFloat(markup_percent_t);
+          //branch_markup=parseInt(branch_markup_m)+parseInt(branch_markup_t);
+          mrkup_t=parseFloat(basefare)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkup(mrkup_t);
+          mrkup_m=parseFloat(basefare)*parseFloat(markup_percent_m)/100+parseFloat(branch_markup_m);
+          setAgentMarkup(mrkup_m);
+          
+         }
+         else if(agent_type=="sub")
+         {
+          const markup_type_s = response.data[0].markup_type;
+          const markup_percent_s = response.data[0].markup_percent;
+          const branch_markup_s = response.data[0].branch_markup;
+
+          const markup_type_m = response.data[1][0].markup_type;
+          const markup_percent_m = response.data[1][0].markup_percent;
+          const branch_markup_m = response.data[1][0].branch_markup;
+
+          const markup_type_t = response.data[1][1][0].markup_type;
+          const markup_percent_t = response.data[1][1][0].markup_percent;
+          const branch_markup_t = response.data[1][1][0].branch_markup;
+         // markup_percent=parseFloat(markup_percent_s)+parseFloat(markup_percent_m)+parseFloat(markup_percent_t);
+          //branch_markup=parseInt(branch_markup_s)+parseInt(branch_markup_m)+parseInt(branch_markup_t);
+          mrkup_t=parseFloat(basefare)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkup(mrkup_t);
+          mrkup_m=parseFloat(basefare)*parseFloat(markup_percent_m)/100+parseFloat(branch_markup_m);
+          setAgentMarkup(mrkup_m);
+          mrkup_s=parseFloat(basefare)*parseFloat(markup_percent_s)/100+parseFloat(branch_markup_s);
+          setSubAgentMarkup(mrkup_s);
+        }
+
+         
+       //  sessionStorage.setItem('Markup', branch_markup);
+       //  sessionStorage.setItem('Markuppercent', markup_percent);
+       console.log("price"+parseFloat(basefare));
+         console.log("tr..."+mrkup_t);
+         console.log("ag..."+mrkup_m);
+         console.log("su..."+mrkup_s);
+     	
+          } catch (error) {
+              if (axios.isAxiosError(error)) {
+                  console.error('Axios Error:', error.response.data);
+                } else {
+                  console.error('Non-Axios Error:', error);
+                }
+              }
+            }
+         }
+         fetchmarkup();   
+  },[branchId,basefare]) ;
+
     useEffect(() => {
         let paass=[];
         setPassengers(paass);
@@ -227,7 +318,11 @@ useEffect(() => {
         });
         console.log("Data----"+JSON.stringify(response.data)) ;
         if(response.data.Response.Error.ErrorCode=="0")
-               { setFare(response.data);
+               { 
+                setFare(response.data);
+                //console.log("tttt:"+response.data.Response?.FareRules[0].Airline);
+                 setAirlineCode(response.data.Response?.FareRules[0].Airline);
+                 //setAirlineCode('6E');
                }
         else{
           console.log(response.data.Response.Error.ErrorMessage);
@@ -311,6 +406,8 @@ useEffect(() => {
                         //setTboService(tboserice);
                         setBasefare(basef);
                         setServicefare(markup);
+                        
+                      
                           const reff=responseqt.data.Response.Results.IsRefundable;
                           const lcc=responseqt.data.Response.Results.IsLCC;
                           const resultFareType1=responseqt.data.Response.Results.ResultFareType;
@@ -732,9 +829,9 @@ useEffect(() => {
           if(btnhead=='Submit')
           {
 
+
                         const data=
                         {
-                          
                             "ResultIndex": resultindex,
                             "agentId":parseInt(agentId),
                             "branchId":parseInt(branchId),
@@ -750,10 +847,14 @@ useEffect(() => {
                             "IsLCC":isLCC,
                             "TraceId": traceId,
                             "additional_service":parseFloat(tboService),
-                            "additional_discount":parseFloat(tboDiscount) 
+                            "additional_discount":parseFloat(tboDiscount),
+                            "tbo_price":flightchargeOb,
+                            "expo_price":parseFloat(expoMarkup),
+                            "agent_price":parseFloat(agentMarkup),
+                            "subagent_price":parseFloat(subAgentMarkup) 
                         };
                   
-console.log("datttttttttttttt"+JSON.stringify(data));
+console.log("datttttt..."+JSON.stringify(data));
                     
                     try {
                         const response = await axios.post('https://api.travelxpo.in/auth/booking', data, {
@@ -1025,6 +1126,47 @@ console.log("datttttttttttttt"+JSON.stringify(data));
     setEditedBagDynamic([]);
   };
   useEffect(() => {
+    
+    if (!airlineCode) return;  // Ensure candidateId is available
+    const postData = {
+      "branchid":branchId,
+      "airlineCode": airlineCode,  // Adjust the payload as needed
+    };
+    
+    axios.post('https://b2b.travelxpo.in/api/getAirlineMarkup', postData)
+      .then(response => {
+        
+      
+        const data = response.data;  // Access the data part of the response
+
+        // Ensure the response contains the expected array
+        if (Array.isArray(data)) {
+          data.forEach(item => {
+            const branchId = item.branch_id;
+            const markupType = item.markup_type;
+            const markupValue = item.markup_value;
+            const markupAmount = item.markup_amount;
+
+            const airlinemarkup = (parseFloat(basefare) * parseFloat(markupValue)) / 100 + parseFloat(markupAmount);
+
+            setTboService(airlinemarkup);
+           // console.log(`Branch ID: ${branchId}`);
+          //  console.log(`Markup Type: ${markupType}`);
+           // console.log(`Markup Value: ${markupValue}`);
+           // console.log(`Markup Amount: ${markupAmount}`);
+          });
+        } else {
+          console.error('Unexpected response format:', data);
+        }
+        //'branch_id', 'markup_type', 'markup_value', 'markup_amount'
+       // setCount(response.data.count); // Update the state with the count
+      })
+      .catch(error => {
+        console.error('There was an error fetching the job application count:', error);
+      });
+  }, [airlineCode,branchId,basefare]);
+
+  useEffect(() => {
     // Find the index of the previously selected meal
     const selectedIndex = ssrmeal.findIndex(item => item.Code === editedMealDynamic.Code);
     if (selectedIndex !== -1) {
@@ -1062,7 +1204,7 @@ console.log("datttttttttttttt"+JSON.stringify(data));
     });
     setTotalMeal(totalMealPrice);
     setTotalBags(totalBagPrice);
-    setPriceOb(basefare+totalMealPrice+totalBagPrice+servicefare);
+    setPriceOb(parseFloat(basefare)+parseFloat(totalMealPrice)+parseFloat(totalBagPrice)+parseFloat(servicefare));
    // setFlightcharge(flightcharge+totalMealPrice+totalBagPrice);
   }, [passengers]);
 const [documentId, setDocumentId] = useState("");

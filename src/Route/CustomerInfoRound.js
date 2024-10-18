@@ -34,6 +34,17 @@ const CustomerInfoRound = () => {
    const [maxDate, setMaxDate] = useState(mxDate);
    let passeng =[];
    const [data,setData]=useState();
+   const [expoMarkup,setExpoMarkup]=useState(0.00);
+   const [agentMarkup,setAgentMarkup]=useState(0.00);
+   const [subAgentMarkup,setSubAgentMarkup]=useState(0.00);
+
+   const [expoMarkupIb,setExpoMarkupIb]=useState(0.00);
+   const [agentMarkupIb,setAgentMarkupIb]=useState(0.00);
+   const [subAgentMarkupIb,setSubAgentMarkupIb]=useState(0.00);
+
+   const [airlineCode,setAirlineCode]=useState('');
+   const [airlineCodeIb,setAirlineCodeIb]=useState('');
+
    const [dataIb,setDataIb]=useState();
    const [refundable, setRefumdable] = useState("Refundable");
    const [refundableIb, setRefumdableIb] = useState("Refundable");
@@ -65,6 +76,8 @@ const CustomerInfoRound = () => {
    const [editedFare, setEditedFare] = useState([]);
    const [editedFareIb, setEditedFareIb] = useState([]);
    const [tboService, setTboService] = useState(0.00);
+   const [airlineMarkup, setAirlineMarkup] = useState(0.00);
+   const [airlineMarkupIb, setAirlineMarkupIb] = useState(0.00);
    const [tboDiscount, setTboDiscount] = useState(0.00);
    const [passengers,setPassengers] =useState(passeng);
    const [heading,setHeading]=useState("Adult Passenger");
@@ -224,6 +237,112 @@ const CustomerInfoRound = () => {
  setData(data1);
  setDataIb(dataIb1);
     },[]) ;
+
+
+    useEffect(() => {   
+      const fetchmarkup = async () => {
+        if(basefare>0 && basefareIb>0){
+       try {
+          const datt={
+              "branchid": branchId
+              }
+         const response = await axios.post('https://b2b.travelxpo.in/api/get-markup-data',datt);	 
+        // console.log("mmmmmmmm..."+JSON.stringify(response.data));
+         const agent_type=response.data[0].agent_type;
+          let markup_percent= 0.00;
+          let branch_markup = 0;
+          let mrkup_t=0.00;
+          let mrkup_m=0.00;
+          let mrkup_s=0.00;
+          let mrkup_tIb=0.00;
+          let mrkup_mIb=0.00;
+          let mrkup_sIb=0.00;
+         if(agent_type=="txpo")
+         {
+          //only travelxpo
+          const markup_type_t = response.data[0].markup_type;
+          const markup_percent_t = response.data[0].markup_percent;
+          const branch_markup_t = response.data[0].branch_markup;
+         // markup_percent=parseFloat(markup_percent_t);
+         // branch_markup=parseInt(branch_markup_t);
+          mrkup_t=parseFloat(basefare)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkup(mrkup_t);
+          mrkup_tIb=parseFloat(basefareIb)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkupIb(mrkup_tIb);
+         }
+         else if(agent_type=="main")
+         {
+          //txpo and main                
+          const markup_type_m = response.data[0].markup_type;
+          const markup_percent_m = response.data[0].markup_percent;
+          const branch_markup_m = response.data[0].branch_markup;
+          
+          const markup_type_t = response.data[1][0].markup_type;
+          const markup_percent_t = response.data[1][0].markup_percent;
+          const branch_markup_t = response.data[1][0].branch_markup;
+          //markup_percent=parseFloat(markup_percent_m)+parseFloat(markup_percent_t);
+          //branch_markup=parseInt(branch_markup_m)+parseInt(branch_markup_t);
+          mrkup_t=parseFloat(basefare)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkup(mrkup_t);
+          mrkup_m=parseFloat(basefare)*parseFloat(markup_percent_m)/100+parseFloat(branch_markup_m);
+          setAgentMarkup(mrkup_m);
+
+          mrkup_tIb=parseFloat(basefareIb)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkupIb(mrkup_tIb);
+          mrkup_mIb=parseFloat(basefareIb)*parseFloat(markup_percent_m)/100+parseFloat(branch_markup_m);
+          setAgentMarkupIb(mrkup_mIb);
+          
+         }
+         else if(agent_type=="sub")
+         {
+          const markup_type_s = response.data[0].markup_type;
+          const markup_percent_s = response.data[0].markup_percent;
+          const branch_markup_s = response.data[0].branch_markup;
+
+          const markup_type_m = response.data[1][0].markup_type;
+          const markup_percent_m = response.data[1][0].markup_percent;
+          const branch_markup_m = response.data[1][0].branch_markup;
+
+          const markup_type_t = response.data[1][1][0].markup_type;
+          const markup_percent_t = response.data[1][1][0].markup_percent;
+          const branch_markup_t = response.data[1][1][0].branch_markup;
+         // markup_percent=parseFloat(markup_percent_s)+parseFloat(markup_percent_m)+parseFloat(markup_percent_t);
+          //branch_markup=parseInt(branch_markup_s)+parseInt(branch_markup_m)+parseInt(branch_markup_t);
+          mrkup_t=parseFloat(basefare)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkup(mrkup_t);
+          mrkup_m=parseFloat(basefare)*parseFloat(markup_percent_m)/100+parseFloat(branch_markup_m);
+          setAgentMarkup(mrkup_m);
+          mrkup_s=parseFloat(basefare)*parseFloat(markup_percent_s)/100+parseFloat(branch_markup_s);
+          setSubAgentMarkup(mrkup_s);
+
+          mrkup_tIb=parseFloat(basefareIb)*parseFloat(markup_percent_t)/100+parseFloat(branch_markup_t);
+          setExpoMarkupIb(mrkup_tIb);
+          mrkup_mIb=parseFloat(basefareIb)*parseFloat(markup_percent_m)/100+parseFloat(branch_markup_m);
+          setAgentMarkupIb(mrkup_mIb);
+          mrkup_sIb=parseFloat(basefareIb)*parseFloat(markup_percent_s)/100+parseFloat(branch_markup_s);
+          setSubAgentMarkupIb(mrkup_sIb);
+        }
+
+         
+       //  sessionStorage.setItem('Markup', branch_markup);
+       //  sessionStorage.setItem('Markuppercent', markup_percent);
+       console.log("price"+parseFloat(basefare));
+         console.log("tr..."+mrkup_t);
+         console.log("ag..."+mrkup_m);
+         console.log("su..."+mrkup_s);
+     	
+          } catch (error) {
+              if (axios.isAxiosError(error)) {
+                  console.error('Axios Error:', error.response.data);
+                } else {
+                  console.error('Non-Axios Error:', error);
+                }
+              }
+            }
+         }
+         fetchmarkup();   
+  },[branchId,basefare,basefareIb]) ;
+
     useEffect(() => {
         if(value){
           const fetchData = async () => {
@@ -236,6 +355,7 @@ const CustomerInfoRound = () => {
               //console.log("Data----"+JSON.stringify(response.data)) ;
               if(response.data.Response.Error.ErrorCode=="0")
                      { setFare(response.data);
+                      setAirlineCode(response.data.Response?.FareRules[0].Airline);
                      }
               else{
                   console.log(response.data.Response.Error.ErrorMessage);
@@ -316,7 +436,7 @@ const CustomerInfoRound = () => {
                               setBasefare(basef);
                               setServicefare(markup);
 
-                              setTotalfare(parseFloat(basef)+parseFloat(markup));
+                             // setTotalfare(parseFloat(basef)+parseFloat(markup));
                                 if(reff==false)
                                 {
                                   setRefumdable("Non Refundable");
@@ -390,6 +510,7 @@ const CustomerInfoRound = () => {
                  // console.log("Data----"+JSON.stringify(responseIb.data)) ;
                   if(responseIb.data.Response.Error.ErrorCode=="0")
                          { setFareIb(responseIb.data);
+                          setAirlineCodeIb(responseIb.data.Response?.FareRules[0].Airline);
                          }
                   else{
                       console.log(responseIb.data.Response.Error.ErrorMessage);
@@ -467,7 +588,7 @@ const CustomerInfoRound = () => {
                                          
                                           setBasefareIb(basefIb);
                                           setServicefare(markup);
-                                          setTotalfareIb(parseFloat(basefIb)+parseFloat(markup));
+                                          //setTotalfareIb(parseFloat(basefIb)+parseFloat(markup));
                                              if(reffIb==false)
                                              {
                                                setRefumdableIb("Non Refundable");
@@ -965,7 +1086,11 @@ const CustomerInfoRound = () => {
                             "IsLCC":isLCC,
                             "TraceId": traceId,
                             "additional_service":parseFloat(service1),
-                            "additional_discount":parseFloat(discount1)
+                            "additional_discount":parseFloat(discount1),
+                            "tbo_price":flightchargeOb,
+                            "expo_price":parseFloat(expoMarkup),
+                            "agent_price":parseFloat(agentMarkup),
+                            "subagent_price":parseFloat(subAgentMarkup) 
                         };
                         const dataobib=
                         {
@@ -984,7 +1109,11 @@ const CustomerInfoRound = () => {
                             "IsLCC":isLCCIb,
                             "TraceId": traceId,
                             "additional_service":parseFloat(service1),
-                            "additional_discount":parseFloat(discount1)
+                            "additional_discount":parseFloat(discount1),
+                            "tbo_price":flightchargeIb,
+                            "expo_price":parseFloat(expoMarkupIb),
+                            "agent_price":parseFloat(agentMarkupIb),
+                            "subagent_price":parseFloat(subAgentMarkupIb) 
                         };
 //console.log('11111111111111'+JSON.stringify(data));
 //console.log('22222222222222'+JSON.stringify(dataobib));
@@ -1384,6 +1513,85 @@ const handleBagCancel = () => {
 const handleBagCancelIb = () => {
   setEditedBagDynamicIb([]);
 };
+
+useEffect(() => {
+    
+  if (!airlineCode) return;  // Ensure candidateId is available
+  const postData = {
+    "branchid":branchId,
+    "airlineCode": airlineCode,  // Adjust the payload as needed
+  };
+  
+  axios.post('https://b2b.travelxpo.in/api/getAirlineMarkup', postData)
+    .then(response => {
+      
+    
+      const data = response.data;  // Access the data part of the response
+
+      // Ensure the response contains the expected array
+      if (Array.isArray(data)) {
+        data.forEach(item => {
+          const branchId = item.branch_id;
+          const markupType = item.markup_type;
+          const markupValue = item.markup_value;
+          const markupAmount = item.markup_amount;
+
+          const airlinemarkup1 = (parseFloat(basefare) * parseFloat(markupValue)) / 100 + parseFloat(markupAmount);
+
+          setTboService(parseFloat(airlinemarkup1)+parseFloat(airlineMarkupIb));
+         // console.log(`Branch ID: ${branchId}`);
+        //  console.log(`Markup Type: ${markupType}`);
+         // console.log(`Markup Value: ${markupValue}`);
+         // console.log(`Markup Amount: ${markupAmount}`);
+        });
+      } else {
+        console.error('Unexpected response format:', data);
+      }
+      //'branch_id', 'markup_type', 'markup_value', 'markup_amount'
+     // setCount(response.data.count); // Update the state with the count
+    })
+    .catch(error => {
+      console.error('There was an error fetching the job application count:', error);
+    });
+}, [airlineCode,branchId,basefare]);
+
+useEffect(() => {
+    
+  if (!airlineCodeIb) return;  // Ensure candidateId is available
+  const postData = {
+    "branchid":branchId,
+    "airlineCode": airlineCodeIb,  // Adjust the payload as needed
+  };
+  
+  axios.post('https://b2b.travelxpo.in/api/getAirlineMarkup', postData)
+    .then(response => {
+      
+    
+      const data = response.data;  // Access the data part of the response
+
+      // Ensure the response contains the expected array
+      if (Array.isArray(data)) {
+        data.forEach(item => {
+          const branchId = item.branch_id;
+          const markupType = item.markup_type;
+          const markupValue = item.markup_value;
+          const markupAmount = item.markup_amount;
+
+          const airlinemarkup1 = (parseFloat(basefareIb) * parseFloat(markupValue)) / 100 + parseFloat(markupAmount);
+
+          setTboService(parseFloat(airlineMarkup)+parseFloat(airlinemarkup1));
+
+        });
+      } else {
+        console.error('Unexpected response format:', data);
+      }
+
+    })
+    .catch(error => {
+      console.error('There was an error fetching the job application count:', error);
+    });
+}, [airlineCodeIb,branchId,basefareIb]);
+
  useEffect(() => {
    // Find the index of the previously selected meal
    const selectedIndex =1;//ssrmeal.findIndex(item => item.Code === editedMealDynamic.Code);
