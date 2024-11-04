@@ -81,7 +81,9 @@ const AirlineListRound = () => {
             AirlineCode: result.AirlineCode,
             ValidatingAirline: result.ValidatingAirline,
             FareClassification: result.FareClassification,
-            PenaltyCharges:result.PenaltyCharges
+            PenaltyCharges:result.PenaltyCharges,
+            Cab:result.Segments[0][0].CabinBaggage,
+            Bag:result.Segments[0][0].Baggage
           });
         });
       
@@ -1303,8 +1305,8 @@ const openModalAlert = () => {
                                                               <p>{airlineName}</p>
                                                                <h5>{airlineCode}-{flightNumber}</h5>
                                                                <p>{connectionflightString}</p>
-                                                               <p style={{fontSize:"9px"}}>{`Cabin Baggage: ${handbagwt}`}</p>
-                                                               <p style={{fontSize:"9px"}}>{`Baggage: ${bagwt}`}</p>
+                                                               {/* <p style={{fontSize:"9px"}}>{`Cabin Baggage: ${handbagwt}`}</p>
+                                                               <p style={{fontSize:"9px"}}>{`Baggage: ${bagwt}`}</p> */}
                                                                <p style={{fontSize:"9px"}}>{` ${seats} Seats Avilable`}</p>
                                                              {/*   {rindex=nestedItem.ResultIndex}
                                                                 Flight Number: {flightNumber}
@@ -1335,10 +1337,10 @@ const openModalAlert = () => {
                                                             </th>
                                                             <th style={{ width: "20%" }}>
                                                               <div className="filghtsdetails editProfileSubmitBtns">
-                                                              <span className="text-info" >Reissue Chargee </span>
+                                                              {/* <span className="text-info" >Reissue Chargee </span>
                                                                   <span className="f-recommend__label-v2">{`${reissueCharge}`}</span><br />
                                                                   <span className="text-info" >Cancellation Chargee </span>
-                                                                  <span className="f-recommend__label-v2">{`${cancellationCharge}`}</span><br />
+                                                                  <span className="f-recommend__label-v2">{`${cancellationCharge}`}</span><br /> */}
                                                                {/* <p>{PublishedFare+parseFloat(markup)}</p> */}
                                                                <a className="btn" href="javasript:void(0);" onClick={() => openModalR({resu})}>Direct Ticket</a><br />
                                                             <span className="text-danger">{refund1}-{lcc1}</span> <br />
@@ -1407,7 +1409,7 @@ const openModalAlert = () => {
             <p>{selectedRow.resu.IsRefundable ? 'Refundable' : 'Non Refundable'} | {selectedRow.resu.IsLCC ? 'LCC' : 'Non LCC'}
             </p> 
             
-            <div className="row">
+            <div className="row"> 
             <div className="col-lg-3 form-group" >
             <img src={`assets/images/AirlineLogo_25x25/${selectedRow.resu.AirlineCode}.gif`} style={{border: '1px solid black' ,height:"100px",width:"auto"}} alt=""/>
 
@@ -1423,6 +1425,8 @@ const openModalAlert = () => {
             <th>Fare Classification</th>
             <th>Offered Fare</th>
             <th>Published Fare</th>
+            <th>Cabin Baggages </th> 
+            <th> Baggages </th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -1446,6 +1450,12 @@ const openModalAlert = () => {
               <td style={{ textAlign: "center" }}>
                 ₹ {parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)}
               </td>
+              <td style={{ textAlign: "center" }}>
+                {option.Cab}
+              </td> 
+              <td style={{ textAlign: "center" }}>
+                {option.Bag}
+              </td> 
               <td>
                 <div className="flex item-con-policy-loading__btn-wrapper">
                   &nbsp;&nbsp;<div className="c-result-operate">
@@ -1469,7 +1479,7 @@ const openModalAlert = () => {
             </p>
             <table style={{width:"100%"}}> 
               <thead> 
-              <th>AirLine</th><th>Origin</th><th>Destination</th><th>Duration</th><th>Baggage</th><th>Cabin<br />Baggage</th> 
+              <th>AirLine</th><th>Origin</th><th>Destination</th><th>Duration</th>
               </thead>
              <tbody>
              {
@@ -1481,8 +1491,8 @@ const openModalAlert = () => {
                                   <td><br />{data?.Origin.Airport.AirportName}<br />{moment(new Date(data?.Origin.DepTime)).format('DD/MM/YYYY HH:mm:ss')}</td>
                                   <td><br />{data?.Destination.Airport.AirportName}<br />{moment(new Date(data?.Destination.ArrTime)).format('DD/MM/YYYY HH:mm:ss')}</td>
                                   <td><br />{Math.floor(data?.Duration/60)}h  {data?.Duration % 60}m</td>
-                                  <td><br />{data?.Baggage}</td> 
-                                  <td><br />{data?.CabinBaggage}</td>
+                                  {/* <td><br />{data?.Baggage}</td> 
+                                  <td><br />{data?.CabinBaggage}</td> */}
                                 </tr>
                                 </>
                                 ))};

@@ -33,22 +33,32 @@ const BookingDomesticRound = () => {
     const [fare1,setFare1] = useState(responsereturn.Response.Response.FlightItinerary.FareRules);
     const len1=responsereturn.Response.Response.FlightItinerary.Segments.length;
     const [lsegm1,lsetSegm1] = useState(responsereturn.Response.Response.FlightItinerary.Segments[len1-1]);
-    const [markupamount, setMarkupamount] = useState(0);
-    const [markupamountib, setMarkupamountib] = useState(0);
+   
+    const serviceprice=responsereturn.price;
+    const discount=responsereturn.discount;
+    const markupp=parseFloat(response.expoPrice)+parseFloat(response.agentPrice)+parseFloat(response.subagentPrice);
+  
+    const [markupamount, setMarkupamount] = useState(markupp);
+
+    const servicepriceib=response.price;
+    const discountib=response.discount;
+    const markuppib=parseFloat(responsereturn.expoPrice)+parseFloat(responsereturn.agentPrice)+parseFloat(responsereturn.subagentPrice);
+  
+    const [markupamountib, setMarkupamountib] = useState(markuppib);
     const head1="PDF heading1";
     const head2="PDF heading2";
     const branchId =sessionStorage.getItem('branchId'); 
     useEffect(() => {
   
       const storedValue = localStorage.getItem('tokenValue');
-      const markupamount1=localStorage.getItem('markupamount');
+     // const markupamount1=localStorage.getItem('markupamount');
   if (storedValue) {
     setValue(storedValue);
   }
-  if (markupamount1) {
-    setMarkupamount(markupamount1);
-    setMarkupamountib(markupamount1);
-  }
+  // if (markupamount1) {
+  //   setMarkupamount(markupamount1);
+  //   setMarkupamountib(markupamount1);
+  // }
 },[]) ;
     useEffect(() => {   
       const fetchAgentInfo = async () => {
@@ -300,14 +310,10 @@ else if(z === 3) cc= 'Infant';
                               <h5>TOTAL INVOICE AMOUNT</h5>
                               <div className="row">
                                       <div className="col-lg-2 text-left">
-                                          <p>BaseFare</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.BaseFare).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                          <p>TicketFare + Tax</p>
+                                          <h5 style={{fontSize:"14px"}}><strong>{(parseFloat(farevl?.PublishedFare)+parseFloat(markupamount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                         </div>
-                                      <div className="col-lg-1">
-                                          <p>Tax</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.Tax).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
+                                     
                                         <div className="col-lg-2">
                                           <p>TransactionFee</p>
                                           <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.TransactionFee || 0).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
@@ -328,14 +334,23 @@ else if(z === 3) cc= 'Infant';
                                           <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.TotalMealCharges).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                           
                                         </div>
-                                        <div className="col-lg-1">
-                                          <p>Service</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(markupamount).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                        <div className="col-lg-2">
+                                          <p>Service Charge</p>
+                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(serviceprice).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                           
                                         </div>
-                                        <div className="col-lg-2">
+                                        <div className="col-lg-1">
+                                          <p>Discount</p>
+                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(discount).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                          
+                                        </div>
+                                        <div className="col-lg-1">
                                           <p>Total</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl?.PublishedFare)+parseFloat(markupamount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl?.PublishedFare)
+                                          +parseFloat(markupp)
+                                          +parseFloat(farevl?.TotalBaggageCharges)
+                                          +parseFloat(farevl?.TotalMealCharges)
+                                          +parseFloat(serviceprice)-parseFloat(discount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                           
                                         </div>
                                       </div>
@@ -524,7 +539,8 @@ else if(z === 3) cc= 'Infant';
                               <div className="row">
                                       <div className="col-lg-2 text-left">
                                           <p>BaseFare</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl1?.BaseFare).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl1?.PublishedFare)
+                                          +parseFloat(markuppib)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                         </div>
                                       <div className="col-lg-1">
                                           <p>Tax</p>
@@ -553,12 +569,21 @@ else if(z === 3) cc= 'Infant';
                                         </div>
                                         <div className="col-lg-1">
                                           <p>Service</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(markupamountib).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(servicepriceib).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                           
                                         </div>
-                                        <div className="col-lg-2">
+                                        <div className="col-lg-1">
+                                          <p>Discount</p>
+                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(discountib).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                          
+                                        </div>
+                                        <div className="col-lg-1">
                                           <p>Total</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl1?.PublishedFare)+parseFloat(markupamountib)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
+                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl1?.PublishedFare)
+                                          +parseFloat(markuppib)
+                                          +parseFloat(farevl1?.TotalBaggageCharges)
+                                          +parseFloat(farevl1?.TotalMealCharges)
+                                          +parseFloat(servicepriceib)-parseFloat(discountib)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                           
                                         </div>
                                       </div>
