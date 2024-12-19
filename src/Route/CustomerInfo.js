@@ -68,7 +68,9 @@ const CustomerInfo = () => {
    const [passenStr, setPassenStr] = useState('');
    const [fare, setFare] = useState();
    const [farequote, setFarequote] = useState();
-
+   const [grandTotal, setGrandTotal] = useState(0.00);
+  const [agentBalance, setAgentBalance] = useState(0.00);
+  const [prevent, setPrevent] = useState(1);
   const [ssrmeal, setSSRmeal] = useState([]);
   const [ssrbag, setSSRbag] = useState([
     [
@@ -233,7 +235,50 @@ const CustomerInfo = () => {
          }
          fetchmarkup();   
   },[branchId,basefare]) ;
-
+ 
+  useEffect(() => {
+    const fetchBalance = async () => {
+     try {
+    
+        const response = await axios.post('https://api.travelxpo.in/auth/b2c/get-balance');
+       
+        if(response.data.Error.ErrorCode==0)
+               {                
+                const agentBalance1=response.data.CashBalance;
+                setAgentBalance(agentBalance1);
+               }
+        else{
+          console.log(response.data.Error.ErrorMessage);
+        }
+        } catch (error) {
+            if (error.isAxiosError) {
+                // Handle AxiosError here
+                console.error(error.response); // Error response
+                console.error(error.request); // Request that caused the error
+                console.error(error.message); // Error message
+              } else {
+                console.error(error);     
+              }
+            }
+        };
+        fetchBalance();                
+      },[]) ;
+      useEffect(() => {
+        const gtotal=parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)+parseFloat(tboService)-parseFloat(tboDiscount)  ; 
+      if(agentBalance>0 && gtotal>0){
+       
+        setGrandTotal(gtotal); 
+       //alert(gtotal);
+           if(agentBalance<gtotal) 
+            {
+              setPrevent(0);
+              alert("Error code: 1001 \n Cann`t proceed...\nPlease Contact Support. ");
+            } 
+            else{
+              setPrevent(1); 
+            }
+          }
+      },[totalBags,totalMeal,basefare,servicefare,tboService,tboDiscount,agentBalance]) ;
     useEffect(() => {
         let paass=[];
         setPassengers(paass);
@@ -853,9 +898,9 @@ useEffect(() => {
                             "agent_price":parseFloat(agentMarkup),
                             "subagent_price":parseFloat(subAgentMarkup) 
                         };
-                  
-console.log("datttttt..."+JSON.stringify(data));
-                    
+                   
+//console.log("datttttt..."+JSON.stringify(data));
+if(prevent){   
                     try {
                         const response = await axios.post('https://api.travelxpo.in/auth/booking', data, {
                             headers: {
@@ -877,6 +922,10 @@ console.log("datttttt..."+JSON.stringify(data));
                         console.error(error);
                         }
            
+                      }
+                      else{
+                        alert("Error code: 1001 \n Cann`t proceed...\nPlease Contact Support. ");
+                      }
             }
 
             
