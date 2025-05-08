@@ -267,7 +267,7 @@ const CustomerInfo = () => {
         const gtotal=parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)+parseFloat(tboService)-parseFloat(tboDiscount)  ; 
       if(agentBalance>0 && gtotal>0){
        
-        setGrandTotal(gtotal); 
+        setGrandTotal(gtotal);  
        //alert(gtotal);
            if(agentBalance<gtotal) 
             {
