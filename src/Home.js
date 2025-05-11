@@ -40,6 +40,10 @@ const Home = () => {
     const initialValues = {
         password : 'aaaaaaaaaaa',
       };
+    const [inputValue, setInputValue] = useState("");
+	const [options, setOptions] = useState([]);
+	const [loading, setLoading] = useState(false);
+
       const [totPassengers,setTotPassengers]	=useState(1);
       const radioButtonRef = useRef(null);
       const navigate = useNavigate();
@@ -628,8 +632,12 @@ alert("Total Passengers can not exceed than 9. ")
         setFType("none");
     }
 }, [adultss,totPassengers]);
+
       useEffect(() => {
         localStorage.removeItem('tokenValue');
+        }, []);
+    /*    
+     useEffect(() => {
         async function fetchData() {
           try {
             const response = await fetch("https://b2b.travelxpo.in/api/get-airport", {
@@ -655,7 +663,43 @@ alert("Total Passengers can not exceed than 9. ")
       
         fetchData();
       }, []);
-    
+    */
+useEffect(() => {
+		if (inputValue.length < 2) {
+			setOptions([]); // clear options if less than 2 chars
+			return;
+		}
+
+		const fetchAirports = async () => {
+			setLoading(true);
+			try {
+				const response = await fetch("https://b2b.travelxpo.in/api/get-airport", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ searchTerm: inputValue }),
+				});
+				if (response.ok) {
+					const json = await response.json();
+					const list = json.map((item) => ({
+						value: item.code,
+						label: `${item.code} -- ${item.name} -- ${item.country}`,
+					}));
+					setOptions(list);
+				} else {
+					console.error("Fetch failed:", response.statusText);
+				}
+			} catch (error) {
+				console.error("Error fetching airports:", error);
+			}
+			setLoading(false);
+		};
+
+		const delayDebounceFn = setTimeout(() => {
+			fetchAirports();
+		}, 500); // debounce delay
+
+		return () => clearTimeout(delayDebounceFn); // cancel timeout if input changes
+	}, [inputValue]);
 
     useEffect(() => {
       
@@ -1029,23 +1073,48 @@ alert("Total Passengers can not exceed than 9. ")
                                                                 <div className="row">
                                                                     <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group" >
                                                                        
-                                                                        <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={departLabel}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setDepart(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setDepartLabel(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setDepartLabel('');
-                                                                            }
-                                                                          }}
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params}  placeholder="From" />}
-                                                                        /> 
+                                                                       <Autocomplete
+			disablePortal
+			id="airport-autocomplete"
+			className="form-control w-100"
+			options={options}
+			loading={loading}
+			value={departLabel ? { label: departLabel } : null}
+			onInputChange={(e, value) => setInputValue(value)}
+			onChange={(e, newValue) => {
+				if (newValue !== null) {
+					setDepart(newValue.value);
+					setDepartLabel(newValue.label);
+				} else {
+					setDepart("");
+					setDepartLabel("");
+				}
+			}}
+			sx={{ width: 350 }}
+			filterOptions={(x) => x} // disable built-in filtering
+			renderInput={(params) => (
+				<TextField
+					{...params}
+					// label={depart || "Choose..."}
+					variant="outlined"
+					InputLabelProps={{ shrink: true }}
+					InputProps={{
+						...params.InputProps,
+						endAdornment: (
+							<>
+								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+								{params.InputProps.endAdornment}
+							</>
+						),
+					}}
+				/>
+			)}
+			renderOption={(props, option) => (
+				<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>
+					{option.label}
+				</li>
+			)}
+		/>
 
 
                                                                         <div className="text-center form-group"  onClick={handleSwap}>
@@ -1054,24 +1123,46 @@ alert("Total Passengers can not exceed than 9. ")
                                                                     </div>
                                                                     <div className="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
                                                                      
-                                                                        <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={arriveLabel}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setArrive(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setArriveLabel(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setArriveLabel('');
-                                                                            }
-                                                                          }}
-                                                                        
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="To" />}
-                                                                        /> 
+                                                                       <Autocomplete
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={arriveLabel ? { label: arriveLabel } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setArrive(newValue.value);
+																				setArriveLabel(newValue.label); // Update state with label
+																			} else {
+																				setArrive('');
+																				setArriveLabel('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x} // disable built-in filtering
+																			renderInput={(params) => (
+																				<TextField
+																					{...params}
+																					// label={arrive || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																			)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                        {/* <Autocomplete suggestions={data} name="toAir" id="toAir" />*/}
                                                                        
                                                                     </div>
@@ -1123,47 +1214,91 @@ alert("Total Passengers can not exceed than 9. ")
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
                                                                         <label>From: </label>
                                                                             <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={from1Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setFrom1(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setFrom1Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setFrom1Label('');
-                                                                            }
-                                                                          }}
-                                                                      
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="From" />}
-                                                                        /> 
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={from1Label ? { label: from1Label } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setFrom1(newValue.value);
+																				setFrom1Label(newValue.label); // Update state with label
+																			} else {
+																				setFrom1('');
+																				setFrom1Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={from1 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                             <div className="text-center form-group" onClick={handleSwapMulty1}>
                                                                                 <a href="javascript:void(0);" className="exchangeicom"><i className="fa fa-exchange" aria-hidden="true"></i></a>
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
                                                                         <label>To: </label>
-                                                                            <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={to1Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setTo1(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setTo1Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setTo1Label('');
-                                                                            }
-                                                                          }}
-                                                                        
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="To" />}
-                                                                        /> 
+                                                                           <Autocomplete
+																		disablePortal
+																		id="combo-box-demo1"
+																		className="form-control w-100"
+																		value={to1Label ? { label: to1Label } : null}
+																		options={options}
+																		loading={loading}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setTo1(newValue.value);
+																				setTo1Label(newValue.label); // Update state with label
+																			} else {
+																				setTo1('');
+																				setTo1Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={to1 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                         </div>
                                                                     
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
@@ -1190,24 +1325,46 @@ alert("Total Passengers can not exceed than 9. ")
                                                                     <div className="row">
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
                                                                         <label>From :</label> 
-                                                                            <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={from2Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setFrom2(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setFrom2Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setFrom2Label('');
-                                                                            }
-                                                                          }}
-                                                                      
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="From" />}
-                                                                        /> 
+                                                                           <Autocomplete
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		value={from2Label ? { label: from2Label } : null}
+																		options={options}
+																		loading={loading}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setFrom2(newValue.value);
+																				setFrom2Label(newValue.label); // Update state with label
+																			} else {
+																				setFrom2('');
+																				setFrom2Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={from2 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                             <div className="text-center form-group" onClick={handleSwapMulty2}>
                                                                                 <a href="javascript:void(0);" className="exchangeicom"><i className="fa fa-exchange" aria-hidden="true"></i></a>
                                                                             </div>
@@ -1215,23 +1372,45 @@ alert("Total Passengers can not exceed than 9. ")
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
                                                                         <label>To : </label>
                                                                             <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={to2Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setTo2(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setTo2Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setTo2Label('');
-                                                                            }
-                                                                          }}
-                                                                      
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="To" />}
-                                                                        /> 
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		value={to2Label ? { label: to2Label } : null}
+																		options={options}
+																		loading={loading}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setTo2(newValue.value);
+																				setTo2Label(newValue.label); // Update state with label
+																			} else {
+																				setTo2('');
+																				setTo2Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={to2 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                         </div>
                                                                     
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
@@ -1258,24 +1437,46 @@ alert("Total Passengers can not exceed than 9. ")
                                                                     <div className="row"  style={{display:divv3}}>
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
                                                                         <label>From: </label>
-                                                                            <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={from3Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setFrom3(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setFrom3Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setFrom3Label('');
-                                                                            }
-                                                                          }}
-                                                                        
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="From" />}
-                                                                        /> 
+                                                                           <Autocomplete
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={from3Label ? { label: from3Label } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setFrom3(newValue.value);
+																				setFrom3Label(newValue.label); // Update state with label
+																			} else {
+																				setFrom3('');
+																				setFrom3Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={from3 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                             <div className="text-center form-group" onClick={handleSwapMulty3} >
                                                                                 <a href="javascript:void(0);" className="exchangeicom"><i className="fa fa-exchange" aria-hidden="true"></i></a>
                                                                             </div>
@@ -1283,23 +1484,45 @@ alert("Total Passengers can not exceed than 9. ")
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
                                                                         <label>To: </label>
                                                                             <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={to3Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setTo3(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setTo3Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setTo3Label('');
-                                                                            }
-                                                                          }}
-                                                                       
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="To" />}
-                                                                        /> 
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={to3Label ? { label: to3Label } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setTo3(newValue.value);
+																				setTo3Label(newValue.label); // Update state with label
+																			} else {
+																				setTo3('');
+																				setTo3Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={to3 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                         </div>
                                                                     
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
@@ -1326,23 +1549,44 @@ alert("Total Passengers can not exceed than 9. ")
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
                                                                         <label>From: </label>   
                                                                             <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={from4Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setFrom4(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setFrom4Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setFrom4Label('');
-                                                                            }
-                                                                          }}
-                                                                        
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="From" />}
-                                                                        /> 
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={from4Label ? { label: from4Label } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setFrom4(newValue.value);
+																				setFrom4Label(newValue.label); // Update state with label
+																			} else {
+																				setFrom4Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={from4 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/> 
                                                                             <div className="text-center form-group" onClick={handleSwapMulty4}>
                                                                                 <a href="javascript:void(0);" className="exchangeicom"><i className="fa fa-exchange" aria-hidden="true"></i></a>
                                                                             </div>
@@ -1350,23 +1594,44 @@ alert("Total Passengers can not exceed than 9. ")
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
                                                                         <label>To: </label> 
                                                                             <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={to4Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setTo4(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setTo4Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setTo4Label('');
-                                                                            }
-                                                                          }}
-                                                                       
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="To" />}
-                                                                        /> 
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={to4Label ? { label: to4Label } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setTo4(newValue.value);
+																				setTo4Label(newValue.label); // Update state with label
+																			} else {
+																				setTo4Label('');
+																			}
+																		}}
+																		sx={{ width: 350 }}
+																		filterOptions={(x) => x}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={to4 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                         </div>
                                                                     
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
@@ -1393,47 +1658,91 @@ alert("Total Passengers can not exceed than 9. ")
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
                                                                         <label>From: </label> 
                                                                             <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={from5Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setFrom5(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setFrom5Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setFrom5Label('');
-                                                                            }
-                                                                          }}
-                                                                    
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="From" />}
-                                                                        /> 
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={from5Label ? { label: from5Label } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setFrom5(newValue.value);
+																				setFrom5Label(newValue.label); // Update state with label
+																			} else {
+																				setFrom5('');
+																				setFrom5Label('');
+																			}
+																		}}
+																		filterOptions={(x) => x}
+																		sx={{ width: 350 }}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={from5 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                             <div className="text-center form-group" onClick={handleSwapMulty5}>
                                                                                 <a href="javascript:void(0);" className="exchangeicom"><i className="fa fa-exchange" aria-hidden="true"></i></a>
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
                                                                         <label>To: </label>
-                                                                            <Autocomplete
-                                                                        disablePortal
-                                                                        id="combo-box-demo"
-                                                                        className="form-control w-100 "
-                                                                        value={to5Label}
-                                                                        onChange={(e, newValue) => {
-                                                                            if (newValue !== null) {
-                                                                                setTo5(JSON.stringify(newValue.value).replace(/^"(.*)"$/, '$1'));
-                                                                                setTo5Label(newValue.label); // Update state with label
-                                                                            } else {
-                                                                                setTo5Label('');
-                                                                            }
-                                                                          }}
-                                                                      
-                                                                        options={data}
-                                                                        sx={{ width: 350 }}
-                                                                        renderInput={(params) => <TextField {...params} placeholder="To" />}
-                                                                        /> 
+                                                                           <Autocomplete
+																		disablePortal
+																		id="combo-box-demo"
+																		className="form-control w-100"
+																		options={options}
+																		loading={loading}
+																		value={to5Label ? { label: to5Label } : null}
+																		onInputChange={(e, value) => setInputValue(value)}
+																		onChange={(e, newValue) => {
+																			if (newValue !== null) {
+																				setTo5(newValue.value);
+																				setTo5Label(newValue.label); // Update state with label
+																			} else {
+																				setTo5('');
+																				setTo5Label('');
+																			}
+																		}}
+																		filterOptions={(x) => x}
+																		sx={{ width: 350 }}
+																		renderInput={(params) => (
+																			<TextField
+																					{...params}
+																					// label={to5 || "Choose..."}
+																					variant="outlined"
+																					InputLabelProps={{ shrink: true }}
+																					InputProps={{
+																						...params.InputProps,
+																						endAdornment: (
+																							<>
+																								{loading ? <CircularProgress color="inherit" size={20} /> : null}
+																								{params.InputProps.endAdornment}
+																							</>
+																						),
+																					}}
+																				/>
+																		)}
+																		renderOption={(props, option) => (
+																			<li {...props} style={{ color: 'grey', fontWeight: '500', fontSize: '0.8rem' }}>{option.label}</li>
+																		)}
+																	/>
                                                                         </div>
                                                                     
                                                                         <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group" >
