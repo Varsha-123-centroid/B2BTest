@@ -2471,7 +2471,8 @@ const renderDocumentIdInput = () => {
               onChange={() => handleItemSelect(index)}
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkbox-${index}`}>
-              {item.Weight} kg  ₹ {parseFloat(item.Price)}
+              {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
+  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
             </label>
             {/* </div> */}
           </div>
@@ -2626,7 +2627,8 @@ const renderDocumentIdInput = () => {
               onChange={() => handleItemSelectIb(indexIb)}
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkboxIb-${indexIb}`}>
-              {item.Weight} kg  ₹ {parseFloat(item.Price)}
+              {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
+  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
             </label>
             {/* </div> */}
           </div>
@@ -3054,7 +3056,8 @@ const renderDocumentIdInput = () => {
               onChange={() => handleItemSelectEdit(indexbag)}
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkbox-${indexbag}`}>
-              {item.Weight} kg  ₹ {parseFloat(item.Price)}
+              {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
+  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
             </label>
             </div>
           </div>
@@ -3182,7 +3185,8 @@ const renderDocumentIdInput = () => {
               onChange={() => handleItemSelectEditIb(indexbagIb)}
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkboxib-${indexbagIb}`}>
-              {item.Weight} kg  ₹ {parseFloat(item.Price)}
+              {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
+  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
             </label>
             </div>
           </div>
