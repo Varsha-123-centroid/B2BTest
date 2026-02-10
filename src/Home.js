@@ -4,7 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ThemeContext } from '@mui/styled-engine';
 import DynamicMultycity from './Route/DynamicMultycity';
-import Swal from 'sweetalert2';
+
 import {
     Grid,
     InputLabel,
@@ -134,13 +134,8 @@ const Home = () => {
            
                 if(totPassengers>9)
                     {
-                      // alert("Total Passengers should not Exceed 9..");
-                         Swal.fire({
-    title: "Total Passengers should not Exceed 9..",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes',
-  });
+                      alert("Total Passengers should not Exceed 9..");
+                       
                        return;
                     } 
                     if(depart==='' && journeyType < 3)
@@ -548,14 +543,9 @@ const Home = () => {
         const passcount = parseInt(event.target.value, 10) + parseInt(childss, 10) + parseInt(infantss, 10);
 		if(passcount>9)
 		{
-//alert("Total Passengers can not exceed than 9. ")
+alert("Total Passengers can not exceed than 9. ")
 
-                         Swal.fire({
-    title: "Total Passengers should not Exceed 9..",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes',
-  });
+
 
 		}
       
@@ -583,13 +573,8 @@ const Home = () => {
         
 		if(passcount>9)
 		{
-//alert("Total Passengers can not exceed than 9. ")
-                         Swal.fire({
-    title: "Total Passengers should not Exceed 9..",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes',
-  });
+alert("Total Passengers can not exceed than 9. ")
+
 		}
        
         setTotPassengers(passcount);
@@ -617,13 +602,8 @@ const Home = () => {
       
 		if(passcount>9)
 		{
-//alert("Total Passengers can not exceed than 9. ")
-                         Swal.fire({
-    title: "Total Passengers should not Exceed 9..",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes',
-  });
+alert("Total Passengers can not exceed than 9. ")
+
 
 		}
         setTotPassengers(passcount);

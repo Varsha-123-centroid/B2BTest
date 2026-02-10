@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Slider from '@mui/material/Slider';
 import moment from 'moment/moment';
-import Swal from 'sweetalert2';
+
 const AirLineList = () => {
     const location = useLocation(); 
     const responseget1 = location.state?.responsee;
