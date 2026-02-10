@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Slider from '@mui/material/Slider';
 import moment from 'moment/moment';
+import Swal from 'sweetalert2';
 const AirLineList = () => {
     const location = useLocation(); 
     const responseget1 = location.state?.responsee;
@@ -212,12 +213,12 @@ const AirLineList = () => {
     const [traceid,setTraceid]=useState(result.Response.TraceId);
     const [progress, setProgress] = useState(0);
     const handleButtonClick = async (vl,trid,lcc,price1) => {
-    
-     // alert("price1 "+markuppercent);
+    //alert("price1 "+markup);
+     //alert("price1 "+markuppercent);
       const price11= parseFloat(price1) + parseFloat(price1) * parseFloat(markuppercent) + parseFloat(markup);
 	
-    // alert("Balance "+balance);
-  // alert("Price "+price11);
+     //alert("Balance "+balance);
+   //alert("Price "+price11);
      if(parseFloat(price11)<parseFloat(balance))
          { 
           localStorage.setItem('resultindex', vl);

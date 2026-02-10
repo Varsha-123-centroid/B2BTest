@@ -1868,7 +1868,7 @@ const renderDocumentIdInput = () => {
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkbox-${index}`}>
               {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
-  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
+  <span style={{fontSize:"8px"}}>{item.Text && ` ${item.Text}`}</span>
             </label>
             {/* </div> */}
           </div>
@@ -2405,7 +2405,7 @@ const renderDocumentIdInput = () => {
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkbox-${indexbag}`}>
               {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
-  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
+  <span style={{fontSize:"8px"}}>{item.Text && ` ${item.Text}`}</span>
             </label>
             
             </div>

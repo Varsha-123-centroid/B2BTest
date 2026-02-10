@@ -15,6 +15,7 @@ import { Link ,Routes,Route,Router,Switch, useNavigate, useHistory } from 'react
 import { toast } from 'react-toastify';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Swal from 'sweetalert2';
 const CustomerInfoRound = () => {
     const navigate = useNavigate();
     const [adult,setAdult]=useState(0);
@@ -2472,7 +2473,7 @@ const renderDocumentIdInput = () => {
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkbox-${index}`}>
               {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
-  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
+  <span style={{fontSize:"8px"}}>{item.Text && ` ${item.Text}`}</span>
             </label>
             {/* </div> */}
           </div>
@@ -2628,7 +2629,7 @@ const renderDocumentIdInput = () => {
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkboxIb-${indexIb}`}>
               {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
-  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
+  <span style={{fontSize:"8px"}}>{item.Text && ` ${item.Text}`}</span>
             </label>
             {/* </div> */}
           </div>
@@ -3057,7 +3058,7 @@ const renderDocumentIdInput = () => {
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkbox-${indexbag}`}>
               {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
-  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
+  <span style={{fontSize:"8px"}}>{item.Text && ` ${item.Text}`}</span>
             </label>
             </div>
           </div>
@@ -3186,7 +3187,7 @@ const renderDocumentIdInput = () => {
             /> &nbsp;&nbsp;&nbsp;
             <label htmlFor={`checkboxib-${indexbagIb}`}>
               {item.Weight} kg  ₹ {parseFloat(item.Price)}<br />
-  <span style={{fontSize:"8px"}}>{item.text && ` ${item.text}`}</span>
+  <span style={{fontSize:"8px"}}>{item.Text && ` ${item.Text}`}</span>
             </label>
             </div>
           </div>

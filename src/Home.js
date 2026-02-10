@@ -4,6 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ThemeContext } from '@mui/styled-engine';
 import DynamicMultycity from './Route/DynamicMultycity';
+import Swal from 'sweetalert2';
 import {
     Grid,
     InputLabel,
@@ -133,7 +134,13 @@ const Home = () => {
            
                 if(totPassengers>9)
                     {
-                       alert("Total Passengers should not Exceed 9..");
+                      // alert("Total Passengers should not Exceed 9..");
+                         Swal.fire({
+    title: "Total Passengers should not Exceed 9..",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes',
+  });
                        return;
                     } 
                     if(depart==='' && journeyType < 3)
@@ -541,7 +548,14 @@ const Home = () => {
         const passcount = parseInt(event.target.value, 10) + parseInt(childss, 10) + parseInt(infantss, 10);
 		if(passcount>9)
 		{
-alert("Total Passengers can not exceed than 9. ")
+//alert("Total Passengers can not exceed than 9. ")
+
+                         Swal.fire({
+    title: "Total Passengers should not Exceed 9..",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes',
+  });
 
 		}
       
@@ -569,8 +583,13 @@ alert("Total Passengers can not exceed than 9. ")
         
 		if(passcount>9)
 		{
-alert("Total Passengers can not exceed than 9. ")
-
+//alert("Total Passengers can not exceed than 9. ")
+                         Swal.fire({
+    title: "Total Passengers should not Exceed 9..",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes',
+  });
 		}
        
         setTotPassengers(passcount);
@@ -598,7 +617,13 @@ alert("Total Passengers can not exceed than 9. ")
       
 		if(passcount>9)
 		{
-alert("Total Passengers can not exceed than 9. ")
+//alert("Total Passengers can not exceed than 9. ")
+                         Swal.fire({
+    title: "Total Passengers should not Exceed 9..",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes',
+  });
 
 		}
         setTotPassengers(passcount);
@@ -840,29 +865,16 @@ useEffect(() => {
                 branch_markup=parseInt(branch_markup_s)+parseInt(branch_markup_m)+parseInt(branch_markup_t);
                }
                markup_percent=markup_percent/100;
-               setMarkup(branch_markup);
-               setMarkuppercent(markup_percent);
+               const safeBranchMarkup  = Number(branch_markup) || 0;
+               const safeMarkupPercent = Number(markup_percent) || 0;
+               setMarkup(safeBranchMarkup);
+               setMarkuppercent(safeMarkupPercent);
                
-               sessionStorage.setItem('Markup', branch_markup);
-               sessionStorage.setItem('Markuppercent', markup_percent);
-               console.log("mmmmmmmm..."+branch_markup);
-               console.log("mmmmmmmm..."+markup_percent);
-                /*const markup_type_m = response.data[0].markup_type;
-                const markup_percent_m = response.data[0].markup_percent;
-                const branch_markup_m = response.data[0].branch_markup;
-                console.log("mmmmmmmm..."+response.data[1][0]["branchid"]);
-                console.log("1111111111..."+response.data[1][1][0]["branchid"]);
-                if(markup_type_m=='Amount')
-                {
-                    setMarkup(branch_markup_m);
-                    setMarkuppercent(0);
-                }
-                else if(markup_type_m=='Percent')
-                {
-                    setMarkup(0);
-                    const percen=markup_percent_m/100;
-                    setMarkuppercent(percen);
-                }*/		
+               sessionStorage.setItem('Markup', safeBranchMarkup);
+               sessionStorage.setItem('Markuppercent', safeMarkupPercent);
+               console.log("mmmmmmmm..."+safeBranchMarkup);
+               console.log("mmmmmmmm..."+safeMarkupPercent);
+               	
                 } catch (error) {
                     if (axios.isAxiosError(error)) {
                         console.error('Axios Error:', error.response.data);
