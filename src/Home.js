@@ -794,77 +794,90 @@ useEffect(() => {
                      
                         
           },[uname_1]) ;
-          useEffect(() => {   
-            const fetchmarkup = async () => {
-             try {
-                const datt={
-                    "branchid": branch_id
-                    }
-               const response = await axios.post('https://b2b.travelxpo.in/api/get-markup-data',datt);	 
-              // console.log("mmmmmmmm..."+JSON.stringify(response.data));
-               const agent_type=response.data[0].agent_type;
-                let markup_percent= 0.00;
-                let branch_markup = 0;
-               if(agent_type=="txpo")
-               {
-                //only travelxpo
-                const markup_type_t = response.data[0].markup_type;
-                const markup_percent_t = response.data[0].markup_percent;
-                const branch_markup_t = response.data[0].branch_markup;
-                markup_percent=parseFloat(markup_percent_t);
-                branch_markup=parseInt(branch_markup_t);
-               }
-               else if(agent_type=="main")
-               {
-                //txpo and main                
-                const markup_type_m = response.data[0].markup_type;
-                const markup_percent_m = response.data[0].markup_percent;
-                const branch_markup_m = response.data[0].branch_markup;
-                
-                const markup_type_t = response.data[1][0].markup_type;
-                const markup_percent_t = response.data[1][0].markup_percent;
-                const branch_markup_t = response.data[1][0].branch_markup;
-                markup_percent=parseFloat(markup_percent_m)+parseFloat(markup_percent_t);
-                branch_markup=parseInt(branch_markup_m)+parseInt(branch_markup_t);
-                
-               }
-               else if(agent_type=="sub")
-               {
-                const markup_type_s = response.data[0].markup_type;
-                const markup_percent_s = response.data[0].markup_percent;
-                const branch_markup_s = response.data[0].branch_markup;
+         useEffect(() => {
+  if (!branch_id) return;
 
-                const markup_type_m = response.data[1][0].markup_type;
-                const markup_percent_m = response.data[1][0].markup_percent;
-                const branch_markup_m = response.data[1][0].branch_markup;
+  const fetchmarkup = async () => {
+    try {
+      const datt = { branchid: branch_id };
 
-                const markup_type_t = response.data[1][1][0].markup_type;
-                const markup_percent_t = response.data[1][1][0].markup_percent;
-                const branch_markup_t = response.data[1][1][0].branch_markup;
-                markup_percent=parseFloat(markup_percent_s)+parseFloat(markup_percent_m)+parseFloat(markup_percent_t);
-                branch_markup=parseInt(branch_markup_s)+parseInt(branch_markup_m)+parseInt(branch_markup_t);
-               }
-               markup_percent=markup_percent/100;
-               const safeBranchMarkup  = Number(branch_markup) || 0;
-               const safeMarkupPercent = Number(markup_percent) || 0;
-               setMarkup(safeBranchMarkup);
-               setMarkuppercent(safeMarkupPercent);
-               
-               sessionStorage.setItem('Markup', safeBranchMarkup);
-               sessionStorage.setItem('Markuppercent', safeMarkupPercent);
-               console.log("mmmmmmmm..."+safeBranchMarkup);
-               console.log("mmmmmmmm..."+safeMarkupPercent);
-               	
-                } catch (error) {
-                    if (axios.isAxiosError(error)) {
-                        console.error('Axios Error:', error.response.data);
-                      } else {
-                        console.error('Non-Axios Error:', error);
-                      }
-                    }
-               }
-               fetchmarkup();   
-        },[branch_id]) ;
+      const response = await axios.post(
+        "https://b2b.travelxpo.in/api/get-markup-data",
+        datt
+      );
+
+      console.log("mmmmmmmm...", response.data);
+
+      // 🔴 HANDLE "no data" response
+      if (response.data?.message) {
+        console.warn("No markup data:", response.data.message);
+
+        setMarkup(0);
+        setMarkuppercent(0);
+
+        sessionStorage.setItem("Markup", 0);
+        sessionStorage.setItem("Markuppercent", 0);
+        return;
+      }
+
+      // 🔴 ENSURE ARRAY EXISTS
+      if (!Array.isArray(response.data) || response.data.length === 0) {
+        console.error("Invalid markup response", response.data);
+        return;
+      }
+
+      const agent_type = response.data[0]?.agent_type;
+
+      let markup_percent = 0;
+      let branch_markup = 0;
+
+      if (agent_type === "txpo") {
+        markup_percent = Number(response.data[0]?.markup_percent) || 0;
+        branch_markup = Number(response.data[0]?.branch_markup) || 0;
+      } 
+      else if (agent_type === "main") {
+        markup_percent =
+          (Number(response.data[0]?.markup_percent) || 0) +
+          (Number(response.data?.[1]?.[0]?.markup_percent) || 0);
+
+        branch_markup =
+          (Number(response.data[0]?.branch_markup) || 0) +
+          (Number(response.data?.[1]?.[0]?.branch_markup) || 0);
+      } 
+      else if (agent_type === "sub") {
+        markup_percent =
+          (Number(response.data[0]?.markup_percent) || 0) +
+          (Number(response.data?.[1]?.[0]?.markup_percent) || 0) +
+          (Number(response.data?.[1]?.[1]?.[0]?.markup_percent) || 0);
+
+        branch_markup =
+          (Number(response.data[0]?.branch_markup) || 0) +
+          (Number(response.data?.[1]?.[0]?.branch_markup) || 0) +
+          (Number(response.data?.[1]?.[1]?.[0]?.branch_markup) || 0);
+      }
+
+      markup_percent = markup_percent / 100;
+
+      const safeBranchMarkup = Number(branch_markup) || 0;
+      const safeMarkupPercent = Number(markup_percent) || 0;
+
+      setMarkup(safeBranchMarkup);
+      setMarkuppercent(safeMarkupPercent);
+
+      sessionStorage.setItem("Markup", safeBranchMarkup);
+      sessionStorage.setItem("Markuppercent", safeMarkupPercent);
+
+      console.log("✅ Markup:", safeBranchMarkup);
+      console.log("✅ MarkupPercent:", safeMarkupPercent);
+
+    } catch (error) {
+      console.error("❌ fetchmarkup error", error);
+    }
+  };
+
+  fetchmarkup();
+}, [branch_id]);
+
       
        const handleAddDiv = () => {
        // const newDivs = [...divs, { fromcity: '', tocity: '' , departdt:''}];
@@ -996,7 +1009,7 @@ useEffect(() => {
 
                     <div className="row align-items-center justify-content-center">
                         <div className="col-md-7 p-0">
-                            <h3 className="text-center text-white">Book Flights, Hotels, Transfers, Activities & More</h3>
+                            <h3 className="text-center text-white">Book Flights</h3>
                                 <div className="edit_profileSec">
                                     <div className="editProfileForm" style={{height:heightfrm+"px"}}>
                                         <div className="clearDiv row">
@@ -1009,17 +1022,9 @@ useEffect(() => {
                                                     <div className="panel with-nav-tabs homeSearchCont product-desc">
                                                         <ul className="nav nav-tabs nav-tabs-custom" role="tablist">
                                                             <li className="nav-item">
-                                                            <a className="nav-link active" id="booking2-tab" data-bs-toggle="tab" href="#" role="tab"><i className="fa fa-plane" aria-hidden="true"> </i> Flights</a>
+                                                            <a className="nav-link active" id="booking2-tab" data-bs-toggle="tab" href="#" role="tab"><i className="fa fa-plane" aria-hidden="true"> </i> Flight Booking </a>
                                                             </li>
-                                                            <li className="nav-item">
-                                                            <a className="nav-link" id="booking3-tab" data-bs-toggle="tab" href="#" role="tab"><i className="fa fa-bed" aria-hidden="true"> </i> Hotels</a>
-                                                            </li>
-                                                            <li className="nav-item">
-                                                            <a className="nav-link" id="booking4-tab" data-bs-toggle="tab" href="#" role="tab"><i className="fa fa-car" aria-hidden="true"> </i> Transfers</a>
-                                                            </li>
-                                                            <li className="nav-item">
-                                                            <a className="nav-link" id="booking5-tab" data-bs-toggle="tab" href="#" role="tab"><i className="fa fa-pagelines" aria-hidden="true"> </i> Activities</a>
-                                                            </li>
+                                                     
                                                         </ul>
                                                     </div>
                                                     <div className="tab-content">

@@ -21,10 +21,11 @@ const AirLineList = () => {
     //const [progressPr, setProgressPr] = useState(4000);
     const navigate = useNavigate();
     let markup = sessionStorage.getItem('Markup');
-    let markuppercent = sessionStorage.getItem('Markuppercent');
+   let markuppercent = sessionStorage.getItem('Markuppercent');
 
     const [flights, setFlights] = useState([]);
   const [showModalMessage, setShowModalMessage] = useState(false);
+
   useEffect(() => {  
     //  alert(2);
       if (jsonResponse && jsonResponse.Response && jsonResponse.Response.Results) {
@@ -213,8 +214,8 @@ const AirLineList = () => {
     const [traceid,setTraceid]=useState(result.Response.TraceId);
     const [progress, setProgress] = useState(0);
     const handleButtonClick = async (vl,trid,lcc,price1) => {
-    //alert("price1 "+markup);
-     //alert("price1 "+markuppercent);
+    alert("price1 "+markup);
+    alert("price1 "+markuppercent);
       const price11= parseFloat(price1) + parseFloat(price1) * parseFloat(markuppercent) + parseFloat(markup);
 	
      //alert("Balance "+balance);
