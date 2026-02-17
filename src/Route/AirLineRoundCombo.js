@@ -9,7 +9,7 @@ import moment from 'moment/moment';
 const AirLineRoundCombo = () => {
     const location = useLocation();
     const responseget1 = location.state?.responsee;
-    const [response,setResponse] = useState(responseget1);
+    const [response,setResponse] = useState(responseget1); 
     const [responseget,setResponseget]= useState(location.state?.responsee);
     const [jsonResponse,setJsonResponse]= useState(location.state?.responsee);
     const [data, setData] = useState(response?.Response?.Results?.[0] || []);
@@ -1543,10 +1543,10 @@ const AirLineRoundCombo = () => {
                 </span>
               </td>
               <td style={{ textAlign: "center" }}>
-                ₹ {parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)}
+                 {parseFloat(parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
               <td style={{ textAlign: "center" }}>
-                ₹ {parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)}
+                 {parseFloat(parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
               <td style={{ textAlign: "center" }}>
                 {option.Cab}

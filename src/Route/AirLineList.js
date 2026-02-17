@@ -214,8 +214,8 @@ const AirLineList = () => {
     const [traceid,setTraceid]=useState(result.Response.TraceId);
     const [progress, setProgress] = useState(0);
     const handleButtonClick = async (vl,trid,lcc,price1) => {
-    alert("price1 "+markup);
-    alert("price1 "+markuppercent);
+   // alert("price1 "+markup);
+   // alert("price1 "+markuppercent);
       const price11= parseFloat(price1) + parseFloat(price1) * parseFloat(markuppercent) + parseFloat(markup);
 	
      //alert("Balance "+balance);
@@ -1458,10 +1458,10 @@ let cancellationCharge='';
                 </span>
               </td>
               <td style={{ textAlign: "center" }}>
-                ₹ {parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)}
+                 {parseFloat(parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
               <td style={{ textAlign: "center" }}>
-                ₹ {parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)}
+                {parseFloat(parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
                <td style={{ textAlign: "center" }}>
                 {option.Cab}

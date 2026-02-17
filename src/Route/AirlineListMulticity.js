@@ -7,7 +7,7 @@ import axios from 'axios';
 import Slider from '@mui/material/Slider';
 import moment from 'moment/moment';
 const AirlineListMulticity = () => {
-    const location = useLocation();
+    const location = useLocation(); 
     const responseget1 = location.state?.responsee;
     const [response,setResponse] = useState(responseget1);
     const [responseget,setResponseget]= useState(location.state?.responsee);
@@ -1440,10 +1440,10 @@ const AirlineListMulticity = () => {
                 </span>
               </td>
               <td style={{ textAlign: "center" }}>
-                ₹ {parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)}
+                {parseFloat(parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
               <td style={{ textAlign: "center" }}>
-                ₹ {parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)}
+                {parseFloat(parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
               <td style={{ textAlign: "center" }}>
                 {option.Cab}
