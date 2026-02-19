@@ -151,6 +151,7 @@ const CustomerInfo = () => {
     //mnDate.setDate(currentDate.getDate() - 729);
     useEffect(() => {   
       const fetchmarkup = async () => {
+        //alert(basefare);
         if(basefare>0){
        try {
           const datt={
@@ -446,7 +447,7 @@ useEffect(() => {
                if(responseqt.data.Response.Error.ErrorCode=="0")
                       { 
                         setFarequote(responseqt.data);
-                        const basef=responseqt.data.Response.Results.Fare.PublishedFare;
+                        const basef=responseqt.data.Response.Results.Fare.OfferedFare;
                         const tboserice=responseqt.data.Response.Results.Fare.ServiceFee;
                         //setTboService(tboserice);
                         setBasefare(basef);
@@ -480,7 +481,7 @@ useEffect(() => {
                             }
                             switch(item.PassengerType) {
                               case 1:
-                                console.log("Dataquote---item"+JSON.stringify(item)) ;
+                               // console.log("Dataquote---item"+JSON.stringify(item)) ;
                                 setAdultFare(item);
                                 break;
                               case 2:
@@ -1436,12 +1437,13 @@ const renderDocumentIdInput = () => {
 				   
             </div>
             <div className="col-lg-4">
-              <div className="asidesection bg-white">
+
+              <div className="asidesection bg-white" style={{position: "fixed",top: "100px",width:"33.33%"}}>
                 <div className="card">
-                    <div className="card-body">
-                      <h4>FARE SUMMARY </h4>
-                      <p>{passenStr}	</p>
-                    </div>
+                  
+        <h7 style={{ textAlign: "center", display: "block" }}>
+ FARE SUMMARY ({passenStr})
+</h7>
                       <div className="pricedetails">
                         <div className="price">
                           <table className="table pricelisttable bg-white table-borderless">
@@ -1471,7 +1473,7 @@ const renderDocumentIdInput = () => {
                               <td></td>
                             </tr>
                             <tr>
-                        <td>Service Charge</td>
+                        <td>Fuel & Surcharges</td>
                         <td className="text-right">{parseFloat(tboService).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                       </tr>
                       <tr>
@@ -1842,7 +1844,7 @@ const renderDocumentIdInput = () => {
                 <div className="col-lg-12 mt-5 detailsview">
                   <div className="card">
                     <div className="col-md-4">
-                      <a href="javasript:void(0);"  onClick={handleBaggageClickFirst} className="btn btn-info" >Choose Baggage</a>
+                      <a href="javasript:void(0);"  onClick={handleBaggageClickFirst} className="btn btn-info" >Choose Additional Baggage</a>
                     </div>
                     {showBaggageFirst && (
                     <div className="cardsection">
@@ -1897,7 +1899,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedItems}>Apply Additional Baggage</button>
+                                      onClick={submitSelectedItems}>Apply Baggage</button>
                        </div>
                     </div>
 
@@ -1995,7 +1997,7 @@ const renderDocumentIdInput = () => {
  <div className="clearDiv row">
  <div className="col-lg-4">
                       
-                      <label style={{marginLeft: '15px'}}>SERVICE CHARGE (INR):</label>
+                      <label style={{marginLeft: '15px'}}>FUEL & SURCHARGES  (INR):</label>
                      </div>
                       <div className="col-lg-4">             
                       <input
@@ -2379,7 +2381,7 @@ const renderDocumentIdInput = () => {
                 <div className="col-lg-12 mt-5 detailsview">
                   <div className="card">
                     <div className="col-md-4">
-                    <button onClick={handleBaggageClick}  className="btn btn-secondary">Choose Baggage</button>
+                    <button onClick={handleBaggageClick}  className="btn btn-secondary">Choose Additional Baggage</button>
                     </div>
                     {showBaggage && (
                     <div className="cardsection">

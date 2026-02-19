@@ -477,7 +477,7 @@ const CustomerInfoRound = () => {
                             { 
                               const reff=responseqt.data.Response.Results.IsRefundable;
                               const tboserice=responseqt.data.Response.Results.Fare.ServiceFee;
-                              const basef=responseqt.data.Response.Results.Fare.PublishedFare;
+                              const basef=responseqt.data.Response.Results.Fare.OfferedFare;
                               const resultFareType1=responseqt.data.Response.Results.ResultFareType;
                               setResultFareType(resultFareType1);
                               //setTboService(tboserice);
@@ -632,7 +632,7 @@ const CustomerInfoRound = () => {
                                   if(responseqtIb.data.Response.Error.ErrorCode=="0")
                                          { 
                                           const reffIb=responseqtIb.data.Response.Results.IsRefundable;
-                                          const basefIb=responseqtIb.data.Response.Results.Fare.PublishedFare;
+                                          const basefIb=responseqtIb.data.Response.Results.Fare.OfferedFare;
                                          
                                           setBasefareIb(basefIb);
                                           setServicefare(markup);
@@ -2017,12 +2017,11 @@ const renderDocumentIdInput = () => {
             <div className="col-lg-4">
             <div className="row">
             <div className="col-lg-12">
-              <div className="asidesection bg-white">
+              <div className="asidesection bg-white"  style={{position: "fixed",top: "100px",width:"33.33%"}}>
                 <div className="card">
-                    <div className="card-body">
-                      <h4>FARE SUMMARY </h4>
-                      <p>{passenStr}	</p>
-                    </div>
+                    <h7 style={{ textAlign: "center", display: "block" }}>
+ FARE SUMMARY ({passenStr})
+</h7>
                       <div className="pricedetails">
                         <div className="price">
                           <table className="table pricelisttable bg-white table-borderless">
@@ -2031,48 +2030,29 @@ const renderDocumentIdInput = () => {
                         <td>Base fare + Tax</td>
                         <td className="text-right">{(parseFloat(basefare)+parseFloat(servicefare)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                       </tr>
-                            <tr>
-                              <td></td>
-                              <td></td>
-                            </tr>
-                       
-                      <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr> <tr>
+ <tr>
                                               <td>Meals Charge</td>
                                           <td className="text-right">{parseFloat(totalMeal).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                                         </tr>
-                                        <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr> <tr>
+ <tr>
                                               <td>Baggage Charge</td>
                                           <td className="text-right">{parseFloat(totalBags).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                                         </tr>
-                                        <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr>   
+   
                                               <tr>
-                                                <td><h5>Total</h5></td>
-                                                <td  className="text-right"><h5>{(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</h5></td>
+                                                <td>Total</td>
+                                                <td  className="text-right">{(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                                               </tr>
                            
                           </tbody>
                           </table>
                         </div>
                       </div>
-                </div>  
-              </div>
-              </div>
-              <div className="col-lg-12">
-              <div className="asidesection bg-white">
+                </div> 
                 <div className="card">
-                    <div className="card-body">
-                      <h4>RETURN TRIP FARE SUMMARY </h4>
-                      <p>{passenStr}	</p>
-                    </div>
+                   <h7 style={{ textAlign: "center", display: "block" }}>
+  RETURN TRIP FARE SUMMARY ({passenStr})
+</h7>
                       <div className="pricedetails">
                         <div className="price">
                           <table className="table pricelisttable bg-white table-borderless">
@@ -2081,65 +2061,43 @@ const renderDocumentIdInput = () => {
                         <td>Base fare + Tax</td>
                         <td className="text-right">{(parseFloat(basefareIb)+parseFloat(servicefare)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                       </tr>
-                            <tr>
-                              <td></td>
-                              <td></td>
-                            </tr>
-                         
-                      <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr> <tr>
+                    <tr>
                                               <td>Meals Charge</td>
                                           <td className="text-right">{parseFloat(totalMealIb).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                                         </tr>
-                                        <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr> <tr>
+         <tr>
                                               <td>Baggage Charge</td>
                                           <td className="text-right">{parseFloat(totalBagsIb).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                                         </tr>
-                                        <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr>   
+
                                               <tr>
-                                                <td><h5>Total</h5></td>
-                                                <td  className="text-right"><h5>{(parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</h5></td>
+                                                <td>Total</td>
+                                                <td  className="text-right">{(parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                                               </tr>
+
                                               <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr>
-                                              <tr>
-                        <td>Service Charge</td>
+                        <td>Fuel & Surcharges</td>
                         <td className="text-right">{parseFloat(tboService).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                       </tr>
-                      <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr>
+
                       
                       <tr>
                         <td>Discount Offered</td>
                         <td className="text-right">{parseFloat(tboDiscount).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                       </tr>
-                      <tr>
-                                                <td></td>
-                                                <td></td>
-                                              </tr>
+
                             <tr>
-                              <td><h5>Grand Total<span style={{fontSize:"12px"}}>({(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)).toFixed(2)} + {(parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toFixed(2)}+{(parseFloat(tboService)).toFixed(2)}-{(parseFloat(tboDiscount)).toFixed(2)})</span></h5></td>
-                              <td  className="text-right"><h5>{(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)+parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)+parseFloat(tboService)-parseFloat(tboDiscount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</h5></td>
+                              <td>Grand Total  <span style={{fontSize:"12px"}}>({(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)).toFixed(2)} + {(parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)).toFixed(2)}+{(parseFloat(tboService)).toFixed(2)}-{(parseFloat(tboDiscount)).toFixed(2)})</span></td>
+                              <td  className="text-right">{(parseFloat(basefare)+parseFloat(servicefare)+parseFloat(totalBags)+parseFloat(totalMeal)+parseFloat(basefareIb)+parseFloat(servicefare)+parseFloat(totalBagsIb)+parseFloat(totalMealIb)+parseFloat(tboService)-parseFloat(tboDiscount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</td>
                             </tr>
                           </tbody>
                           </table>
                         </div>
                       </div>
-                </div>  
+                </div>   
               </div>
               </div>
+              
               </div>
             </div>               
 
@@ -2447,7 +2405,7 @@ const renderDocumentIdInput = () => {
                 <div className="col-lg-12 mt-5 detailsview">
                   <div className="card">
                     <div className="col-md-4">
-                      <a href="javasript:void(0);"  onClick={handleBaggageClickFirst} className="btn btn-info" >Choose Baggage</a>
+                      <a href="javasript:void(0);"  onClick={handleBaggageClickFirst} className="btn btn-info" >Choose Additional Baggage</a>
                     </div>
                     {showBaggageFirst && (
                     <div className="cardsection">
@@ -2502,7 +2460,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedItems}>Apply Additional Baggage</button>
+                                      onClick={submitSelectedItems}>Apply Baggage</button>
                        </div>
                     </div>
 
@@ -2603,7 +2561,7 @@ const renderDocumentIdInput = () => {
                 <div className="col-lg-12 mt-5 detailsview">
                   <div className="card">
                     <div className="col-md-4">
-                      <a href="javasript:void(0);"  onClick={handleBaggageClickFirstIb} className="btn btn-info" >Choose Baggage Return</a>
+                      <a href="javasript:void(0);"  onClick={handleBaggageClickFirstIb} className="btn btn-info" >Choose Additional Baggage Return</a>
                     </div>
                     {showBaggageFirstIb && (
                     <div className="cardsection">
@@ -2761,7 +2719,7 @@ const renderDocumentIdInput = () => {
                         <div className="clearDiv row">
  <div className="col-lg-4">
                       
-                      <label style={{marginLeft: '15px'}}>SERVICE CHARGE (INR):</label>
+                      <label style={{marginLeft: '15px'}}>FUEL & SURCHARGES (INR):</label>
                      </div>
                       <div className="col-lg-4">             
                       <input
@@ -3032,7 +2990,7 @@ const renderDocumentIdInput = () => {
                 <div className="col-lg-12 mt-5 detailsview">
                   <div className="card">
                     <div className="col-md-4">
-                    <button onClick={handleBaggageClick}  className="btn btn-secondary">Choose Baggage</button>
+                    <button onClick={handleBaggageClick}  className="btn btn-secondary">Choose Additional Baggage</button>
                     </div>
                     {showBaggage && (
                     <div className="cardsection">

@@ -18,6 +18,7 @@ const AirlineListReturn = () => {
     const [value, setValue] = useState('');
     const [passenStr, setPassenStr] = useState('');
     const [balance, setBalance] = useState(sessionStorage.getItem('Balance'));
+    const [showOfferedFare, setShowOfferedFare] = useState(false);
     const [flights, setFlights] = useState([]);
     const navigate = useNavigate();
     let markup = sessionStorage.getItem('Markup');
@@ -1405,7 +1406,16 @@ const AirlineListReturn = () => {
             <img src={`assets/images/AirlineLogo_25x25/${selectedRow.resu.AirlineCode}.gif`} style={{border: '1px solid black' ,height:"100px",width:"auto"}} alt=""/>
 
             </div>
-            
+             <div className="col-lg-6 form-group" >
+              </div>
+            <div className="col-lg-3 form-group" >
+            <button 
+  onClick={() => setShowOfferedFare(prev => !prev)}
+  className="btn btn-primary"
+>
+  {showOfferedFare ? "Hide Offered Fare" : "Show Offered Fare"}
+</button>
+ </div>
              </div> 
  <div data-testid="u_policy_wrapper_2-0" className="policy-wrapper is-v2" style={{ display: isVisible ? "block" : "none" }}>
   <div className="policy-wrapper_content-wrapper">
@@ -1414,7 +1424,7 @@ const AirlineListReturn = () => {
         <thead>
           <tr>
             <th>Fare Classification</th>
-            <th>Offered Fare</th>
+            {showOfferedFare && <th>Offered Fare</th>}
             <th>Published Fare</th>
             <th>Cabin Baggages </th> 
             <th> Baggages </th>
@@ -1435,11 +1445,19 @@ const AirlineListReturn = () => {
                   {option.FareClassification?.Type || 'Default'}
                 </span>
               </td>
+               {showOfferedFare && (
+        <td style={{ textAlign: "center" }}>
+          {parseFloat(
+            parseFloat(option.Fare.OfferedFare) +
+            parseFloat(option.Fare.OfferedFare * markuppercent + markup)
+          ).toLocaleString('en-IN', {
+            style: 'currency',
+            currency: 'INR'
+          })}
+        </td>
+      )}
               <td style={{ textAlign: "center" }}>
-                {parseFloat(parseFloat(option.Fare.OfferedFare) + parseFloat(option.Fare.OfferedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
-              </td>
-              <td style={{ textAlign: "center" }}>
-                {parseFloat(parseFloat(option.Fare.PublishedFare) + parseFloat(option.Fare.PublishedFare * markuppercent + markup)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
+                {parseFloat(option.Fare.PublishedFare).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
               <td style={{ textAlign: "center" }}>
                 {option.Cab}
@@ -1451,7 +1469,7 @@ const AirlineListReturn = () => {
                 <div className="flex item-con-policy-loading__btn-wrapper">
                   &nbsp;&nbsp;<div className="c-result-operate">
                     
-                    <span onClick={() => handleButtonClick(option.ResultIndex, result.Response.TraceId, selectedRow.resu?.IsLCC, parseFloat(option.Fare.PublishedFare))} className="c-result-operate__btn is-v2 flex-column-center user-select closeDropDowns f-14">
+                    <span onClick={() => handleButtonClick(option.ResultIndex, result.Response.TraceId, selectedRow.resu?.IsLCC, parseFloat(option.Fare.OfferedFare))} className="c-result-operate__btn is-v2 flex-column-center user-select closeDropDowns f-14">
                       <span className="btn btn-info">Book</span>
                     </span>
                   </div>
