@@ -1091,8 +1091,21 @@ const CustomerInfoRound = () => {
 
            const flightchargeOb=parseFloat(priceOb)-parseFloat(markup);
            const flightchargeIb=parseFloat(priceIb)-parseFloat(markup);
-          if(btnhead=='Submit')
-          {
+if(btnhead=='Submit')
+{
+  if (
+    !farequote ||
+    !farequote.Response ||
+    !farequote.Response.Results ||
+    !traceId ||
+    !resultindex
+) {
+    alert("Session expired.\nFare data missing.\nPlease search flights again.");
+    return;
+}
+   if (!window.confirm("Do you want to proceed with booking?")) {
+        return;
+    }
             const updatedPassengersob = passengers.map(passenger => {
               // Destructure the passenger object and omit the specified properties
               const { FareIb, MealDynamicIb, BaggageIb, ...rest } = passenger;
@@ -2460,7 +2473,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedItems}>Apply Baggage</button>
+                                      onClick={submitSelectedItems}>Apply</button>
                        </div>
                     </div>
 
@@ -2540,7 +2553,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedMeals}>Apply Meals</button>
+                                      onClick={submitSelectedMeals}>Apply</button>
                        </div>
                     </div>
 
@@ -2616,7 +2629,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedItemsIb}>Apply Return Baggage</button>
+                                      onClick={submitSelectedItemsIb}>Apply</button>
                        </div>
                     </div>
 
@@ -2696,7 +2709,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedMealsIb}>Apply Return Meals</button>
+                                      onClick={submitSelectedMealsIb}>Apply</button>
                        </div>
                     </div>
 

@@ -45,6 +45,7 @@ const BookingDomesticRound = () => {
     const markuppib=parseFloat(responsereturn.expoPrice)+parseFloat(responsereturn.agentPrice)+parseFloat(responsereturn.subagentPrice);
   
     const [markupamountib, setMarkupamountib] = useState(markuppib);
+    const [showPrice, setShowPrice] = useState(true);
     const head1="PDF heading1";
     const head2="PDF heading2";
     const branchId =sessionStorage.getItem('branchId'); 
@@ -81,20 +82,22 @@ const BookingDomesticRound = () => {
          fetchAgentInfo();   
   },[branchId]) ;
 
-  const pdfDownload = (e) => {
+  const pdfDownload = async (e, withPrice) => {
     e.preventDefault();
-    // Get the target element
+    setShowPrice(withPrice);
+    await new Promise(resolve => setTimeout(resolve, 300));
     const pdfView1 = document.getElementById('pdf-view1');
     const pdfView2 = document.getElementById('pdf-view2');
     // Use html2canvas to capture the content as an image
-    html2canvas(pdfView1).then((canvas1) => {
+      html2canvas(pdfView1).then((canvas1) => {
       html2canvas(pdfView2).then((canvas2) => {
         const doc = new jsPDF('portrait', 'pt', 'A4');
         doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 10, 10, doc.internal.pageSize.getWidth()-10, doc.internal.pageSize.getHeight()-10);
         doc.addPage();
         doc.addImage(canvas2.toDataURL('image/png'), 'PNG', 10, 10, doc.internal.pageSize.getWidth()-10, doc.internal.pageSize.getHeight()-10);
 
-      doc.save('TravelxpoTicket.pdf');
+     // doc.save('TravelxpoTicket.pdf');
+      doc.save(withPrice ? 'Ticket-With-Price.pdf' : 'Ticket-No-Price.pdf');
     });
   });
   };
@@ -165,7 +168,7 @@ else if(z === 3) cc= 'Infant';
             
             <div class="row">
                                                 
-                                                <div class="col-lg-8">
+                                                <div class="col-lg-6">
                                                 </div>
                                                     <div class="col-lg-1"  style={{marginTop:"-25px"}} >
                                                     <Link to="/dashboard">
@@ -173,7 +176,24 @@ else if(z === 3) cc= 'Infant';
                                                     </Link>
                                                     </div>
                                                     <div class="col-lg-2" style={{marginTop:"-15px"}}>
-                                                    <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
+                                                    {/* <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
+                                                     */}
+                                                     <button 
+                                                      onClick={(e) => pdfDownload(e, true)} 
+                                                      className="btn btn-info me-2"
+                                                  >
+                                                      Download With Price
+                                                  </button>
+                                                    </div>
+                                                    <div class="col-lg-2" style={{marginTop:"-15px"}}>
+                                                    {/* <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
+                                                     */}
+                                                     <button 
+                                                        onClick={(e) => pdfDownload(e, false)} 
+                                                        className="btn btn-secondary"
+                                                    >
+                                                        Download Without Price
+                                                    </button>
                                                     </div>
                                           </div>
 
@@ -307,6 +327,8 @@ else if(z === 3) cc= 'Infant';
 
                                 
                               </table>
+                              {showPrice && (
+                                <>
                               <h5>TOTAL INVOICE AMOUNT</h5>
                               <div className="row">
                                       <div className="col-lg-2 text-left">
@@ -354,6 +376,8 @@ else if(z === 3) cc= 'Infant';
                                           
                                         </div>
                                       </div>
+                                        </>
+                                    )}
                             </div>
                           </div>
                   
@@ -535,6 +559,8 @@ else if(z === 3) cc= 'Infant';
 
                                 
                               </table>
+                              {showPrice && (
+                               <>
                               <h5>TOTAL INVOICE AMOUNT RETURN</h5>
                               <div className="row">
                                       <div className="col-lg-2 text-left">
@@ -587,6 +613,8 @@ else if(z === 3) cc= 'Infant';
                                           
                                         </div>
                                       </div>
+                                        </>
+                                    )}
                             </div>
                           </div>
                   

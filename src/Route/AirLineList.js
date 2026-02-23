@@ -1468,7 +1468,7 @@ let cancellationCharge='';
                 </span>
               </td>
                {showOfferedFare && (
-        <td style={{ textAlign: "center" }}>
+        <td style={{ textAlign: "center" }}> 
           {parseFloat(
             parseFloat(option.Fare.OfferedFare) +
             parseFloat(option.Fare.OfferedFare * markuppercent + markup)

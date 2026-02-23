@@ -874,7 +874,19 @@ useEffect(() => {
 
           if(btnhead=='Submit')
           {
-
+   if (
+    !farequote ||
+    !farequote.Response ||
+    !farequote.Response.Results ||
+    !traceId ||
+    !resultindex
+) {
+    alert("Session expired.\nFare data missing.\nPlease search flights again.");
+    return;
+}         
+ if (!window.confirm("Do you want to proceed with booking?")) {
+        return;
+    }
 
                         const data=
                         {
@@ -1899,7 +1911,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedItems}>Apply Baggage</button>
+                                      onClick={submitSelectedItems}>Apply</button>
                        </div>
                     </div>
 
@@ -1979,7 +1991,7 @@ const renderDocumentIdInput = () => {
                         <div className="col-lg-4">
                                       <button  className="btn btn-primary" 
                                       style={{marginLeft: '15px'}}
-                                      onClick={submitSelectedMeals}>Apply Meals</button>
+                                      onClick={submitSelectedMeals}>Apply</button>
                        </div>
                     </div>
 

@@ -8,7 +8,7 @@ import moment from 'moment/moment';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import Style from './Style';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas'; 
 const BookingOneway = () => {
   const location = useLocation();
   const response = location.state?.responsebook;
@@ -27,7 +27,7 @@ const BookingOneway = () => {
   const len=response.Response.Response.FlightItinerary.Segments.length;
   const [markupamount, setMarkupamount] = useState(0);
   const [lsegm,lsetSegm] = useState(response.Response.Response.FlightItinerary.Segments[len-1]);
-
+  const [showPrice, setShowPrice] = useState(true);
     const head1="PDF heading1";
     const head2="PDF heading2";
     const branchId =sessionStorage.getItem('branchId');
@@ -62,9 +62,11 @@ const BookingOneway = () => {
          }
          fetchAgentInfo();   
   },[branchId]) ;
-  const pdfDownload = (e) => {
+  const pdfDownload = async (e, withPrice) => {
     e.preventDefault();
-    // Get the target element
+        setShowPrice(withPrice);
+    await new Promise(resolve => setTimeout(resolve, 300));
+
     const pdfView = document.getElementById('pdf-view');
   
     // Use html2canvas to capture the content as an image
@@ -79,7 +81,8 @@ const BookingOneway = () => {
       doc.addImage(imgData, 'PNG', 10, 10, doc.internal.pageSize.getWidth()-10, doc.internal.pageSize.getHeight()-10);
   
       // Save the PDF
-      doc.save('TravelxpoTicket.pdf');
+      //doc.save('TravelxpoTicket.pdf');
+      doc.save(withPrice ? 'Ticket-With-Price.pdf' : 'Ticket-No-Price.pdf');
     });
   };
   const concatByTwo = (value) => {
@@ -142,7 +145,7 @@ else if(z === 3) cc= 'Infant';
             
             <div class="row">
                                                 
-                                                <div class="col-lg-8">
+                                                <div class="col-lg-6">
                                                 </div>
                                                     <div class="col-lg-1"  style={{marginTop:"-25px"}} >
                                                     <Link to="/dashboard">
@@ -150,7 +153,24 @@ else if(z === 3) cc= 'Infant';
                                                     </Link>
                                                     </div>
                                                     <div class="col-lg-2"  style={{marginTop:"-15px"}} >
-                                                    <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
+                                                    {/* <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
+                                                     */}
+                                                     <button 
+    onClick={(e) => pdfDownload(e, true)} 
+    className="btn btn-info me-2"
+>
+    Download With Price
+</button>
+                                                    </div>
+                                                    <div class="col-lg-2"  style={{marginTop:"-15px"}} >
+                                                    {/* <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
+                                                     */}
+                                                     <button 
+    onClick={(e) => pdfDownload(e, false)} 
+    className="btn btn-secondary"
+>
+    Download Without Price
+</button>
                                                     </div>
                                           </div>
 
@@ -284,6 +304,8 @@ else if(z === 3) cc= 'Infant';
 
                                 
                               </table>
+                              {showPrice && (
+    <>
                               <h5>TOTAL INVOICE AMOUNT</h5>
                               <div className="row">
                                       
@@ -331,8 +353,11 @@ else if(z === 3) cc= 'Infant';
                                           +parseFloat(serviceprice)-parseFloat(discount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
                                           
                                         </div>
-                                      </div>
+                                 </div>
+                                        </>
+                                  )}
                             </div>
+                            
                           </div>
                   
                   

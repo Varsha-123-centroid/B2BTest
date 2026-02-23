@@ -91,7 +91,7 @@ function Navbar() {
 								 <br />
                                  <span className="avalpointsTxt">
                                     <span className="avlCreditTxt">Available Balance :</span>
-                                    <span className="currencyTxt"> ₹ {balance}</span>
+                                    <span className="currencyTxt"> {parseFloat(balance).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</span>
                                 </span>
                               </div>
 							</div>
