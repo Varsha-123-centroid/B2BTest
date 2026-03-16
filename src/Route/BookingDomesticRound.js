@@ -1,681 +1,525 @@
-import React,{ useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from './Footer';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment/moment';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import Style from './Style';
-const BookingDomesticRound = () => {
-    const location = useLocation();
-    const response = location.state?.responsebook;
-    const responsereturn = location.state?.responsebookreturn;
-    //console.log(response);
-    //console.log(responsereturn);
-    const navigate = useNavigate();
-    const [value, setValue] = useState('');
-    const [branchData, setBranchData] = useState('');
-    const [dataa,setDataa] = useState(response.Response.Response);
-    const [farevl,setFarevl] = useState(response.Response.Response.FlightItinerary.Fare);
-    const [datas,setDatas] = useState(response.Response.Response.FlightItinerary.Passenger);
-    const [segm,setSegm] = useState(response.Response.Response.FlightItinerary.Segments[0]);
-    const [fare,setFare] = useState(response.Response.Response.FlightItinerary.FareRules);
-    const len=response.Response.Response.FlightItinerary.Segments.length;
-    const [lsegm,lsetSegm] = useState(response.Response.Response.FlightItinerary.Segments[len-1]);
 
-    const [dataa1,setDataa1] = useState(responsereturn.Response.Response);
-    const [farevl1,setFarevl1] = useState(responsereturn.Response.Response.FlightItinerary.Fare);
-    const [datas1,setDatas1] = useState(responsereturn.Response.Response.FlightItinerary.Passenger);
-    const [segm1,setSegm1] = useState(responsereturn.Response.Response.FlightItinerary.Segments[0]);
-    const [fare1,setFare1] = useState(responsereturn.Response.Response.FlightItinerary.FareRules);
-    const len1=responsereturn.Response.Response.FlightItinerary.Segments.length;
-    const [lsegm1,lsetSegm1] = useState(responsereturn.Response.Response.FlightItinerary.Segments[len1-1]);
-   
-    const serviceprice=responsereturn.price;
-    const discount=responsereturn.discount;
-    const markupp=parseFloat(response.expoPrice)+parseFloat(response.agentPrice)+parseFloat(response.subagentPrice);
-  
-    const [markupamount, setMarkupamount] = useState(markupp);
+const ticketStyles = `
+  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
 
-    const servicepriceib=response.price;
-    const discountib=response.discount;
-    const markuppib=parseFloat(responsereturn.expoPrice)+parseFloat(responsereturn.agentPrice)+parseFloat(responsereturn.subagentPrice);
-  
-    const [markupamountib, setMarkupamountib] = useState(markuppib);
-    const [showPrice, setShowPrice] = useState(true);
-    const head1="PDF heading1";
-    const head2="PDF heading2";
-    const branchId =sessionStorage.getItem('branchId'); 
-    useEffect(() => {
-  
-      const storedValue = localStorage.getItem('tokenValue');
-     // const markupamount1=localStorage.getItem('markupamount');
-  if (storedValue) {
-    setValue(storedValue);
+  .ticket-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 24px 28px;
+    font-family: 'Source Sans 3', Arial, sans-serif;
+    font-size: 13px;
+    color: #222;
+    box-sizing: border-box;
   }
-  // if (markupamount1) {
-  //   setMarkupamount(markupamount1);
-  //   setMarkupamountib(markupamount1);
-  // }
-},[]) ;
-    useEffect(() => {   
-      const fetchAgentInfo = async () => {
-       try {
-          const datt={
-              "branchId": branchId
-              }
-         const response = await axios.post('https://b2b.travelxpo.in/api/getUserData',datt);	 
-      console.log("mmmmmmmm..."+JSON.stringify(response.data));
-        
-        setBranchData(response);
-          } catch (error) {
-              if (axios.isAxiosError(error)) {
-                  console.error('Axios Error:', error.response.data);
-                } else {
-                  console.error('Non-Axios Error:', error);
-                }
-              }
-         }
-         fetchAgentInfo();   
-  },[branchId]) ;
+  .ticket-wrapper *, .ticket-wrapper *::before, .ticket-wrapper *::after {
+    box-sizing: border-box;
+  }
+  .ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .ticket-agency-info { font-size: 12px; line-height: 1.6; }
+  .ticket-agency-info strong { font-size: 13px; }
+  .ticket-title-block { text-align: center; flex: 1; }
+  .ticket-title-block h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #222;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+  .ticket-status-pnr { text-align: right; }
+  .ticket-badge-confirmed {
+    display: inline-block;
+    border: 2px solid #2e7d32;
+    color: #2e7d32;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 3px 14px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+  .ticket-pnr-line { font-size: 14px; font-weight: 700; color: #d4860a; }
+  .ticket-issued-line { font-size: 11.5px; color: #555; }
+
+  .ticket-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  .ticket-table th, .ticket-table td { border: 1px solid #c0c0c0; padding: 7px 10px; font-size: 12.5px; }
+  .ticket-table thead th { background: #d9e4f0; font-weight: 700; color: #1a1a1a; font-size: 12.5px; }
+  .ticket-section-label { background: #eef3fa; font-weight: 600; font-size: 12.5px; color: #333; }
+
+  .ticket-flight-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
+  .ticket-airline-badge {
+    width: 34px; height: 34px;
+    background: #1a3f6f;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 900; font-size: 11px;
+    flex-shrink: 0; text-align: center; line-height: 1.1;
+  }
+  .ticket-flight-sub { font-size: 11.5px; color: #555; font-weight: 400; }
+  .ticket-airport-code { font-size: 18px; font-weight: 700; }
+  .ticket-airport-name { font-size: 11px; color: #555; }
+  .ticket-terminal-time { font-size: 11.5px; color: #333; }
+  .ticket-dep-time { font-weight: 700; color: #111; }
+  .ticket-arrow-cell { text-align: center; color: #e87722; font-size: 20px; vertical-align: middle; }
+
+  .ticket-anc-header { background: #d9e4f0; font-weight: 700; }
+  .ticket-anc-passenger { font-weight: 700; background: #f5f5f5; }
+  .ticket-anc-label { font-weight: 700; font-size: 12px; }
+  .ticket-baggage-detail { font-size: 12px; line-height: 1.7; }
+
+  .ticket-bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .ticket-bottom-section.no-price {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ticket-important-box { font-size: 12px; line-height: 1.7; }
+  .ticket-important-box .red-bold { color: #c00; font-weight: 700; }
+  .ticket-important-box .bold { font-weight: 700; }
+  .ticket-general-info { font-size: 11.5px; }
+  .ticket-general-info strong { display: block; margin-bottom: 6px; font-size: 12px; text-decoration: underline; }
+  .ticket-general-info ul { padding-left: 16px; line-height: 1.8; margin: 0; }
+  .ticket-payment-box { font-size: 12.5px; }
+  .ticket-payment-box table { width: 100%; border-collapse: collapse; }
+  .ticket-payment-box td { border: 1px solid #ccc; padding: 5px 10px; }
+  .ticket-pay-header { background: #d9e4f0; font-weight: 700; font-size: 13px; padding: 6px 10px; border: 1px solid #ccc; }
+  .ticket-total-row td { font-weight: 700; background: #f5f5f5; }
+`;
+
+// ── Barcode SVG placeholder ──────────────────────────────────
+const BarcodeSVG = () => (
+  <svg width="130" height="48" viewBox="0 0 130 48" xmlns="http://www.w3.org/2000/svg">
+    {[0,4,7,12,16,19,23,26,31,34,38,41,46,50,53,57,60,65,69,72,76,79,84,88,91,95,98,103,107,110,114,119,122,126].map((x, i) => (
+      <rect key={i} x={x} y="0" width={[2,1,3,2,1,2,1,3,1,2,1,3,2,1,2,1,3,2,1,2,1,3,2,1,2,1,3,2,1,2,3,1,2,2][i]} height="48" fill="#000" />
+    ))}
+  </svg>
+);
+
+// ── Reusable single-flight ticket block ──────────────────────
+const TicketBlock = ({
+  id,
+  branchData,
+  dataa,
+  datas,
+  segm,
+  lsegm,
+  segments,
+  farevl,
+  serviceprice,
+  discount,
+  markupp,
+  showPrice,
+  flightLabel,
+}) => {
+  const paxType = (z) => {
+    if (z === 1) return 'Adult';
+    if (z === 2) return 'Child';
+    if (z === 3) return 'Infant';
+    return '';
+  };
+
+  const fmt = (dt) => moment(dt).format('ddd, DD-MMM-YYYY HH:mm');
+  const toINR = (v) => parseFloat(v || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
+
+  const totalAmount = parseFloat(farevl?.PublishedFare || 0)
+    + parseFloat(markupp || 0)
+    + parseFloat(farevl?.TotalBaggageCharges || 0)
+    + parseFloat(farevl?.TotalMealCharges || 0)
+    + parseFloat(serviceprice || 0)
+    - parseFloat(discount || 0);
+
+  return (
+    <div id={id} className="ticket-wrapper" style={{ marginBottom: 32 }}>
+
+      {/* ── HEADER ── */}
+      <div className="ticket-header">
+        <div className="ticket-agency-info">
+          <img src="assets/images/SIGNATORY01.png" height="100" alt="TravelXpo" style={{ maxWidth: 160 }} /><br />
+          {branchData?.data?.address || '1st floor travelxpo adarsh arcade'}<br />
+          {branchData?.data?.poc_mobile && <>Contact No: {branchData.data.poc_mobile}</>}
+        </div>
+        <div className="ticket-title-block">
+          <h1>E-Ticket</h1>
+          {branchData?.data?.company_name && (
+            <div style={{ fontSize: 12, color: '#555', marginTop: 4 }}>
+              {branchData.data.company_name}<br />
+              {branchData.data.company_email}
+            </div>
+          )}
+        </div>
+        <div className="ticket-status-pnr">
+          <div className="ticket-badge-confirmed">Confirmed</div><br />
+          <div className="ticket-pnr-line">PNR: {dataa.FlightItinerary.PNR}</div>
+          <div className="ticket-issued-line">
+            Issued Date: {moment().format('ddd, DD-MMM-YYYY HH:mm')}
+          </div>
+        </div>
+      </div>
+
+      {/* ── PASSENGER TABLE ── */}
+      <table className="ticket-table">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Passenger Type</th>
+            <th>Ticket No.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {datas.map((p, i) => (
+            <tr key={i}>
+              <td>{p?.Title} {p?.FirstName}</td>
+              <td>{p?.LastName}</td>
+              <td>{paxType(p?.PaxType)}</td>
+              <td>{p?.Ticket?.TicketId ? `${p.Ticket.TicketId}-${p.Ticket.TicketNumber}` : '––'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── FLIGHT DETAILS TABLE ── */}
+      <table className="ticket-table">
+        <thead>
+          <tr>
+            <th>Flight Details</th>
+            <th>Departure</th>
+            <th style={{ width: 40 }}></th>
+            <th style={{ textAlign: 'right' }}>Arrival</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colSpan="4" className="ticket-section-label">{flightLabel}</td>
+          </tr>
+          {segments.map((seg, idx) => (
+            <tr key={idx}>
+              <td>
+                <div className="ticket-flight-logo">
+                  <div className="ticket-airline-badge">{seg.Airline?.AirlineCode}</div>
+                  <div>
+                    {seg.Airline?.AirlineName} {seg.Airline?.AirlineCode}-{seg.Airline?.FlightNumber}<br />
+                    <span className="ticket-flight-sub">Economy, Class {seg.Airline?.FareClass || '–'}</span><br />
+                    <span className="ticket-flight-sub">Duration: {Math.floor((seg.Duration || 0) / 60)}h {(seg.Duration || 0) % 60}m</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div className="ticket-airport-code">{seg.Origin?.Airport?.AirportCode}</div>
+                <div className="ticket-airport-name">({seg.Origin?.Airport?.AirportName}, {seg.Origin?.Airport?.CityName})</div>
+                <div className="ticket-terminal-time">Terminal: {seg.Origin?.Airport?.Terminal || '–'}</div>
+                <div className="ticket-dep-time">{fmt(seg.Origin?.DepTime)}</div>
+              </td>
+              <td className="ticket-arrow-cell">✈</td>
+              <td style={{ textAlign: 'right' }}>
+                <div className="ticket-airport-code">{seg.Destination?.Airport?.AirportCode}</div>
+                <div className="ticket-airport-name">({seg.Destination?.Airport?.AirportName}, {seg.Destination?.Airport?.CityName})</div>
+                <div className="ticket-terminal-time">Terminal: {seg.Destination?.Airport?.Terminal || '–'}</div>
+                <div className="ticket-dep-time">{fmt(seg.Destination?.ArrTime)}</div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── ANCILLARY TABLE ── */}
+      <table className="ticket-table">
+        <thead>
+          <tr>
+            <th colSpan="5" className="ticket-anc-header">Ancillary Details</th>
+            <th className="ticket-anc-header">Barcode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colSpan="6" className="ticket-section-label">{flightLabel}</td></tr>
+          {datas.map((p, i) => (
+            <React.Fragment key={i}>
+              <tr>
+                <td colSpan="6" className="ticket-anc-passenger">
+                  {p?.Title} {p?.FirstName} {p?.LastName}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ fontSize: 11, color: '#777', width: 90 }}>
+                  {segm.Origin?.Airport?.AirportCode} – {lsegm.Destination?.Airport?.AirportCode}<br />
+                  {segm.Airline?.AirlineCode} {segm.Airline?.FlightNumber}
+                </td>
+                <td>
+                  <div className="ticket-anc-label">🧳 Baggage</div>
+                  <div className="ticket-baggage-detail">
+                    Cabin: {segm.CabinBaggage || '7 Kg'}<br />
+                    Check-In: {segm.Baggage || '15 Kg'}<br />
+                    {p?.Baggage?.length > 0 ? `Extra: ${p.Baggage[0].Weight} Kg` : 'Excess: ––'}
+                  </div>
+                </td>
+                <td>
+                  <div className="ticket-anc-label">🪑 Seat</div>
+                  {p?.SeatPreference || '––'}
+                </td>
+                <td>
+                  <div className="ticket-anc-label">🍽 Meal</div>
+                  {p?.MealDynamic?.length > 0 ? p.MealDynamic[0].AirlineDescription : '––'}
+                </td>
+                <td>
+                  <div className="ticket-anc-label">⭐ Special Service</div>
+                  ––
+                </td>
+                <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                  <BarcodeSVG />
+                </td>
+              </tr>
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── BOTTOM SECTION: 3-col with price, 2-col without ── */}
+      <div className={`ticket-bottom-section${showPrice ? '' : ' no-price'}`}>
+
+        {/* Left: Important */}
+        <div className="ticket-important-box">
+          <p><span className="red-bold">Important:</span> This is an Electronic Ticket. Passengers must carry a valid photo ID for check-in at the airport.</p>
+          <br />
+          <p><span className="bold">Baggage dimensions may vary depending on airline policies. Please confirm with the airline in advance.</span></p>
+          <br />
+          <p>Carriage and other services provided by the carrier are subject to conditions of carriage. Passengers travelling on a tourist visa must show a return ticket at check-in.</p>
+          <br />
+          <p><span className="bold">Note:</span> We recommend purchasing travel insurance. Please contact your travel advisor.</p>
+        </div>
+
+        {/* Centre: General Information */}
+        <div className="ticket-general-info">
+          <strong>General Information :</strong>
+          <ul>
+            <li>Complete Check-In before departure. <strong>***Have a safe and pleasant journey***</strong></li>
+            <li>Carry a valid government-issued photo ID for airport check-in.</li>
+            <li>For international travel, ensure valid passport, visa (including transit visa if required), and immigration clearance.</li>
+            <li>Travel is subject to the airline's Conditions of Carriage.</li>
+            <li>Baggage dimensions may vary — confirm with airline in advance.</li>
+            <li>Report 2 hours before departure. Check-in closes 1 hour before departure.</li>
+          </ul>
+        </div>
+
+        {/* Right: Payment — only rendered when showPrice is true */}
+        {showPrice && (
+          <div className="ticket-payment-box">
+            <table>
+              <tbody>
+                <tr><td colSpan="2" className="ticket-pay-header">Payment Details</td></tr>
+                <tr>
+                  <td>Fare (incl. markup):</td>
+                  <td style={{ textAlign: 'right' }}>{toINR(parseFloat(farevl?.PublishedFare || 0) + parseFloat(markupp || 0))}</td>
+                </tr>
+                <tr>
+                  <td>Transaction Fee:</td>
+                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.TransactionFee)}</td>
+                </tr>
+                <tr>
+                  <td>Other Charges:</td>
+                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.OtherCharges)}</td>
+                </tr>
+                <tr>
+                  <td>Baggage Charges:</td>
+                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.TotalBaggageCharges)}</td>
+                </tr>
+                <tr>
+                  <td>Meal Charges:</td>
+                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.TotalMealCharges)}</td>
+                </tr>
+                <tr>
+                  <td>Service Charge:</td>
+                  <td style={{ textAlign: 'right' }}>{toINR(serviceprice)}</td>
+                </tr>
+                <tr>
+                  <td>Discount:</td>
+                  <td style={{ textAlign: 'right' }}>- {toINR(discount)}</td>
+                </tr>
+                <tr className="ticket-total-row">
+                  <td>Total Amount:</td>
+                  <td style={{ textAlign: 'right' }}>{toINR(totalAmount)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ── Main Component ────────────────────────────────────────────
+const BookingDomesticRound = () => {
+  const location = useLocation();
+  const response = location.state?.responsebook;
+  const responsereturn = location.state?.responsebookreturn;
+
+  const navigate = useNavigate();
+  const [value, setValue] = useState('');
+  const [branchData, setBranchData] = useState('');
+  const [showPrice, setShowPrice] = useState(true);
+  const branchId = sessionStorage.getItem('branchId');
+
+  // ── Outbound flight data ──
+  const dataa = response.Response.Response;
+  const farevl = response.Response.Response.FlightItinerary.Fare;
+  const datas = response.Response.Response.FlightItinerary.Passenger;
+  const segments = response.Response.Response.FlightItinerary.Segments;
+  const segm = segments[0];
+  const lsegm = segments[segments.length - 1];
+  const serviceprice = response.price;
+  const discount = response.discount;
+  const markupp = parseFloat(response.expoPrice) + parseFloat(response.agentPrice) + parseFloat(response.subagentPrice);
+
+  // ── Return flight data ──
+  const dataa1 = responsereturn.Response.Response;
+  const farevl1 = responsereturn.Response.Response.FlightItinerary.Fare;
+  const datas1 = responsereturn.Response.Response.FlightItinerary.Passenger;
+  const segments1 = responsereturn.Response.Response.FlightItinerary.Segments;
+  const segm1 = segments1[0];
+  const lsegm1 = segments1[segments1.length - 1];
+  const serviceprice1 = responsereturn.price;
+  const discount1 = responsereturn.discount;
+  const markupp1 = parseFloat(responsereturn.expoPrice) + parseFloat(responsereturn.agentPrice) + parseFloat(responsereturn.subagentPrice);
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem('tokenValue');
+    if (storedValue) setValue(storedValue);
+  }, []);
+
+  useEffect(() => {
+    const fetchAgentInfo = async () => {
+      try {
+        const res = await axios.post('https://b2b.travelxpo.in/api/getUserData', { branchId });
+        setBranchData(res);
+      } catch (error) {
+        console.error('Error fetching branch data:', error);
+      }
+    };
+    fetchAgentInfo();
+  }, [branchId]);
 
   const pdfDownload = async (e, withPrice) => {
     e.preventDefault();
     setShowPrice(withPrice);
     await new Promise(resolve => setTimeout(resolve, 300));
+
     const pdfView1 = document.getElementById('pdf-view1');
     const pdfView2 = document.getElementById('pdf-view2');
-    // Use html2canvas to capture the content as an image
-      html2canvas(pdfView1).then((canvas1) => {
-      html2canvas(pdfView2).then((canvas2) => {
+
+    html2canvas(pdfView1, { scale: 2, useCORS: true }).then((canvas1) => {
+      html2canvas(pdfView2, { scale: 2, useCORS: true }).then((canvas2) => {
         const doc = new jsPDF('portrait', 'pt', 'A4');
-        doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 10, 10, doc.internal.pageSize.getWidth()-10, doc.internal.pageSize.getHeight()-10);
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 10, 10, pageW - 20, pageH - 20);
         doc.addPage();
-        doc.addImage(canvas2.toDataURL('image/png'), 'PNG', 10, 10, doc.internal.pageSize.getWidth()-10, doc.internal.pageSize.getHeight()-10);
-
-     // doc.save('TravelxpoTicket.pdf');
-      doc.save(withPrice ? 'Ticket-With-Price.pdf' : 'Ticket-No-Price.pdf');
+        doc.addImage(canvas2.toDataURL('image/png'), 'PNG', 10, 10, pageW - 20, pageH - 20);
+        doc.save(withPrice ? 'Ticket-With-Price.pdf' : 'Ticket-No-Price.pdf');
+      });
     });
-  });
   };
 
-
-  const concatByTwo = (value) => {
-    
-    return 'assets/images/AirlineLogo_25x25/'+value+'.gif';
-  };
-  const convertJ=(vl) =>{
-    let x="";
- if(vl === 1) x="Oneway";
- else if(vl === 2) x="RoundTrip";
- else if(vl === 3) x="Multiway";
- return x;
-  }
-  const stopCounts=(ln) =>{
-    let y="";
- if(ln === 1) y=" Non Stop";
- else if(ln === 2) y=" One Stop";
- else if(ln > 2) y=" 2 Plus Stops";
- return y;
-  }
-  const TotalDuration=(segment) =>{
-    if (!Array.isArray(segment)) {
-      throw new Error('Invalid segment format. Expecting an array.');
-    }
-    const totalDuration = segment.reduce((sum, flight) => {
-      // Ensure each flight has a Duration property
-      if (flight && flight.Duration && typeof flight.Duration === 'number') {
-        return sum + flight.Duration;
-      }
-
-      return sum;
-    }, 0);
-    let hrs=Math.floor(totalDuration / 60);
-    let mnts=totalDuration % 60;
-   return hrs+' h ' + mnts +' m ';
-  }
-  const paxType = (z) => {
-let cc= '';
-if(z === 1) cc= 'Adult';
-else if(z === 2) cc= 'Child';
-else if(z === 3) cc= 'Infant';
-    return cc;
-  }
-  const options = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  };
-
-
-   let markup = sessionStorage.getItem('Markup'); 
-
-   
-
-    return (
-      <div>
-<style>{Style}</style>
+  return (
+    <div>
+      <style>{ticketStyles}</style>
       <Navbar />
-      {/* <Sidebar /> */}
-      
-        <div className="page-content">
-            
-            <div class="row">
-                                                
-                                                <div class="col-lg-6">
-                                                </div>
-                                                    <div class="col-lg-1"  style={{marginTop:"-25px"}} >
-                                                    <Link to="/dashboard">
-                                                    <a href="javaScript:void(0);"> <h5> ◄◄ <i className="fa fa-home pt-4" aria-hidden="true"style={{color: "#333",size:"50px"}}></i> </h5></a>
-                                                    </Link>
-                                                    </div>
-                                                    <div class="col-lg-2" style={{marginTop:"-15px"}}>
-                                                    {/* <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
-                                                     */}
-                                                     <button 
-                                                      onClick={(e) => pdfDownload(e, true)} 
-                                                      className="btn btn-info me-2"
-                                                  >
-                                                      Download With Price
-                                                  </button>
-                                                    </div>
-                                                    <div class="col-lg-2" style={{marginTop:"-15px"}}>
-                                                    {/* <a href="javaScript:void(0);" onClick={pdfDownload} className="btn btn-info">Download PDF <i class="fa fa-download" aria-hidden="true"></i></a>
-                                                     */}
-                                                     <button 
-                                                        onClick={(e) => pdfDownload(e, false)} 
-                                                        className="btn btn-secondary"
-                                                    >
-                                                        Download Without Price
-                                                    </button>
-                                                    </div>
-                                          </div>
+      <div className="page-content">
 
-                
-                <div className="row" >
-                <div className="container">
-                  <div className="row">
-                    <div className="col-lg-1">
-                    </div>
-                      <div className="col-lg-10" id="pdf-view1">
-                        <div className="p-3">
-                          <div className="hedersection">
-                            <div className="row">
-                              <div className="col-lg-4">
-                                <img className="img-logo" src="assets/images/SIGNATORY01.png" alt="logo" style={{height:"100px"}} />
-                              </div>
-                              <div className="col-lg-8">
-                                <div className="text-end">
-                                  <p className="mb-0"><b>Flight Ticket</b> {convertJ(dataa.FlightItinerary.JourneyType)}</p>
-                                  <p className="mb-0">Booking ID :<b> {dataa.FlightItinerary.BookingId}</b> , (Booked on {new Date().toLocaleTimeString([], { year: 'numeric', month: 'long', day: 'numeric' })})</p>
-                                  <p className="mb-0">{branchData?.data?.poc_name}</p>
-                                  <h5 className="mb-0 pb-0">{branchData?.data?.company_name}</h5>
-                                  <p className="mb-0">{branchData?.data?.company_email} , {branchData?.data?.poc_mobile}</p>
-                                  <p className="mb-0">{branchData?.data?.address}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="topsection mb-3">
-                            <div className="row">
-                              <div className="col-lg-4">
-                                <h4>BOOKING DETAILS</h4>
-                              </div>
-                              <div className="col-lg-8">
-                                <div className="hrline"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row mb-2">
-                            <div className="col-lg-6">
-                            
-                              <h5>{dataa.FlightItinerary.Origin} - {dataa.FlightItinerary.Destination}</h5>
-                              <p>{moment(dataa.FlightItinerary.DepTime).format('DD/MM/YYYY HH:mm:ss')} - {stopCounts(len)}  -  {TotalDuration(response.Response.Response.FlightItinerary.Segments)} duration</p>
-                            </div>
-                            <div className="col-lg-3">
-                                <span className="pt-2"><i className="fa text-gary fa-suitcase" aria-hidden="true"></i></span><span className="me-2 ms-2">{segm.Baggage}*</span> <span>check-in</span>
-                            </div>
-                            <div className="col-lg-3">
-                                <span claclassNamess="pt-2"><i className="fa text-gary fa-suitcase" aria-hidden="true"></i></span><span className="me-2 ms-2">{segm.CabinBaggage}*</span> <span>cabin</span>
-                            </div>
-                          </div>
-                          
-                          <div className="row">
-                            <div className="col-lg-12">
-                              <table className="table table-bordered" style={{borderRadius: "23px"}}>
-                                
-                                  <tr>
-                                    <td className="p-5" style={{width:"30%"}}>
-                                      <div className="d-flex">
-                                      <img src={concatByTwo(dataa.FlightItinerary.AirlineCode)} className="pt-3" style={{height:"50px",width:"auto",marginTop:"-20px"}}  />
-                                      <h5 className="ms-2">
-                                       {segm.Airline?.AirlineName} - {segm.Airline?.FlightNumber}</h5>
-                                        </div>
-                                      <div className="row mt-2 border-light">
-                                        <div className="col-lg-4 p-0"><span className="onepnr">PNR</span></div>
-                                        <div className="col-lg-8 p-0"><span className="twopnr">{dataa.FlightItinerary.PNR}</span></div>
-                                      </div>
-                                    </td>
-                                    <td className="p-3">
-                                      <div className="row">
-                                        <div className="col-lg-5 text-left">
-                                          <h5>{segm.Origin?.Airport?.CityName} - {segm.Destination?.Airport?.CityName} </h5>
-                                          <p>{moment(segm.Origin?.DepTime).format('DD/MM/YYYY HH:mm:ss')}</p>
-                                          
-                                          <hr />
-                                          <p>{segm.Origin?.Airport?.AirportName} - Terminal {segm.Origin?.Airport?.Terminal}</p>
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <div className="icontime ">
-                                            <span>---</span><span className="me-2 ms-2"><i className="fa fa-clock-o" aria-hidden="true"></i></span><span>---</span>
-                                            <br />
-                                            <p>{TotalDuration(response.Response.Response.FlightItinerary.Segments)} </p>
-                                          </div>
-                                        </div>
-                                        <div className="col-lg-5 text-end">
-                                          <h5>{lsegm.Origin?.Airport?.CityName} - {lsegm.Destination?.Airport?.CityName}</h5>
-                                          <p>{moment(lsegm.Destination.DepTime).format('DD/MM/YYYY HH:mm:ss')}</p>
-                                          
-                                          <hr />
-                                          <p>{lsegm.Destination?.Airport?.AirportName} - Terminal {lsegm.Destination?.Airport?.Terminal}</p>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  
-                                  {
-                                  datas.map((data,k) => (
-                                                  
-                                                  <>
-                                  <tr className="p-3">
-                                    <td colspan="2">
-                                    <div className="row">
-                                        <div className="col-lg-3 text-left">
-                                          <p>TRAVELLERS</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{data?.Title}.{data?.FirstName} {data?.LastName}</strong> - {paxType(data?.PaxType)}</h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <p>BAGGAGE</p>
-                                          {data?.Baggage && data.Baggage.length > 0 && (
-                                            <p>{data.Baggage[0].Weight}KG (Additinal)</p>
-                                          )}
-                                        </div>
-                                        <div className="col-lg-5">
-                                          <p>MEAL</p>
-                                          {data?.MealDynamic && data.MealDynamic.length > 0 && (
-                                            <p>{data.MealDynamic[0].AirlineDescription}</p>
-                                          )}
-                                        </div>
-                                        <div className="col-lg-2 text-end">
-                                          <p>E-TICKET No</p>
-                                          <h5  style={{fontSize:"14px",textAlign:"right",}}>{data?.Ticket?.TicketId}-{data?.Ticket?.TicketNumber}</h5>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
+        {/* ── Action bar ── */}
+        <div className="row mb-3">
+          <div className="col-lg-6"></div>
+          <div className="col-lg-1" style={{ marginTop: '-25px' }}>
+            <Link to="/dashboard">
+              <h5>◄◄ <i className="fa fa-home pt-4" aria-hidden="true" style={{ color: '#333' }}></i></h5>
+            </Link>
+          </div>
+          <div className="col-lg-2" style={{ marginTop: '-15px' }}>
+            <button onClick={(e) => pdfDownload(e, true)} className="btn btn-info me-2">
+              Download With Price
+            </button>
+          </div>
+          <div className="col-lg-2" style={{ marginTop: '-15px' }}>
+            <button onClick={(e) => pdfDownload(e, false)} className="btn btn-secondary">
+              Download Without Price
+            </button>
+          </div>
+        </div>
 
-                                  </>
-                                        ))}
-
-
-                                
-                              </table>
-                              {showPrice && (
-                                <>
-                              <h5>TOTAL INVOICE AMOUNT</h5>
-                              <div className="row">
-                                      <div className="col-lg-2 text-left">
-                                          <p>TicketFare + Tax</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{(parseFloat(farevl?.PublishedFare)+parseFloat(markupamount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                        </div>
-                                     
-                                        <div className="col-lg-2">
-                                          <p>TransactionFee</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.TransactionFee || 0).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <p>OtherCharges</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.OtherCharges).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Baggage</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.TotalBaggageCharges).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Meal</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl?.TotalMealCharges).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <p>Service Charge</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(serviceprice).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Discount</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(discount).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Total</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl?.PublishedFare)
-                                          +parseFloat(markupp)
-                                          +parseFloat(farevl?.TotalBaggageCharges)
-                                          +parseFloat(farevl?.TotalMealCharges)
-                                          +parseFloat(serviceprice)-parseFloat(discount)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                      </div>
-                                        </>
-                                    )}
-                            </div>
-                          </div>
-                  
-                  
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <div className="info p-3">
-                        <h5>IMPORTANT INFORMATION</h5>
-                        <ul style={{lineHeight: "20px"}}>
-                          <li style={{textAlign:"justify"}}><b>Check-in Time :</b> Passenger to report 2 hours before departure. Check-in procedure and baggage
-                          drop will close 1 hour before departure.</li>
-                          <li  style={{textAlign:"justify"}}><b>DGCA passenger charter :</b> Please refer to passenger charter by clicking <a href="#">Here</a></li>
-                          <li  style={{textAlign:"justify"}}><b>Transit Visa Requirement :</b> Please note that travellers are solely responsible for ensuring their
-                          eligibility to enter the destination or transit countries. We accept no liability in this regard. Please
-                          check the travel rules of all regulatory websites before booking and commencing travel.</li>
-                          <li  style={{textAlign:"justify"}}><b> Passengers travelling to Thailand, please note :</b> Who can travel? Travel is open for all visa holders.
-                          Please check all the detailed guidelines for both your chosen destination and airline by visiting our
-                          guidelines page here -<a href="#">Know More</a></li>
-                          <li  style={{textAlign:"justify"}}><b> Please Note :</b>  Passengers travelling on a tourist visa are not allowed to travel with one-way ticket.
-                          They must show a return ticket else they may not be allowed to board the flight.You must adhere to
-                          baggage dimension (length, breadth, width etc.) guidelines of the airline, else you may have to pay
-                          additional charges or be even denied boarding. Kindly refer to the airline website for more details.</li>
-                          <li  style={{textAlign:"justify"}}><b> Visa Requirements :</b> Passport should be valid for minimum 6 months from the date of travel.All
-                          travellers must present hard copies of their foreign visa (soft copies won’t be accepted) at the
-                          immigration counters during departure.MakeMyTrip holds no liability with respect to visa information.
-                          To get further details on visa and passport requirements, before booking your travel, <a href="#">click here </a></li>
-                          <li  style={{textAlign:"justify"}}><b> A Note on Guidelines :</b> Please note that travellers are solely responsible for ensuring their eligibility to
-                          enter the destination or transit countries. We accept no liability in this regard. Please check the travel
-                          rules of all regulatory websites before booking and commencing travel.</li>
-                          <li  style={{textAlign:"justify"}}><b>Valid ID proof needed :</b> Please carry a valid Passport and Visa (mandatory for international travel).
-                          Passport should have at least 6 months of validity at the time of travel</li>
-                          <li  style={{textAlign:"justify"}}><b>Ensure Compliance with Visa/Transit Visa Requirements :</b>Please ensure you verify and adhere to
-                          the visa and transit visa requirements based on your nationality, passport type, and destination
-                          country. MakeMyTrip holds our customers' best interests at heart; however, we cannot be held liable
-                          for any issues that may arise from a failure to seek and follow the necessary visa information. For the
-                          most reliable and up-to-date visa requirements, check reputable regulatory websites like or with IATA
-                          the airline</li>
-                        </ul>	
-                      </div>
-                    </div>
-                  </div>
-              
-                </div>
+        {/* ── Outbound Ticket ── */}
+        <div className="row">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-1"></div>
+              <div className="col-lg-10">
+                <TicketBlock
+                  id="pdf-view1"
+                  branchData={branchData}
+                  dataa={dataa}
+                  datas={datas}
+                  segm={segm}
+                  lsegm={lsegm}
+                  segments={segments}
+                  farevl={farevl}
+                  serviceprice={serviceprice}
+                  discount={discount}
+                  markupp={markupp}
+                  showPrice={showPrice}
+                  flightLabel="Departure Flight"
+                />
               </div>
-              <div className="col-lg-1">
-              </div>
+              <div className="col-lg-1"></div>
             </div>
-          </div>  
+          </div>
+        </div>
 
-
-                </div>
-                  
-                <div className="row">
-                <div className="container">
-                  <div className="row">
-                    <div className="col-lg-1">
-                    </div>
-                      <div className="col-lg-10" id="pdf-view2">
-                        <div className="p-3">
-                          <div className="hedersection">
-                            <div className="row">
-                              <div className="col-lg-4">
-                                <img className="img-logo" src="assets/images/SIGNATORY01.png" alt="logo" style={{height:"100px"}} />
-                              </div>
-                              <div className="col-lg-8">
-                                <div className="text-end">
-                                  <p className="mb-0"><b>Flight Ticket</b> {convertJ(dataa1.FlightItinerary.JourneyType)}</p>
-                                  <p className="mb-0">Booking ID :<b> {dataa1.FlightItinerary.BookingId}</b> , (Booked on {new Date().toLocaleTimeString([], { year: 'numeric', month: 'long', day: 'numeric' })})</p>
-                                  <p className="mb-0">{branchData?.data?.poc_name}</p>
-                                  <h5 className="mb-0 pb-0">{branchData?.data?.company_name}</h5>
-                                  <p className="mb-0">{branchData?.data?.company_email} , {branchData?.data?.poc_mobile}</p>
-                                  <p className="mb-0">{branchData?.data?.address}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="topsection mb-3">
-                            <div className="row">
-                              <div className="col-lg-4">
-                                <h4>BOOKING DETAILS</h4>
-                              </div>
-                              <div className="col-lg-8">
-                                <div className="hrline"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row mb-2">
-                            <div className="col-lg-6">
-                            
-                              <h5>{dataa1.FlightItinerary.Origin} - {dataa1.FlightItinerary.Destination}</h5>
-                              <p>{moment(dataa1.FlightItinerary.DepTime).format('DD/MM/YYYY HH:mm:ss')} - {stopCounts(len1)}  -  {TotalDuration(responsereturn.Response.Response.FlightItinerary.Segments)} duration</p>
-                            </div>
-                            <div className="col-lg-3">
-                                <span className="pt-2"><i className="fa text-gary fa-suitcase" aria-hidden="true"></i></span><span className="me-2 ms-2">{segm1.Baggage}*</span> <span>check-in</span>
-                            </div>
-                            <div className="col-lg-3">
-                                <span claclassNamess="pt-2"><i className="fa text-gary fa-suitcase" aria-hidden="true"></i></span><span className="me-2 ms-2">{segm1.CabinBaggage}*</span> <span>cabin</span>
-                            </div>
-                          </div>
-                          
-                          <div className="row">
-                            <div className="col-lg-12">
-                              <table className="table table-bordered" style={{borderRadius: "23px"}}>
-                                
-                                  <tr>
-                                    <td className="p-5" style={{width:"30%"}}>
-                                      <div className="d-flex">
-                                      <img src={concatByTwo(dataa1.FlightItinerary.AirlineCode)} className="pt-3" style={{height:"50px",width:"auto",marginTop:"-20px"}}  />
-                                      <h5 className="ms-2">
-                                       {segm1.Airline?.AirlineName} - {segm1.Airline?.FlightNumber}</h5>
-                                        </div>
-                                      <div className="row mt-2 border-light">
-                                        <div className="col-lg-4 p-0"><span className="onepnr">PNR</span></div>
-                                        <div className="col-lg-8 p-0"><span className="twopnr">{dataa1.FlightItinerary.PNR}</span></div>
-                                      </div>
-                                    </td>
-                                    <td className="p-3">
-                                      <div className="row">
-                                        <div className="col-lg-5 text-left">
-                                          <h5>{segm1.Origin?.Airport?.CityName} - {segm1.Destination?.Airport?.CityName} </h5>
-                                          <p>{moment(segm1.Origin?.DepTime).format('DD/MM/YYYY HH:mm:ss')}</p>
-                                          
-                                          <hr />
-                                          <p>{segm1.Origin?.Airport?.AirportName} - Terminal {segm1.Origin?.Airport?.Terminal}</p>
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <div className="icontime ">
-                                            <span>---</span><span className="me-2 ms-2"><i className="fa fa-clock-o" aria-hidden="true"></i></span><span>---</span>
-                                            <br />
-                                            <p>{TotalDuration(responsereturn.Response.Response.FlightItinerary.Segments)} </p>
-                                          </div>
-                                        </div>
-                                        <div className="col-lg-5 text-end">
-                                          <h5>{lsegm1.Origin?.Airport?.CityName} - {lsegm1.Destination?.Airport?.CityName}</h5>
-                                          <p>{moment(lsegm1.Destination?.DepTime).format('DD/MM/YYYY HH:mm:ss')}</p>
-                                          
-                                          <hr />
-                                          <p>{lsegm1.Destination?.Airport?.AirportName} - Terminal {lsegm1.Destination?.Airport?.Terminal}</p>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  
-                                  {
-                                  datas1.map((data,k) => (
-                                                  
-                                                  <>
-                                  <tr className="p-3">
-                                    <td colspan="2">
-                                    <div className="row">
-                                        <div className="col-lg-3 text-left">
-                                          <p>TRAVELLERS</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{data?.Title}.{data?.FirstName} {data?.LastName}</strong> - {paxType(data?.PaxType)}</h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <p>BAGGAGE</p>
-                                          {data?.Baggage && data.Baggage.length > 0 && (
-                                            <p>{data.Baggage[0].Weight}KG (Additinal)</p>
-                                          )}
-                                        </div>
-                                        <div className="col-lg-5">
-                                          <p>MEAL</p>
-                                          {data?.MealDynamic && data.MealDynamic.length > 0 && (
-                                            <p>{data.MealDynamic[0].AirlineDescription}</p>
-                                          )}
-                                        </div>
-                                        <div className="col-lg-2 text-end">
-                                          <p>E-TICKET No</p>
-                                          <h5  style={{fontSize:"14px",textAlign:"right",}}>{data?.Ticket?.TicketId}-{data?.Ticket?.TicketNumber}</h5>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-
-                                  </>
-                                        ))}
-
-
-                                
-                              </table>
-                              {showPrice && (
-                               <>
-                              <h5>TOTAL INVOICE AMOUNT RETURN</h5>
-                              <div className="row">
-                                      <div className="col-lg-2 text-left">
-                                          <p>BaseFare</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl1?.PublishedFare)
-                                          +parseFloat(markuppib)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                        </div>
-                                      <div className="col-lg-1">
-                                          <p>Tax</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl1?.Tax).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <p>TransactionFee</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl1?.TransactionFee || 0).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-2">
-                                          <p>OtherCharges</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl1?.OtherCharges).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Baggage</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl1?.TotalBaggageCharges).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Meal</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(farevl1?.TotalMealCharges).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Service</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(servicepriceib).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Discount</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(discountib).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                        <div className="col-lg-1">
-                                          <p>Total</p>
-                                          <h5 style={{fontSize:"14px"}}><strong>{parseFloat(parseFloat(farevl1?.PublishedFare)
-                                          +parseFloat(markuppib)
-                                          +parseFloat(farevl1?.TotalBaggageCharges)
-                                          +parseFloat(farevl1?.TotalMealCharges)
-                                          +parseFloat(servicepriceib)-parseFloat(discountib)).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}</strong></h5>
-                                          
-                                        </div>
-                                      </div>
-                                        </>
-                                    )}
-                            </div>
-                          </div>
-                  
-                  
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <div className="info p-3">
-                        <h5>IMPORTANT INFORMATION</h5>
-                        <ul style={{lineHeight: "20px"}}>
-                          <li style={{textAlign:"justify"}}><b>Check-in Time :</b> Passenger to report 2 hours before departure. Check-in procedure and baggage
-                          drop will close 1 hour before departure.</li>
-                          <li  style={{textAlign:"justify"}}><b>DGCA passenger charter :</b> Please refer to passenger charter by clicking <a href="#">Here</a></li>
-                          <li  style={{textAlign:"justify"}}><b>Transit Visa Requirement :</b> Please note that travellers are solely responsible for ensuring their
-                          eligibility to enter the destination or transit countries. We accept no liability in this regard. Please
-                          check the travel rules of all regulatory websites before booking and commencing travel.</li>
-                          <li  style={{textAlign:"justify"}}><b> Passengers travelling to Thailand, please note :</b> Who can travel? Travel is open for all visa holders.
-                          Please check all the detailed guidelines for both your chosen destination and airline by visiting our
-                          guidelines page here -<a href="#">Know More</a></li>
-                          <li  style={{textAlign:"justify"}}><b> Please Note :</b>  Passengers travelling on a tourist visa are not allowed to travel with one-way ticket.
-                          They must show a return ticket else they may not be allowed to board the flight.You must adhere to
-                          baggage dimension (length, breadth, width etc.) guidelines of the airline, else you may have to pay
-                          additional charges or be even denied boarding. Kindly refer to the airline website for more details.</li>
-                          <li  style={{textAlign:"justify"}}><b> Visa Requirements :</b> Passport should be valid for minimum 6 months from the date of travel.All
-                          travellers must present hard copies of their foreign visa (soft copies won’t be accepted) at the
-                          immigration counters during departure.MakeMyTrip holds no liability with respect to visa information.
-                          To get further details on visa and passport requirements, before booking your travel, <a href="#">click here </a></li>
-                          <li  style={{textAlign:"justify"}}><b> A Note on Guidelines :</b> Please note that travellers are solely responsible for ensuring their eligibility to
-                          enter the destination or transit countries. We accept no liability in this regard. Please check the travel
-                          rules of all regulatory websites before booking and commencing travel.</li>
-                          <li  style={{textAlign:"justify"}}><b>Valid ID proof needed :</b> Please carry a valid Passport and Visa (mandatory for international travel).
-                          Passport should have at least 6 months of validity at the time of travel</li>
-                          <li  style={{textAlign:"justify"}}><b>Ensure Compliance with Visa/Transit Visa Requirements :</b>Please ensure you verify and adhere to
-                          the visa and transit visa requirements based on your nationality, passport type, and destination
-                          country. MakeMyTrip holds our customers' best interests at heart; however, we cannot be held liable
-                          for any issues that may arise from a failure to seek and follow the necessary visa information. For the
-                          most reliable and up-to-date visa requirements, check reputable regulatory websites like or with IATA
-                          the airline</li>
-                        </ul>	
-                      </div>
-                    </div>
-                  </div>
-              
-                </div>
+        {/* ── Return Ticket ── */}
+        <div className="row">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-1"></div>
+              <div className="col-lg-10">
+                <TicketBlock
+                  id="pdf-view2"
+                  branchData={branchData}
+                  dataa={dataa1}
+                  datas={datas1}
+                  segm={segm1}
+                  lsegm={lsegm1}
+                  segments={segments1}
+                  farevl={farevl1}
+                  serviceprice={serviceprice1}
+                  discount={discount1}
+                  markupp={markupp1}
+                  showPrice={showPrice}
+                  flightLabel="Return Flight"
+                />
               </div>
-              <div className="col-lg-1">
-              </div>
+              <div className="col-lg-1"></div>
             </div>
-          </div>  
+          </div>
+        </div>
 
-
-
-
-                </div>
-
-
-            </div> 
-   
-
-           
       </div>
-    )
-  }
+    </div>
+  );
+};
 
-export default BookingDomesticRound
+export default BookingDomesticRound;
