@@ -9,663 +9,102 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-const sample1={
+// ── Sample data for testing (remove ?? sample1 in production) ──
+const sample1 = {
+  "Response": {
+    "B2B2BStatus": false,
+    "Error": { "ErrorCode": 0, "ErrorMessage": "" },
+    "ResponseStatus": 1,
     "Response": {
-        "B2B2BStatus": false,
-        "Error": {
-            "ErrorCode": 0,
-            "ErrorMessage": ""
+      "PNR": "X97VFT",
+      "BookingId": 1906910,
+      "FlightItinerary": {
+        "JourneyType": 1,
+        "BookingId": 1906910,
+        "PNR": "X97VFT",
+        "Origin": "DEL",
+        "Destination": "BOM",
+        "AirlineCode": "QP",
+        "Fare": {
+          "Currency": "INR", "BaseFare": 1100, "Tax": 2594,
+          "PublishedFare": 8744, "OtherCharges": 0,
+          "TotalBaggageCharges": 5050, "TotalMealCharges": 0,
+          "TotalSeatCharges": 0, "TransactionFee": 0
         },
-        "ResponseStatus": 1,
-        "TraceId": "ac3aec1e-3b86-421e-b6b1-ddb08c25fbff",
-        "Response": {
-            "PNR": "X97VFT",
-            "BookingId": 1906910,
-            "SSRDenied": false,
-            "SSRMessage": null,
-            "Status": 1,
-            "IsPriceChanged": false,
-            "IsTimeChanged": false,
-            "FlightItinerary": {
-                "CommentDetails": null,
-                "IsAutoReissuanceAllowed": true,
-                "IssuancePcc": "QPDEL7005B_03",
-                "JourneyType": 1,
-                "SearchCombinationType": 2,
-                "TripIndicator": 1,
-                "BookingAllowedForRoamer": true,
-                "BookingId": 1906910,
-                "IsCouponAppilcable": true,
-                "IsManual": false,
-                "PNR": "X97VFT",
-                "AgentReferenceNo": "sonam1234567890",
-                "IsDomestic": true,
-                "ResultFareType": "RegularFare",
-                "Source": 109,
-                "Origin": "DEL",
-                "Destination": "BOM",
-                "AirlineCode": "QP",
-                "ValidatingAirlineCode": "QP",
-                "AirlineRemark": "",
-                "IsLCC": true,
-                "NonRefundable": false,
-                "FareType": "PUB",
-                "CreditNoteNo": null,
-                "Fare": {
-                    "Currency": "INR",
-                    "BaseFare": 1100,
-                    "Tax": 2594,
-                    "TaxBreakup": [
-                        {
-                            "key": "PSF",
-                            "value": 182.00
-                        },
-                        {
-                            "key": "UDF",
-                            "value": 122.00
-                        },
-                        {
-                            "key": "YR",
-                            "value": 150.00
-                        },
-                        {
-                            "key": "TotalTax",
-                            "value": 1094.00
-                        },
-                        {
-                            "key": "OtherTaxes",
-                            "value": 640.00
-                        },
-                        {
-                            "key": "K3",
-                            "value": 0
-                        }
-                    ],
-                    "YQTax": 0,
-                    "AdditionalTxnFeeOfrd": 0,
-                    "AdditionalTxnFeePub": 0,
-                    "PGCharge": 0,
-                    "OtherCharges": 0,
-                    "ChargeBU": [
-                        {
-                            "key": "TBOMARKUP",
-                            "value": 0
-                        },
-                        {
-                            "key": "GLOBALPROCUREMENTCHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "OTHERCHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "CONVENIENCECHARGE",
-                            "value": 0
-                        }
-                    ],
-                    "Discount": 0.00,
-                    "PublishedFare": 8744,
-                    "CommissionEarned": 0,
-                    "PLBEarned": 0,
-                    "IncentiveEarned": 0,
-                    "OfferedFare": 8744,
-                    "TdsOnCommission": 0,
-                    "TdsOnPLB": 0,
-                    "TdsOnIncentive": 0,
-                    "ServiceFee": 0,
-                    "TotalBaggageCharges": 5050,
-                    "TotalMealCharges": 0,
-                    "TotalSeatCharges": 0,
-                    "TotalSpecialServiceCharges": 0
-                },
-                "CreditNoteCreatedOn": null,
-                "Passenger": [
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135615,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1MANGALATH/SUNIL RAJ  X97VFT DELBOMQP 1128 238Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135615,
-                        "Title": "Mr",
-                        "FirstName": "Sunil Raj",
-                        "LastName": "Mangalath",
-                        "PaxType": 1,
-                        "DateOfBirth": "1987-11-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Thrissur",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 550,
-                            "Tax": 547,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "PSF",
-                                    "value": 91.00
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 61.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 547.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 320.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 3622,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 3622,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 2525,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879834877",
-                        "Email": "harsh123@tbtq.in",
-                        "IsLeadPax": true,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Baggage": [
-                            {
-                                "AirlineCode": "QP",
-                                "FlightNumber": "1128",
-                                "WayType": 2,
-                                "Code": "XC05",
-                                "Description": 2,
-                                "Weight": 5,
-                                "Currency": "INR",
-                                "Price": 2525,
-                                "Origin": "DEL",
-                                "Destination": "BOM",
-                                "Text": "5 kgs"
-                            }
-                        ],
-                        "MealDynamic": [
-                            {
-                                "AirlineCode": "QP",
-                                "FlightNumber": "1128",
-                                "WayType": 2,
-                                "Code": "NoMeal",
-                                "Description": 2,
-                                "AirlineDescription": null,
-                                "Quantity": 0,
-                                "Currency": "INR",
-                                "Price": 0,
-                                "Origin": "DEL",
-                                "Destination": "BOM"
-                            }
-                        ],
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193319,
-                            "TicketNumber": "X97VFT",
-                            "IssueDate": "2024-07-06T11:09:04",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg|5",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135616,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1KRISHAN/SUMANRAI     X97VFT DELBOMQP 1128 238Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135616,
-                        "Title": "Mstr",
-                        "FirstName": "sumanrai",
-                        "LastName": "Krishan",
-                        "PaxType": 2,
-                        "DateOfBirth": "2019-12-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Thrissur",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 550,
-                            "Tax": 547,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "PSF",
-                                    "value": 91.00
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 61.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 547.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 320.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 3622,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 3622,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 2525,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879834877",
-                        "Email": "harsh123@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Baggage": [
-                            {
-                                "AirlineCode": "QP",
-                                "FlightNumber": "1128",
-                                "WayType": 2,
-                                "Code": "XC05",
-                                "Description": 2,
-                                "Weight": 5,
-                                "Currency": "INR",
-                                "Price": 2525,
-                                "Origin": "DEL",
-                                "Destination": "BOM",
-                                "Text": "5 kgs"
-                            }
-                        ],
-                        "MealDynamic": [
-                            {
-                                "AirlineCode": "QP",
-                                "FlightNumber": "1128",
-                                "WayType": 2,
-                                "Code": "NoMeal",
-                                "Description": 2,
-                                "AirlineDescription": null,
-                                "Quantity": 0,
-                                "Currency": "INR",
-                                "Price": 0,
-                                "Origin": "DEL",
-                                "Destination": "BOM"
-                            }
-                        ],
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193320,
-                            "TicketNumber": "X97VFT",
-                            "IssueDate": "2024-07-06T11:09:04",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg|5",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135617,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1KRISHNA/SAM          X97VFT DELBOMQP 1128 238Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135617,
-                        "Title": "Mstr",
-                        "FirstName": "Sam",
-                        "LastName": "Krishna",
-                        "PaxType": 3,
-                        "DateOfBirth": "2023-12-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Thrissur",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 0,
-                            "Tax": 1500,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 1500,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 1500,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879834877",
-                        "Email": "harsh123@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193321,
-                            "TicketNumber": "X97VFT",
-                            "IssueDate": "2024-07-06T11:09:04",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "0 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    }
-                ],
-                "CancellationCharges": null,
-                "Segments": [
-                    {
-                        "Baggage": "15 Kg",
-                        "CabinBaggage": "7 Kg",
-                        "CabinClass": 2,
-                        "SupplierFareClass": null,
-                        "TripIndicator": 1,
-                        "SegmentIndicator": 1,
-                        "Airline": {
-                            "AirlineCode": "QP",
-                            "AirlineName": "Akasa Air",
-                            "FlightNumber": "1128",
-                            "FareClass": "BC",
-                            "OperatingCarrier": ""
-                        },
-                        "AirlinePNR": "",
-                        "Origin": {
-                            "Airport": {
-                                "AirportCode": "DEL",
-                                "AirportName": "Indira Gandhi Airport",
-                                "Terminal": "T2",
-                                "CityCode": "DEL",
-                                "CityName": "Delhi",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "DepTime": "2024-08-25T16:10:00"
-                        },
-                        "Destination": {
-                            "Airport": {
-                                "AirportCode": "BOM",
-                                "AirportName": "Chhatrapati Shivaji International Airport",
-                                "Terminal": "T1",
-                                "CityCode": "BOM",
-                                "CityName": "Mumbai",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "ArrTime": "2024-08-25T18:20:00"
-                        },
-                        "Duration": 130,
-                        "GroundTime": 0,
-                        "Mile": 0,
-                        "StopOver": false,
-                        "FlightInfoIndex": "",
-                        "StopPoint": "",
-                        "StopPointArrivalTime": "0001-01-01T00:00:00",
-                        "StopPointDepartureTime": "0001-01-01T00:00:00",
-                        "Craft": "7BH",
-                        "Remark": null,
-                        "IsETicketEligible": true,
-                        "FlightStatus": "Confirmed",
-                        "Status": "HK",
-                        "FareClassification": null
-                    }
-                ],
-                "FareRules": [
-                    {
-                        "Origin": "DEL",
-                        "Destination": "BOM",
-                        "Airline": "QP",
-                        "FareBasisCode": "B0O7RBIX",
-                        "FareRuleDetail": "<div style=\"font-size:12pt;font-family:&quot;Microsoft Sans Serif&quot;;\"><p style=\"font-size:8.5pt;margin:0;\">Test Rule </p></div><br /><br /><br/> <br/><ul><li>APART FROM AIRLINE CHARGES,GST+RAF+ APPLICABLE CHARGES IF ANY, WILL BE CHARGED.</li><li>MENTIONED FEE ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li></ul>",
-                        "FareRestriction": null
-                    }
-                ],
-                "MiniFareRules": [
-                    {
-                        "JourneyPoints": "",
-                        "Type": "",
-                        "From": "",
-                        "To": "",
-                        "Unit": "",
-                        "Details": ""
-                    }
-                ],
-                "PenaltyCharges": {},
-                "Status": 5,
-                "Invoice": [
-                    {
-                        "CreditNoteGSTIN": null,
-                        "GSTIN": null,
-                        "InvoiceCreatedOn": "2024-07-06T11:09:05",
-                        "InvoiceId": 8389,
-                        "InvoiceNo": "IW/2425/8389",
-                        "InvoiceAmount": 8744.00,
-                        "Remarks": "",
-                        "InvoiceStatus": 3
-                    }
-                ],
-                "InvoiceAmount": 8744.00,
-                "InvoiceNo": "IW/2425/8389",
-                "InvoiceStatus": 3,
-                "InvoiceCreatedOn": "2024-07-06T11:09:05",
-                "Remarks": "",
-                "IsWebCheckInAllowed": false
+        "Passenger": [
+          {
+            "BarcodeDetails": {
+              "Id": 3135615,
+              "Barcode": [{
+                "Index": 1, "Format": "PDF417",
+                "Content": "M1MANGALATH/SUNIL RAJ  X97VFT DELBOMQP 1128 238Y00000000 100",
+                "BarCodeInBase64": null, "JourneyWayType": 3
+              }]
             },
-            "TicketStatus": 1
-        }
+            "Title": "Mr", "FirstName": "Sunil Raj", "LastName": "Mangalath", "PaxType": 1,
+            "Fare": { "PublishedFare": 3622, "TotalBaggageCharges": 2525, "TotalMealCharges": 0 },
+            "Baggage": [{ "Weight": 5, "Text": "5 kgs", "FlightNumber": "1128" }],
+            "MealDynamic": [{ "Code": "NoMeal", "AirlineDescription": null, "FlightNumber": "1128" }],
+            "Ssr": [],
+            "Ticket": { "TicketId": 2193319, "TicketNumber": "X97VFT", "IssueDate": "2024-07-06T11:09:04", "Status": "OK" },
+            "GSTNumber": "",
+            "SegmentAdditionalInfo": [{ "FareBasis": "B0O7RBIX", "Baggage": "15 Kg|7 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }]
+          },
+          {
+            "BarcodeDetails": {
+              "Id": 3135616,
+              "Barcode": [{
+                "Index": 1, "Format": "PDF417",
+                "Content": "M1KRISHAN/SUMANRAI     X97VFT DELBOMQP 1128 238Y00000000 100",
+                "BarCodeInBase64": null, "JourneyWayType": 3
+              }]
+            },
+            "Title": "Mstr", "FirstName": "sumanrai", "LastName": "Krishan", "PaxType": 2,
+            "Fare": { "PublishedFare": 3622, "TotalBaggageCharges": 2525, "TotalMealCharges": 0 },
+            "Baggage": [{ "Weight": 5, "Text": "5 kgs", "FlightNumber": "1128" }],
+            "MealDynamic": [{ "Code": "NoMeal", "AirlineDescription": null, "FlightNumber": "1128" }],
+            "Ssr": [],
+            "Ticket": { "TicketId": 2193320, "TicketNumber": "X97VFT", "IssueDate": "2024-07-06T11:09:04", "Status": "OK" },
+            "GSTNumber": "",
+            "SegmentAdditionalInfo": [{ "FareBasis": "B0O7RBIX", "Baggage": "15 Kg|7 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }]
+          },
+          {
+            "BarcodeDetails": {
+              "Id": 3135617,
+              "Barcode": [{
+                "Index": 1, "Format": "PDF417",
+                "Content": "M1KRISHNA/SAM          X97VFT DELBOMQP 1128 238Y00000000 100",
+                "BarCodeInBase64": null, "JourneyWayType": 3
+              }]
+            },
+            "Title": "Mstr", "FirstName": "Sam", "LastName": "Krishna", "PaxType": 3,
+            "Fare": { "PublishedFare": 1500, "TotalBaggageCharges": 0, "TotalMealCharges": 0 },
+            "Baggage": [], "MealDynamic": [], "Ssr": [],
+            "Ticket": { "TicketId": 2193321, "TicketNumber": "X97VFT", "IssueDate": "2024-07-06T11:09:04", "Status": "OK" },
+            "GSTNumber": "",
+            "SegmentAdditionalInfo": [{ "FareBasis": "B0O7RBIX", "Baggage": "0 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }]
+          }
+        ],
+        "Segments": [{
+          "Baggage": "15 Kg", "CabinBaggage": "7 Kg",
+          "Airline": { "AirlineCode": "QP", "AirlineName": "Akasa Air", "FlightNumber": "1128", "FareClass": "BC" },
+          "Origin": {
+            "Airport": { "AirportCode": "DEL", "AirportName": "Indira Gandhi Airport", "Terminal": "T2", "CityName": "Delhi" },
+            "DepTime": "2024-08-25T16:10:00"
+          },
+          "Destination": {
+            "Airport": { "AirportCode": "BOM", "AirportName": "Chhatrapati Shivaji International Airport", "Terminal": "T1", "CityName": "Mumbai" },
+            "ArrTime": "2024-08-25T18:20:00"
+          },
+          "Duration": 130
+        }],
+        "FareRules": []
+      }
     }
+  }
 };
+
+// ── Styles ───────────────────────────────────────────────────
 const ticketStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
 
@@ -689,72 +128,36 @@ const ticketStyles = `
     align-items: flex-start;
     margin-bottom: 18px;
   }
-  .ticket-agency-info {
-    font-size: 12px;
-    line-height: 1.6;
-  }
+  .ticket-agency-info { font-size: 12px; line-height: 1.6; }
   .ticket-agency-info strong { font-size: 13px; }
   .ticket-title-block { text-align: center; flex: 1; }
   .ticket-title-block h1 {
-    font-size: 26px;
-    font-weight: 700;
-    color: #222;
-    letter-spacing: 1px;
-    margin: 0;
+    font-size: 26px; font-weight: 700; color: #222; letter-spacing: 1px; margin: 0;
   }
   .ticket-status-pnr { text-align: right; }
   .ticket-badge-confirmed {
     display: inline-block;
-    border: 2px solid #2e7d32;
-    color: #2e7d32;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 3px 14px;
-    border-radius: 4px;
-    margin-bottom: 6px;
+    border: 2px solid #2e7d32; color: #2e7d32;
+    font-weight: 700; font-size: 13px;
+    padding: 3px 14px; border-radius: 4px; margin-bottom: 6px;
   }
-  .ticket-pnr-line {
-    font-size: 14px;
-    font-weight: 700;
-    color: #d4860a;
-  }
+  .ticket-pnr-line { font-size: 14px; font-weight: 700; color: #d4860a; }
   .ticket-issued-line { font-size: 11.5px; color: #555; }
 
   .ticket-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
   .ticket-table th, .ticket-table td {
-    border: 1px solid #c0c0c0;
-    padding: 7px 10px;
-    font-size: 12.5px;
+    border: 1px solid #c0c0c0; padding: 7px 10px; font-size: 12.5px;
   }
   .ticket-table thead th {
-    background: #d9e4f0;
-    font-weight: 700;
-    color: #1a1a1a;
-    font-size: 12.5px;
+    background: #d9e4f0; font-weight: 700; color: #1a1a1a; font-size: 12.5px;
   }
-  .ticket-section-label {
-    background: #eef3fa;
-    font-weight: 600;
-    font-size: 12.5px;
-    color: #333;
-  }
+  .ticket-section-label { background: #eef3fa; font-weight: 600; font-size: 12.5px; color: #333; }
 
-  .ticket-flight-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 13px;
-  }
+  .ticket-flight-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
   .ticket-airline-badge {
-    width: 34px; height: 34px;
-    background: #1a3f6f;
-    border-radius: 6px;
+    width: 34px; height: 34px; background: #1a3f6f; border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-weight: 900; font-size: 11px;
-    flex-shrink: 0;
-    text-align: center;
-    line-height: 1.1;
+    color: #fff; font-weight: 900; font-size: 11px; flex-shrink: 0; text-align: center; line-height: 1.1;
   }
   .ticket-flight-sub { font-size: 11.5px; color: #555; font-weight: 400; }
   .ticket-airport-code { font-size: 18px; font-weight: 700; }
@@ -765,18 +168,37 @@ const ticketStyles = `
 
   .ticket-anc-header { background: #d9e4f0; font-weight: 700; }
   .ticket-anc-passenger { font-weight: 700; background: #f5f5f5; }
-  .ticket-anc-label { font-weight: 700; font-size: 12px; }
+
+  /* Fix ancillary table column widths so barcode doesn't stretch */
+  .ticket-anc-table { table-layout: fixed; width: 100%; }
+  .ticket-anc-col-route   { width: 80px; }
+  .ticket-anc-col-baggage { width: 160px; }
+  .ticket-anc-col-seat    { width: 70px; }
+  .ticket-anc-col-meal    { width: 70px; }
+  .ticket-anc-col-ssr     { width: 90px; }
+  .ticket-anc-col-barcode { width: 160px; }
+
+  .ticket-anc-label { display: block; font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .ticket-anc-value {
+    display: block;
+    font-size: 12px;
+    color: #333;
+  }
   .ticket-baggage-detail { font-size: 12px; line-height: 1.7; }
 
+  /* Barcode SVG — fixed size, never stretches */
+  .barcode-svg {
+    display: block;
+    width: 150px !important;
+    height: 50px !important;
+    margin: 0 auto;
+  }
+
   .ticket-bottom-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-top: 14px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 14px;
   }
-  .ticket-bottom-section.no-price {
-    grid-template-columns: 1fr 1fr;
-  }
+  .ticket-bottom-section.no-price { grid-template-columns: 1fr 1fr; }
+
   .ticket-important-box { font-size: 12px; line-height: 1.7; }
   .ticket-important-box .red-bold { color: #c00; font-weight: 700; }
   .ticket-important-box .bold { font-weight: 700; }
@@ -789,73 +211,157 @@ const ticketStyles = `
   .ticket-payment-box table { width: 100%; border-collapse: collapse; }
   .ticket-payment-box td { border: 1px solid #ccc; padding: 5px 10px; }
   .ticket-pay-header {
-    background: #d9e4f0;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 6px 10px;
-    border: 1px solid #ccc;
+    background: #d9e4f0; font-weight: 700; font-size: 13px; padding: 6px 10px; border: 1px solid #ccc;
   }
   .ticket-total-row td { font-weight: 700; background: #f5f5f5; }
-  .ticket-hr { border: none; border-top: 1px solid #ccc; margin: 12px 0; }
 `;
 
-// ── Barcode SVG placeholder ──────────────────────────────────
-const BarcodeSVG = () => (
-  <svg width="130" height="48" viewBox="0 0 130 48" xmlns="http://www.w3.org/2000/svg">
-    {[0,4,7,12,16,19,23,26,31,34,38,41,46,50,53,57,60,65,69,72,76,79,84,88,91,95,98,103,107,110,114,119,122,126].map((x, i) => (
-      <rect key={i} x={x} y="0" width={[2,1,3,2,1,2,1,3,1,2,1,3,2,1,2,1,3,2,1,2,1,3,2,1,2,1,3,2,1,2,3,1,2,2][i]} height="48" fill="#000" />
-    ))}
-  </svg>
-);
+// ── Code128B encoder — draws a proper barcode on a <canvas> ──
+// This avoids JsBarcode's SVG sizing issues entirely.
+const CODE128_PATTERNS = {
+  ' ':['11011001100'],A:['10011100110'],B:['10011001110'],C:['10111011000'],
+  D:['10111000110'],E:['10001101110'],F:['10111011100'],G:['11101101110'],
+  H:['11101001100'],I:['11100101100'],J:['11100100110'],K:['11101100100'],
+  L:['11100110100'],M:['11100110010'],N:['11011011000'],O:['11011000110'],
+  P:['11000110110'],Q:['10100011000'],R:['10001011000'],S:['10001000110'],
+  T:['10110001000'],U:['10001101000'],V:['10011001000'],W:['10000101110'],
+  X:['10000110110'],Y:['10001010000'],Z:['10100001000'],
+  '0':['11001100110'],'1':['11001001100'],'2':['11001001110'],'3':['11011001000'],
+  '4':['11001101000'],'5':['11001100100'],'6':['11011011110'],'7':['11011110110'],
+  '8':['11110110110'],'9':['10010110000'],
+  '-':['10010000110'],'.':['11101011110'],'/':['11110101110'],
+  '*':['10011110100'], // start B
+};
 
-// ── Reusable ticket block (one flight direction) ─────────────
+// Full Code128B table (values 0–106)
+const C128B = [
+  '11011001100','11001101100','11001100110','10010011000','10010001100',
+  '10001001100','10011001000','10001100100','10011000100','11001001000',
+  '11001000100','11000100100','10110011100','10011011100','10011001110',
+  '10111001100','10011101100','10011100110','11001110010','11001011100',
+  '11001001110','11011100100','11001110100','11101101110','11101001100',
+  '11100101100','11100100110','11101100100','11100110100','11100110010',
+  '11011011000','11011000110','11000110110','10100011000','10001011000',
+  '10001000110','10110001000','10001101000','10011001000','10000101110',
+  '10000110110','10001010000','10100001000','10001001110','10000100110',
+  '10001100010','11010001110','11000101110','11011101000','11011100010',
+  '11011101110','11101011000','11101000110','11100010110','11101101000',
+  '11101100010','11100011010','11101111010','11001000010','11110001010',
+  '10100110000','10100001100','10010110000','10010000110','10000101100',
+  '10000100110','10110010000','10110000100','10011010000','10011000010',
+  '10000110100','10000110010','11000010010','11001010000','11110111010',
+  '11000010100','10001111010','10100111100','10010111100','10010011110',
+  '10111100100','10011110100','10011110010','11110100100','11110010100',
+  '11110010010','11011011110','11011110110','11110110110','10101111000',
+  '10100011110','10001011110','10111101000','10111100010','11110101000',
+  '11110100010','10111011110','10111101110','11101011110','11110101110',
+  '11010000100','11010010000','11010011100','1100011101011',// stop
+];
+const C128_START_B = 104;
+const C128_STOP    = 106;
+
+function encodeCode128B(text) {
+  // Build array of symbol values
+  const vals = [C128_START_B];
+  let checksum = C128_START_B;
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i) - 32;
+    if (code < 0 || code > 94) continue; // skip unsupported chars
+    vals.push(code);
+    checksum += code * (i + 1);
+  }
+  vals.push(checksum % 103); // check symbol
+  vals.push(C128_STOP);
+  // Convert to bar pattern string
+  return vals.map(v => C128B[v] || '').join('');
+}
+
+function drawBarcode(canvas, text) {
+  if (!canvas || !text) return;
+  const bars   = encodeCode128B(text);
+  const barW   = 1.5;   // pixels per module
+  const height = 48;
+  const quietW = 10;    // quiet zone
+  const totalW = bars.length * barW + quietW * 2;
+  canvas.width  = totalW;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, totalW, height);
+  ctx.fillStyle = '#000';
+  let x = quietW;
+  for (let i = 0; i < bars.length; i++) {
+    if (bars[i] === '1') ctx.fillRect(x, 0, barW, height);
+    x += barW;
+  }
+}
+
+// ── BarcodeCell component ─────────────────────────────────────
+const BarcodeCell = ({ passenger }) => {
+  const barcodeObj = passenger?.BarcodeDetails?.Barcode?.[0];
+  const canvasRef  = React.useRef(null);
+  const content    = barcodeObj?.Content || '';
+
+  useEffect(() => {
+    if (barcodeObj?.BarCodeInBase64 || !content) return;
+    // Small delay so the canvas is in the DOM
+    const t = setTimeout(() => drawBarcode(canvasRef.current, content), 50);
+    return () => clearTimeout(t);
+  }, [content]);
+
+  if (!barcodeObj) {
+    return <span style={{ fontSize: 11, color: '#999' }}>––</span>;
+  }
+
+  // Priority 1: Base64 image from API
+  if (barcodeObj.BarCodeInBase64) {
+    return (
+      <img
+        src={`data:image/png;base64,${barcodeObj.BarCodeInBase64}`}
+        alt="Boarding barcode"
+        style={{ maxWidth: 150, maxHeight: 56, display: 'block', margin: '0 auto' }}
+      />
+    );
+  }
+
+  // Priority 2: canvas-drawn Code128B barcode from Content string
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 50 }}
+    />
+  );
+};
+
+// ── Reusable ticket block ─────────────────────────────────────
 const TicketBlock = ({
-  id,
-  branchData,
-  dataa,
-  datas,
-  segm,
-  lsegm,
-  segments,
-  farevl,
-  serviceprice,
-  discount,
-  markupp,
-  showPrice,
-  flightLabel,
-  isReturn,
+  id, branchData, dataa, datas, segm, lsegm,
+  segments, farevl, serviceprice, discount, markupp, showPrice, flightLabel,
 }) => {
-  const paxType = (z) => {
-    if (z === 1) return 'Adult';
-    if (z === 2) return 'Child';
-    if (z === 3) return 'Infant';
-    return '';
-  };
+  const paxType = (z) => z === 1 ? 'Adult' : z === 2 ? 'Child' : z === 3 ? 'Infant' : '';
+  const fmt     = (dt) => moment(dt).format('ddd, DD-MMM-YYYY HH:mm');
+  const toINR   = (v)  => parseFloat(v || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
 
-  const TotalDuration = (segs) => {
-    const total = segs.reduce((s, f) => s + (f?.Duration || 0), 0);
-    return `${Math.floor(total / 60)}h ${total % 60}m`;
-  };
-
-  const fmt = (dt) => moment(dt).format('ddd, DD-MMM-YYYY HH:mm');
-
-  const totalAmount = parseFloat(farevl?.PublishedFare || 0)
+  const totalAmount =
+    parseFloat(farevl?.PublishedFare || 0)
     + parseFloat(markupp || 0)
     + parseFloat(farevl?.TotalBaggageCharges || 0)
     + parseFloat(farevl?.TotalMealCharges || 0)
     + parseFloat(serviceprice || 0)
     - parseFloat(discount || 0);
 
-  const toINR = (v) => parseFloat(v || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
-
-  const airlineCode = dataa.FlightItinerary.AirlineCode;
-
   return (
     <div id={id} className="ticket-wrapper">
+
       {/* ── HEADER ── */}
       <div className="ticket-header">
         <div className="ticket-agency-info">
-          <img src="assets/images/SIGNATORY01.png" height="100" alt="TravelXpo" style={{ maxWidth: 160 }} /><br />
+          <img
+            src="assets/images/SIGNATORY01.png"
+            height="100"
+            alt="Agency Logo"
+            style={{ maxWidth: 160, display: 'block', marginBottom: 4 }}
+          />
           {branchData?.data?.address || '1st floor travelxpo adarsh arcade'}<br />
           {branchData?.data?.poc_mobile && <>Contact No: {branchData.data.poc_mobile}</>}
         </div>
@@ -872,7 +378,10 @@ const TicketBlock = ({
           <div className="ticket-badge-confirmed">Confirmed</div><br />
           <div className="ticket-pnr-line">PNR: {dataa.FlightItinerary.PNR}</div>
           <div className="ticket-issued-line">
-            Issued Date: {moment().format('ddd, DD-MMM-YYYY HH:mm')}
+            Issued Date:{' '}
+            {datas[0]?.Ticket?.IssueDate
+              ? moment(datas[0].Ticket.IssueDate).format('ddd, DD-MMM-YYYY HH:mm')
+              : moment().format('ddd, DD-MMM-YYYY HH:mm')}
           </div>
         </div>
       </div>
@@ -885,6 +394,7 @@ const TicketBlock = ({
             <th>Last Name</th>
             <th>Passenger Type</th>
             <th>Ticket No.</th>
+            <th>GST No.</th>
           </tr>
         </thead>
         <tbody>
@@ -894,6 +404,7 @@ const TicketBlock = ({
               <td>{p?.LastName}</td>
               <td>{paxType(p?.PaxType)}</td>
               <td>{p?.Ticket?.TicketId ? `${p.Ticket.TicketId}-${p.Ticket.TicketNumber}` : '––'}</td>
+              <td>{p?.GSTNumber || '––'}</td>
             </tr>
           ))}
         </tbody>
@@ -921,20 +432,26 @@ const TicketBlock = ({
                   <div>
                     {seg.Airline?.AirlineName} {seg.Airline?.AirlineCode}-{seg.Airline?.FlightNumber}<br />
                     <span className="ticket-flight-sub">Economy, Class {seg.Airline?.FareClass || '–'}</span><br />
-                    <span className="ticket-flight-sub">Duration: {Math.floor((seg.Duration || 0) / 60)}h {(seg.Duration || 0) % 60}m</span>
+                    <span className="ticket-flight-sub">
+                      Duration: {Math.floor((seg.Duration || 0) / 60)}h {(seg.Duration || 0) % 60}m
+                    </span>
                   </div>
                 </div>
               </td>
               <td>
                 <div className="ticket-airport-code">{seg.Origin?.Airport?.AirportCode}</div>
-                <div className="ticket-airport-name">({seg.Origin?.Airport?.AirportName}, {seg.Origin?.Airport?.CityName})</div>
+                <div className="ticket-airport-name">
+                  ({seg.Origin?.Airport?.AirportName}, {seg.Origin?.Airport?.CityName})
+                </div>
                 <div className="ticket-terminal-time">Terminal: {seg.Origin?.Airport?.Terminal || '–'}</div>
                 <div className="ticket-dep-time">{fmt(seg.Origin?.DepTime)}</div>
               </td>
               <td className="ticket-arrow-cell">✈</td>
               <td style={{ textAlign: 'right' }}>
                 <div className="ticket-airport-code">{seg.Destination?.Airport?.AirportCode}</div>
-                <div className="ticket-airport-name">({seg.Destination?.Airport?.AirportName}, {seg.Destination?.Airport?.CityName})</div>
+                <div className="ticket-airport-name">
+                  ({seg.Destination?.Airport?.AirportName}, {seg.Destination?.Airport?.CityName})
+                </div>
                 <div className="ticket-terminal-time">Terminal: {seg.Destination?.Airport?.Terminal || '–'}</div>
                 <div className="ticket-dep-time">{fmt(seg.Destination?.ArrTime)}</div>
               </td>
@@ -944,7 +461,15 @@ const TicketBlock = ({
       </table>
 
       {/* ── ANCILLARY TABLE ── */}
-      <table className="ticket-table">
+      <table className="ticket-table ticket-anc-table">
+        <colgroup>
+          <col className="ticket-anc-col-route" />
+          <col className="ticket-anc-col-baggage" />
+          <col className="ticket-anc-col-seat" />
+          <col className="ticket-anc-col-meal" />
+          <col className="ticket-anc-col-ssr" />
+          <col className="ticket-anc-col-barcode" />
+        </colgroup>
         <thead>
           <tr>
             <th colSpan="5" className="ticket-anc-header">Ancillary Details</th>
@@ -952,45 +477,91 @@ const TicketBlock = ({
           </tr>
         </thead>
         <tbody>
-          <tr><td colSpan="6" className="ticket-section-label">{flightLabel || 'Departure Flight'}</td></tr>
-          {datas.map((p, i) => (
-            <React.Fragment key={i}>
-              <tr>
-                <td colSpan="6" className="ticket-anc-passenger">
-                  {p?.Title} {p?.FirstName} {p?.LastName}
-                </td>
-              </tr>
-              <tr>
-                <td style={{ fontSize: 11, color: '#777', width: 90 }}>
-                  {segm.Origin?.Airport?.AirportCode} – {lsegm.Destination?.Airport?.AirportCode}<br />
-                  {segm.Airline?.AirlineCode} {segm.Airline?.FlightNumber}
-                </td>
-                <td>
-                  <div className="ticket-anc-label">🧳 Baggage</div>
-                  <div className="ticket-baggage-detail">
-                    Cabin: {segm.CabinBaggage || '7 Kg'}<br />
-                    Check-In: {segm.Baggage || '15 Kg'}<br />
-                    {p?.Baggage?.length > 0 ? `Extra: ${p.Baggage[0].Weight} Kg` : 'Excess: ––'}
-                  </div>
-                </td>
-                <td>
-                  <div className="ticket-anc-label">🪑 Seat</div>
-                  {p?.SeatPreference || '––'}
-                </td>
-                <td>
-                  <div className="ticket-anc-label">🍽 Meal</div>
-                  {p?.MealDynamic?.length > 0 ? p.MealDynamic[0].AirlineDescription : '––'}
-                </td>
-                <td>
-                  <div className="ticket-anc-label">⭐ Special Service</div>
-                  ––
-                </td>
-                <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                  <BarcodeSVG />
-                </td>
-              </tr>
-            </React.Fragment>
-          ))}
+          <tr>
+            <td colSpan="6" className="ticket-section-label">{flightLabel || 'Departure Flight'}</td>
+          </tr>
+
+          {datas.map((p, i) => {
+            // SegmentAdditionalInfo[0] holds per-segment baggage/meal/seat strings
+            const segInfo = p?.SegmentAdditionalInfo?.[0];
+
+            // Baggage string format: "15 Kg|7 Kg" → [checkIn, cabin]
+            const bagParts = segInfo?.Baggage?.split('|') || [];
+            const checkIn  = bagParts[0]?.trim() || segm.Baggage    || '15 Kg';
+            const cabin    = bagParts[1]?.trim() || segm.CabinBaggage || '7 Kg';
+
+            // Extra paid baggage from the Baggage array
+            const paidBag = p?.Baggage?.length > 0
+              ? p.Baggage.map(b => b.Text || `${b.Weight} Kg`).join(', ')
+              : null;
+
+            // Meal — show description or code, skip NoMeal
+            const mealCode = p?.MealDynamic?.[0]?.Code;
+            const mealDesc = p?.MealDynamic?.[0]?.AirlineDescription;
+            const meal = (mealDesc && mealDesc !== 'NoMeal')
+              ? mealDesc
+              : (mealCode && mealCode !== 'NoMeal' ? mealCode : '––');
+
+            // Seat from SegmentAdditionalInfo
+            const seat = segInfo?.Seat?.trim() || '––';
+
+            // Special Service
+            const ssr = segInfo?.SpecialService?.trim()
+              || (p?.Ssr?.length > 0 ? p.Ssr[0] : '––');
+
+            return (
+              <React.Fragment key={i}>
+                {/* Passenger name row */}
+                <tr>
+                  <td colSpan="6" className="ticket-anc-passenger">
+                    {p?.Title} {p?.FirstName} {p?.LastName}
+                  </td>
+                </tr>
+
+                {/* Detail row */}
+                <tr>
+                  {/* Route ref */}
+                  <td style={{ fontSize: 11, color: '#777', width: 90, verticalAlign: 'top' }}>
+                    {segm.Origin?.Airport?.AirportCode} – {lsegm.Destination?.Airport?.AirportCode}<br />
+                    {segm.Airline?.AirlineCode} {segm.Airline?.FlightNumber}
+                  </td>
+
+                  {/* Baggage */}
+                  <td style={{ verticalAlign: 'top' }}>
+                    <span className="ticket-anc-label">🧳 Baggage</span>
+                    <div className="ticket-baggage-detail">
+                      Cabin: {cabin}<br />
+                      Check-In: {checkIn}<br />
+                      {paidBag ? `Extra: ${paidBag}` : 'Excess: ––'}
+                    </div>
+                  </td>
+
+                  {/* Seat — label on top, value below */}
+                  <td style={{ verticalAlign: 'top' }}>
+                    <span className="ticket-anc-label">🪑 Seat</span>
+                    <span className="ticket-anc-value">{seat}</span>
+                  </td>
+
+                  {/* Meal — label on top, value below */}
+                  <td style={{ verticalAlign: 'top' }}>
+                    <span className="ticket-anc-label">🍽 Meal</span>
+                    <span className="ticket-anc-value">{meal}</span>
+                  </td>
+
+                  {/* Special Service — label on top, value below */}
+                  <td style={{ verticalAlign: 'top' }}>
+                    <span className="ticket-anc-label"  style={{ whiteSpace: 'nowrap' }}>⭐ Special Service</span>
+                    <span className="ticket-anc-value">{ssr}</span>
+                  </td>
+
+                  {/* Barcode from real API BarcodeDetails */}
+                  <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                    <BarcodeCell passenger={p} />
+                  </td>
+                </tr>
+              </React.Fragment>
+            );
+          })}
         </tbody>
       </table>
 
@@ -999,13 +570,26 @@ const TicketBlock = ({
 
         {/* Left: Important notices */}
         <div className="ticket-important-box">
-          <p><span className="red-bold">Important:</span> This is an Electronic Ticket. Passengers must carry a valid photo ID for check-in at the airport.</p>
+          <p>
+            <span className="red-bold">Important:</span> This is an Electronic Ticket.
+            Passengers must carry a valid photo ID for check-in at the airport.
+          </p>
           <br />
-          <p><span className="bold">Baggage dimensions may vary depending on airline policies. Please confirm with the airline in advance.</span></p>
+          <p>
+            <span className="bold">Baggage dimensions may vary depending on airline policies.
+            Please confirm with the airline in advance.</span>
+          </p>
           <br />
-          <p>Carriage and other services provided by the carrier are subject to conditions of carriage. These conditions may be obtained from the issuing carrier. Passengers travelling on a tourist visa must show a return ticket at the time of check-in.</p>
+          <p>
+            Carriage and other services provided by the carrier are subject to conditions of
+            carriage. These conditions may be obtained from the issuing carrier. Passengers
+            travelling on a tourist visa must show a return ticket at check-in.
+          </p>
           <br />
-          <p><span className="bold">Note:</span> We recommend purchasing travel insurance. Please contact your travel advisor to purchase travel insurance.</p>
+          <p>
+            <span className="bold">Note:</span> We recommend purchasing travel insurance.
+            Please contact your travel advisor to purchase travel insurance.
+          </p>
         </div>
 
         {/* Centre: General Information */}
@@ -1029,7 +613,9 @@ const TicketBlock = ({
                 <tr><td colSpan="2" className="ticket-pay-header">Payment Details</td></tr>
                 <tr>
                   <td>Fare (incl. markup):</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(parseFloat(farevl?.PublishedFare || 0) + parseFloat(markupp || 0))}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {toINR(parseFloat(farevl?.PublishedFare || 0) + parseFloat(markupp || 0))}
+                  </td>
                 </tr>
                 <tr>
                   <td>Transaction Fee:</td>
@@ -1064,6 +650,7 @@ const TicketBlock = ({
           </div>
         )}
       </div>
+
     </div>
   );
 };
@@ -1071,22 +658,27 @@ const TicketBlock = ({
 // ── Main Component ────────────────────────────────────────────
 const BookingOneway = () => {
   const location = useLocation();
+  // ?? sample1 — fallback for testing without navigation state. Remove ?? sample1 in production.
   const response = location.state?.responsebook ?? sample1;
 
-  const serviceprice = response.price;
-  const discount = response.discount;
-  const markupp = parseFloat(response.expoPrice) + parseFloat(response.agentPrice) + parseFloat(response.subagentPrice);
+  const serviceprice = response.price       ?? 0;
+  const discount     = response.discount    ?? 0;
+  const markupp      = parseFloat(response.expoPrice     || 0)
+                     + parseFloat(response.agentPrice    || 0)
+                     + parseFloat(response.subagentPrice || 0);
 
-  const navigate = useNavigate();
-  const [value, setValue] = useState('');
+  const navigate  = useNavigate();
+  const [value, setValue]           = useState('');
   const [branchData, setBranchData] = useState('');
-  const [dataa] = useState(response.Response.Response);
-  const [farevl] = useState(response.Response.Response.FlightItinerary.Fare);
-  const [datas] = useState(response.Response.Response.FlightItinerary.Passenger);
+  const [showPrice, setShowPrice]   = useState(true);
+
+  const dataa    = response.Response.Response;
+  const farevl   = response.Response.Response.FlightItinerary.Fare;
+  const datas    = response.Response.Response.FlightItinerary.Passenger;
   const segments = response.Response.Response.FlightItinerary.Segments;
-  const [segm] = useState(segments[0]);
-  const [lsegm] = useState(segments[segments.length - 1]);
-  const [showPrice, setShowPrice] = useState(true);
+  const segm     = segments[0];
+  const lsegm    = segments[segments.length - 1];
+
   const branchId = sessionStorage.getItem('branchId');
 
   useEffect(() => {
@@ -1103,7 +695,7 @@ const BookingOneway = () => {
         console.error('Error fetching branch data:', error);
       }
     };
-    fetchAgentInfo();
+    if (branchId) fetchAgentInfo();
   }, [branchId]);
 
   const pdfDownload = async (e, withPrice) => {
@@ -1113,7 +705,7 @@ const BookingOneway = () => {
     const pdfView = document.getElementById('pdf-view');
     html2canvas(pdfView, { scale: 2, useCORS: true }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const doc = new jsPDF('portrait', 'pt', 'A4');
+      const doc   = new jsPDF('portrait', 'pt', 'A4');
       const pageW = doc.internal.pageSize.getWidth();
       const pageH = doc.internal.pageSize.getHeight();
       doc.addImage(imgData, 'PNG', 10, 10, pageW - 20, pageH - 20);

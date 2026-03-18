@@ -81,7 +81,7 @@ const Home = () => {
         const username_11 = atob(params.get('xxun'));
         const password_11 = params.get('pwxx');
         const branch_id1  = params.get('bbr');
-        console.log(":::::::::::::::::::"+branch_id1);
+       // console.log(":::::::::::::::::::"+branch_id1);
         setUname_1(uname_11);
         setUsername_1(username_11);
         setPassword_1(password_11);
@@ -102,7 +102,7 @@ const Home = () => {
         const username_11 = atob(params.get('xxun'));
         const password_11 = params.get('pwxx');
         const branch_id1  = params.get('bbr');
-        console.log(":::::::::::::::::::"+branch_id1);
+        //console.log(":::::::::::::::::::"+branch_id1);
         setUname_1(uname_11);
         setUsername_1(username_11);
         setPassword_1(password_11);
@@ -312,7 +312,7 @@ const Home = () => {
                 };
               //}
           //  console.log(value);
-          console.log(JSON.stringify(data));
+          //console.log(JSON.stringify(data));
           localStorage.setItem('allss', allss);
              try {
                 const response = await axios.post('https://api.travelxpo.in/auth/search', data, {
@@ -322,7 +322,7 @@ const Home = () => {
                 });
 
                 // Handle the response
-             console.log(response.data);
+            // console.log(response.data);
                if(response.data.Response.Error.ErrorCode=="0" && journeyType==1)
                { setResponsee(response.data);
                 //localStorage.setItem('IbOb', 'ob'); 
@@ -711,12 +711,12 @@ useEffect(() => {
          
              
                      const fetchuser = async () => {
-                      console.log("in token genrate"+uname_1); 
+                    //  console.log("in token genrate"+uname_1); 
                       if(uname_1){
                       try {
                     
-                        console.log(username_1);
-                        console.log(password_1);
+                       // console.log(username_1);
+                       // console.log(password_1);
                         const response = await axios.get('https://api.travelxpo.in/auth/login', {
                             params: {
                               username: username_1,
@@ -771,19 +771,19 @@ useEffect(() => {
 
                         }
                         let mytocken=localStorage.getItem('tokenValue')
-                        console.log("..........."+uname_1);
+                        //console.log("..........."+uname_1);
                         if(uname_1){
                             console.log("......user.....");
                             fetchuser();
                          }
                      else if (mytocken ==null) {
-                        console.log(".....null......"); 
+                        //console.log(".....null......"); 
                         fetchuser();
                      }
                      else{
-                        console.log(".....else......");
+                       // console.log(".....else......");
                       mytocken= sessionStorage.getItem('myTocken');
-                      console.log("..........."+mytocken);
+                      //console.log("..........."+mytocken);
                         //const markup2 = sessionStorage.getItem('BaseMarkup');
                         //setMarkup(markup2);
                         localStorage.setItem('tokenValue', mytocken);
@@ -806,7 +806,7 @@ useEffect(() => {
         datt
       );
 
-      console.log("mmmmmmmm...", response.data);
+     // console.log("mmmmmmmm...", response.data);
 
       // 🔴 HANDLE "no data" response
       if (response.data?.message) {
@@ -867,8 +867,8 @@ useEffect(() => {
       sessionStorage.setItem("Markup", safeBranchMarkup);
       sessionStorage.setItem("Markuppercent", safeMarkupPercent);
 
-      console.log("✅ Markup:", safeBranchMarkup);
-      console.log("✅ MarkupPercent:", safeMarkupPercent);
+     // console.log("✅ Markup:", safeBranchMarkup);
+     // console.log("✅ MarkupPercent:", safeMarkupPercent);
 
     } catch (error) {
       console.error("❌ fetchmarkup error", error);
