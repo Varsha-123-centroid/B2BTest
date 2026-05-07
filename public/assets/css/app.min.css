@@ -1935,3 +1935,83 @@ dd.filter-item {
     width: 100%;
 
 }
+.calendar-fare-wrapper {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.calendar-fare-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 10px 5px;
+  scroll-behavior: smooth;
+}
+
+.calendar-fare-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.calendar-fare-scroll::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 20px;
+}
+
+.fare-card {
+  min-width: 140px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #eee;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s;
+  flex-shrink: 0;
+}
+
+.fare-card:hover {
+  transform: translateY(-3px);
+}
+
+.lowest-fare-card {
+  border: 2px solid #1dbf73;
+  background: #f2fff8;
+}
+
+.fare-day {
+  font-size: 14px;
+  color: #666;
+}
+
+.fare-date {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.fare-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #0a58ca;
+  margin-top: 8px;
+}
+
+.fare-airline {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #888;
+}
+
+.lowest-tag {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #1dbf73;
+  color: white;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+}

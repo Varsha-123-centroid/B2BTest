@@ -651,6 +651,7 @@ useEffect(() => {
         setAddress1(values.address1);
         setAddress2(values.address2);
         setEmail(values.email);
+        sessionStorage.setItem("whatsapp",values.email);
         setMobile(values.mobile);
         setCcode(values.ccode);
         setCity(values.city);

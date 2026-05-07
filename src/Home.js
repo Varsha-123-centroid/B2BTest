@@ -312,7 +312,7 @@ const Home = () => {
                 };
               //}
           //  console.log(value);
-          //console.log(JSON.stringify(data));
+          //console.log("&&&&&&&&&&&",JSON.stringify(data));
           localStorage.setItem('allss', allss);
              try {
                 const response = await axios.post('https://api.travelxpo.in/auth/search', data, {

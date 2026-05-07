@@ -8,2009 +8,141 @@ import axios from 'axios';
 import moment from 'moment/moment';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-const sample1 ={
+
+const sample1 = {
     "Response": {
         "B2B2BStatus": false,
-        "Error": {
-            "ErrorCode": 0,
-            "ErrorMessage": ""
-        },
+        "Error": { "ErrorCode": 0, "ErrorMessage": "" },
         "ResponseStatus": 1,
         "TraceId": "3daf263f-73ff-493a-8fd9-3ed069ca250a",
         "Response": {
-            "PNR": "C967SQ",
-            "BookingId": 1906951,
-            "SSRDenied": false,
-            "SSRMessage": null,
-            "Status": 1,
-            "IsPriceChanged": false,
-            "IsTimeChanged": false,
+            "PNR": "C967SQ", "BookingId": 1906951,
             "FlightItinerary": {
-                "CommentDetails": null,
-                "IsAutoReissuanceAllowed": true,
-                "IssuancePcc": "QPDEL7005B_03",
-                "JourneyType": 2,
-                "SearchCombinationType": 1,
-                "TripIndicator": 1,
-                "BookingAllowedForRoamer": true,
-                "BookingId": 1906951,
-                "IsCouponAppilcable": true,
-                "IsManual": false,
-                "PNR": "C967SQ",
-                "AgentReferenceNo": "sonam1234567890",
-                "IsDomestic": true,
-                "ResultFareType": "RegularFare",
-                "Source": 109,
-                "Origin": "DEL",
-                "Destination": "COK",
-                "AirlineCode": "QP",
-                "ValidatingAirlineCode": "QP",
-                "AirlineRemark": "",
-                "IsLCC": true,
-                "NonRefundable": false,
-                "FareType": "PUB",
-                "CreditNoteNo": null,
+                "JourneyType": 2, "BookingId": 1906951, "PNR": "C967SQ",
+                "Origin": "DEL", "Destination": "COK", "AirlineCode": "QP",
                 "Fare": {
-                    "Currency": "INR",
-                    "BaseFare": 18836,
-                    "Tax": 4728,
-                    "TaxBreakup": [
-                        {
-                            "key": "PSF",
-                            "value": 364.00
-                        },
-                        {
-                            "key": "UDF",
-                            "value": 244.00
-                        },
-                        {
-                            "key": "YR",
-                            "value": 300.00
-                        },
-                        {
-                            "key": "TotalTax",
-                            "value": 3228.00
-                        },
-                        {
-                            "key": "OtherTaxes",
-                            "value": 2320.00
-                        },
-                        {
-                            "key": "K3",
-                            "value": 0
-                        }
-                    ],
-                    "YQTax": 0,
-                    "AdditionalTxnFeeOfrd": 0,
-                    "AdditionalTxnFeePub": 0,
-                    "PGCharge": 0,
-                    "OtherCharges": 0,
-                    "ChargeBU": [
-                        {
-                            "key": "TBOMARKUP",
-                            "value": 0
-                        },
-                        {
-                            "key": "GLOBALPROCUREMENTCHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "OTHERCHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "CONVENIENCECHARGE",
-                            "value": 0
-                        }
-                    ],
-                    "Discount": 0.00,
-                    "PublishedFare": 23564,
-                    "CommissionEarned": 0,
-                    "PLBEarned": 0,
-                    "IncentiveEarned": 0,
-                    "OfferedFare": 23564,
-                    "TdsOnCommission": 0,
-                    "TdsOnPLB": 0,
-                    "TdsOnIncentive": 0,
-                    "ServiceFee": 0,
-                    "TotalBaggageCharges": 0,
-                    "TotalMealCharges": 0,
-                    "TotalSeatCharges": 0,
-                    "TotalSpecialServiceCharges": 0
+                    "Currency": "INR", "BaseFare": 18836, "Tax": 4728,
+                    "PublishedFare": 23564, "OtherCharges": 0,
+                    "TotalBaggageCharges": 0, "TotalMealCharges": 0,
+                    "TotalSeatCharges": 0, "TransactionFee": 0
                 },
-                "CreditNoteCreatedOn": null,
                 "Passenger": [
                     {
-                        "BarcodeDetails": {
-                            "Id": 3135674,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1RAJ/SANDYA           C967SQ DELCOKQP 1128 233Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135674,
-                        "Title": "Mrs",
-                        "FirstName": "Sandya",
-                        "LastName": "Raj",
-                        "PaxType": 1,
-                        "DateOfBirth": "1987-11-06T00:00:00",
-                        "Gender": 2,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 4709,
-                            "Tax": 807,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "PSF",
-                                    "value": 91.00
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 61.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 807.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 580.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 5516,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 5516,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
+                        "BarcodeDetails": { "Id": 3135674, "Barcode": [{ "Index": 1, "Format": "PDF417", "Content": "M1RAJ/SANDYA           C967SQ DELCOKQP 1128 233Y00000000 100", "BarCodeInBase64": null, "JourneyWayType": 3 }] },
+                        "Title": "Mrs", "FirstName": "Sandya", "LastName": "Raj", "PaxType": 1,
                         "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": true,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193357,
-                            "TicketNumber": "C967SQ",
-                            "IssueDate": "2024-07-06T12:39:19",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
+                        "Fare": { "PublishedFare": 5516, "TotalBaggageCharges": 0, "TotalMealCharges": 0 },
+                        "Baggage": [], "MealDynamic": [], "Ssr": [],
+                        "Ticket": { "TicketId": 2193357, "TicketNumber": "C967SQ", "IssueDate": "2024-07-06T12:39:19", "Status": "OK" },
                         "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
+                        "SegmentAdditionalInfo": [{ "FareBasis": "B0O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }, { "FareBasis": "B0O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }]
                     },
                     {
-                        "BarcodeDetails": {
-                            "Id": 3135675,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1GOPAL/RAJ            C967SQ DELCOKQP 1128 233Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135675,
-                        "Title": "Mr",
-                        "FirstName": "Raj",
-                        "LastName": "Gopal",
-                        "PaxType": 1,
-                        "DateOfBirth": "1980-12-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 4709,
-                            "Tax": 807,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "PSF",
-                                    "value": 91.00
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 61.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 807.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 580.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 5516,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 5516,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Gurgaon",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
+                        "BarcodeDetails": { "Id": 3135675, "Barcode": [{ "Index": 1, "Format": "PDF417", "Content": "M1GOPAL/RAJ            C967SQ DELCOKQP 1128 233Y00000000 100", "BarCodeInBase64": null, "JourneyWayType": 3 }] },
+                        "Title": "Mr", "FirstName": "Raj", "LastName": "Gopal", "PaxType": 1,
                         "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193358,
-                            "TicketNumber": "C967SQ",
-                            "IssueDate": "2024-07-06T12:39:19",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
+                        "Fare": { "PublishedFare": 5516, "TotalBaggageCharges": 0, "TotalMealCharges": 0 },
+                        "Baggage": [], "MealDynamic": [], "Ssr": [],
+                        "Ticket": { "TicketId": 2193358, "TicketNumber": "C967SQ", "IssueDate": "2024-07-06T12:39:19", "Status": "OK" },
                         "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135676,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1RAJ/RAM              C967SQ DELCOKQP 1128 233Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135676,
-                        "Title": "Mstr",
-                        "FirstName": "Ram",
-                        "LastName": "Raj",
-                        "PaxType": 2,
-                        "DateOfBirth": "2018-10-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 4709,
-                            "Tax": 807,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "PSF",
-                                    "value": 91.00
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 61.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 807.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 580.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 5516,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 5516,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissr",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193359,
-                            "TicketNumber": "C967SQ",
-                            "IssueDate": "2024-07-06T12:39:19",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135677,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1RAJ/SAM              C967SQ DELCOKQP 1128 233Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135677,
-                        "Title": "Mstr",
-                        "FirstName": "Sam",
-                        "LastName": "Raj",
-                        "PaxType": 2,
-                        "DateOfBirth": "2018-10-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 4709,
-                            "Tax": 807,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "PSF",
-                                    "value": 91.00
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 61.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 807.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 580.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 5516,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 5516,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193360,
-                            "TicketNumber": "C967SQ",
-                            "IssueDate": "2024-07-06T12:39:19",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135678,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1MOL/SOORYA           C967SQ DELCOKQP 1128 233Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135678,
-                        "Title": "Miss",
-                        "FirstName": "Soorya",
-                        "LastName": "Mol",
-                        "PaxType": 3,
-                        "DateOfBirth": "2023-10-04T00:00:00",
-                        "Gender": 2,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 0,
-                            "Tax": 1500,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 1500,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 1500,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193361,
-                            "TicketNumber": "C967SQ",
-                            "IssueDate": "2024-07-06T12:39:19",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "0 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "B0O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "0 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
+                        "SegmentAdditionalInfo": [{ "FareBasis": "B0O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }, { "FareBasis": "B0O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }]
                     }
                 ],
-                "CancellationCharges": null,
                 "Segments": [
-                    {
-                        "Baggage": "15 Kg",
-                        "CabinBaggage": "7 Kg",
-                        "CabinClass": 2,
-                        "SupplierFareClass": null,
-                        "TripIndicator": 1,
-                        "SegmentIndicator": 1,
-                        "Airline": {
-                            "AirlineCode": "QP",
-                            "AirlineName": "Akasa Air",
-                            "FlightNumber": "1128",
-                            "FareClass": "BC",
-                            "OperatingCarrier": ""
-                        },
-                        "AirlinePNR": "",
-                        "Origin": {
-                            "Airport": {
-                                "AirportCode": "DEL",
-                                "AirportName": "Indira Gandhi Airport",
-                                "Terminal": "T2",
-                                "CityCode": "DEL",
-                                "CityName": "Delhi",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "DepTime": "2024-08-20T16:10:00"
-                        },
-                        "Destination": {
-                            "Airport": {
-                                "AirportCode": "BOM",
-                                "AirportName": "Chhatrapati Shivaji International Airport",
-                                "Terminal": "T1",
-                                "CityCode": "BOM",
-                                "CityName": "Mumbai",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "ArrTime": "2024-08-20T18:20:00"
-                        },
-                        "Duration": 130,
-                        "GroundTime": 0,
-                        "Mile": 0,
-                        "StopOver": false,
-                        "FlightInfoIndex": "",
-                        "StopPoint": "",
-                        "StopPointArrivalTime": "0001-01-01T00:00:00",
-                        "StopPointDepartureTime": "0001-01-01T00:00:00",
-                        "Craft": "7BH",
-                        "Remark": null,
-                        "IsETicketEligible": true,
-                        "FlightStatus": "Confirmed",
-                        "Status": "HK",
-                        "FareClassification": null
-                    },
-                    {
-                        "Baggage": "15 Kg",
-                        "CabinBaggage": "7 Kg",
-                        "CabinClass": 2,
-                        "SupplierFareClass": null,
-                        "TripIndicator": 1,
-                        "SegmentIndicator": 2,
-                        "Airline": {
-                            "AirlineCode": "QP",
-                            "AirlineName": "Akasa Air",
-                            "FlightNumber": "1505",
-                            "FareClass": "V1",
-                            "OperatingCarrier": ""
-                        },
-                        "AirlinePNR": "",
-                        "Origin": {
-                            "Airport": {
-                                "AirportCode": "BOM",
-                                "AirportName": "Chhatrapati Shivaji International Airport",
-                                "Terminal": "T1",
-                                "CityCode": "BOM",
-                                "CityName": "Mumbai",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "DepTime": "2024-08-20T19:50:00"
-                        },
-                        "Destination": {
-                            "Airport": {
-                                "AirportCode": "COK",
-                                "AirportName": "Cochin International Airport",
-                                "Terminal": "T1",
-                                "CityCode": "COK",
-                                "CityName": "Kochi",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "ArrTime": "2024-08-20T21:50:00"
-                        },
-                        "AccumulatedDuration": 340,
-                        "Duration": 120,
-                        "GroundTime": 0,
-                        "Mile": 0,
-                        "StopOver": false,
-                        "FlightInfoIndex": "",
-                        "StopPoint": "",
-                        "StopPointArrivalTime": "0001-01-01T00:00:00",
-                        "StopPointDepartureTime": "0001-01-01T00:00:00",
-                        "Craft": "7MZ",
-                        "Remark": null,
-                        "IsETicketEligible": true,
-                        "FlightStatus": "Confirmed",
-                        "Status": "HK",
-                        "FareClassification": null
-                    }
+                    { "Baggage": "15 Kg", "CabinBaggage": "7 Kg", "Airline": { "AirlineCode": "QP", "AirlineName": "Akasa Air", "FlightNumber": "1128", "FareClass": "BC" }, "Origin": { "Airport": { "AirportCode": "DEL", "AirportName": "Indira Gandhi Airport", "Terminal": "T2", "CityName": "Delhi" }, "DepTime": "2024-08-20T16:10:00" }, "Destination": { "Airport": { "AirportCode": "BOM", "AirportName": "Chhatrapati Shivaji International Airport", "Terminal": "T1", "CityName": "Mumbai" }, "ArrTime": "2024-08-20T18:20:00" }, "Duration": 130 },
+                    { "Baggage": "15 Kg", "CabinBaggage": "7 Kg", "Airline": { "AirlineCode": "QP", "AirlineName": "Akasa Air", "FlightNumber": "1505", "FareClass": "V1" }, "Origin": { "Airport": { "AirportCode": "BOM", "AirportName": "Chhatrapati Shivaji International Airport", "Terminal": "T1", "CityName": "Mumbai" }, "DepTime": "2024-08-20T19:50:00" }, "Destination": { "Airport": { "AirportCode": "COK", "AirportName": "Cochin International Airport", "Terminal": "T1", "CityName": "Kochi" }, "ArrTime": "2024-08-20T21:50:00" }, "Duration": 120 }
                 ],
-                "FareRules": [
-                    {
-                        "Origin": "DEL",
-                        "Destination": "BOM",
-                        "Airline": "QP",
-                        "FareBasisCode": "B0O7RBIX",
-                        "FareRuleDetail": "<div style=\"font-size:12pt;font-family:&quot;Microsoft Sans Serif&quot;;\"><p style=\"font-size:8.5pt;margin:0;\">Test Rule </p></div><br /><br /><br/> <br/><ul><li>APART FROM AIRLINE CHARGES,GST+RAF+ APPLICABLE CHARGES IF ANY, WILL BE CHARGED.</li><li>MENTIONED FEE ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li></ul>",
-                        "FareRestriction": null
-                    }
-                ],
-                "MiniFareRules": [
-                    {
-                        "JourneyPoints": "",
-                        "Type": "",
-                        "From": "",
-                        "To": "",
-                        "Unit": "",
-                        "Details": ""
-                    }
-                ],
-                "PenaltyCharges": {},
-                "Status": 5,
-                "Invoice": [
-                    {
-                        "CreditNoteGSTIN": null,
-                        "GSTIN": null,
-                        "InvoiceCreatedOn": "2024-07-06T12:39:20",
-                        "InvoiceId": 8406,
-                        "InvoiceNo": "IW/2425/8406",
-                        "InvoiceAmount": 23564.00,
-                        "Remarks": "",
-                        "InvoiceStatus": 3
-                    }
-                ],
-                "InvoiceAmount": 23564.00,
-                "InvoiceNo": "IW/2425/8406",
-                "InvoiceStatus": 3,
-                "InvoiceCreatedOn": "2024-07-06T12:39:20",
-                "Remarks": "",
-                "IsWebCheckInAllowed": false
-            },
-            "TicketStatus": 1
+                "FareRules": []
+            }
         }
     }
 };
-const sampleIB={
+
+const sampleIB = {
     "Response": {
         "B2B2BStatus": false,
-        "Error": {
-            "ErrorCode": 0,
-            "ErrorMessage": ""
-        },
+        "Error": { "ErrorCode": 0, "ErrorMessage": "" },
         "ResponseStatus": 1,
-        "TraceId": "3daf263f-73ff-493a-8fd9-3ed069ca250a",
         "Response": {
-            "PNR": "Z83NNJ",
-            "BookingId": 1906952,
-            "SSRDenied": false,
-            "SSRMessage": null,
-            "Status": 1,
-            "IsPriceChanged": false,
-            "IsTimeChanged": false,
+            "PNR": "Z83NNJ", "BookingId": 1906952,
             "FlightItinerary": {
-                "CommentDetails": null,
-                "IsAutoReissuanceAllowed": true,
-                "IssuancePcc": "QPDEL7005B_03",
-                "JourneyType": 2,
-                "SearchCombinationType": 1,
-                "TripIndicator": 2,
-                "BookingAllowedForRoamer": true,
-                "BookingId": 1906952,
-                "ParentBookingId": 1906951,
-                "IsCouponAppilcable": true,
-                "IsManual": false,
-                "PNR": "Z83NNJ",
-                "AgentReferenceNo": "sonam1234567890",
-                "IsDomestic": true,
-                "ResultFareType": "RegularFare",
-                "Source": 109,
-                "Origin": "COK",
-                "Destination": "DEL",
-                "AirlineCode": "QP",
-                "ValidatingAirlineCode": "QP",
-                "AirlineRemark": "",
-                "IsLCC": true,
-                "NonRefundable": false,
-                "FareType": "PUB",
-                "CreditNoteNo": null,
+                "JourneyType": 2, "BookingId": 1906952, "PNR": "Z83NNJ",
+                "Origin": "COK", "Destination": "DEL", "AirlineCode": "QP",
                 "Fare": {
-                    "Currency": "INR",
-                    "BaseFare": 21364,
-                    "Tax": 5524,
-                    "TaxBreakup": [
-                        {
-                            "key": "UDF",
-                            "value": 1276.00
-                        },
-                        {
-                            "key": "YR",
-                            "value": 300.00
-                        },
-                        {
-                            "key": "TotalTax",
-                            "value": 4024.00
-                        },
-                        {
-                            "key": "OtherTaxes",
-                            "value": 2448.00
-                        },
-                        {
-                            "key": "K3",
-                            "value": 0
-                        }
-                    ],
-                    "YQTax": 0,
-                    "AdditionalTxnFeeOfrd": 0,
-                    "AdditionalTxnFeePub": 0,
-                    "PGCharge": 0,
-                    "OtherCharges": 0,
-                    "ChargeBU": [
-                        {
-                            "key": "TBOMARKUP",
-                            "value": 0
-                        },
-                        {
-                            "key": "GLOBALPROCUREMENTCHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "OTHERCHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "CONVENIENCECHARGE",
-                            "value": 0
-                        }
-                    ],
-                    "Discount": 0.00,
-                    "PublishedFare": 26888,
-                    "CommissionEarned": 0,
-                    "PLBEarned": 0,
-                    "IncentiveEarned": 0,
-                    "OfferedFare": 26888,
-                    "TdsOnCommission": 0,
-                    "TdsOnPLB": 0,
-                    "TdsOnIncentive": 0,
-                    "ServiceFee": 0,
-                    "TotalBaggageCharges": 0,
-                    "TotalMealCharges": 0,
-                    "TotalSeatCharges": 0,
-                    "TotalSpecialServiceCharges": 0
+                    "Currency": "INR", "BaseFare": 21364, "Tax": 5524,
+                    "PublishedFare": 26888, "OtherCharges": 0,
+                    "TotalBaggageCharges": 0, "TotalMealCharges": 0,
+                    "TotalSeatCharges": 0, "TransactionFee": 0
                 },
-                "CreditNoteCreatedOn": null,
                 "Passenger": [
                     {
-                        "BarcodeDetails": {
-                            "Id": 3135679,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1RAJ/SANDYA           Z83NNJ COKDELQP 1352 241Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135679,
-                        "Title": "Mrs",
-                        "FirstName": "Sandya",
-                        "LastName": "Raj",
-                        "PaxType": 1,
-                        "DateOfBirth": "1987-11-06T00:00:00",
-                        "Gender": 2,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 5341,
-                            "Tax": 1006,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 319.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 1006.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 612.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 6347,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 6347,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
+                        "BarcodeDetails": { "Id": 3135679, "Barcode": [{ "Index": 1, "Format": "PDF417", "Content": "M1RAJ/SANDYA           Z83NNJ COKDELQP 1352 241Y00000000 100", "BarCodeInBase64": null, "JourneyWayType": 3 }] },
+                        "Title": "Mrs", "FirstName": "Sandya", "LastName": "Raj", "PaxType": 1,
                         "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": true,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193362,
-                            "TicketNumber": "Z83NNJ",
-                            "IssueDate": "2024-07-06T12:44:27",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
+                        "Fare": { "PublishedFare": 6347, "TotalBaggageCharges": 0, "TotalMealCharges": 0 },
+                        "Baggage": [], "MealDynamic": [], "Ssr": [],
+                        "Ticket": { "TicketId": 2193362, "TicketNumber": "Z83NNJ", "IssueDate": "2024-07-06T12:44:27", "Status": "OK" },
                         "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
+                        "SegmentAdditionalInfo": [{ "FareBasis": "U8O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }, { "FareBasis": "U8O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }]
                     },
                     {
-                        "BarcodeDetails": {
-                            "Id": 3135680,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1GOPAL/RAJ            Z83NNJ COKDELQP 1352 241Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135680,
-                        "Title": "Mr",
-                        "FirstName": "Raj",
-                        "LastName": "Gopal",
-                        "PaxType": 1,
-                        "DateOfBirth": "1980-12-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 5341,
-                            "Tax": 1006,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 319.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 1006.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 612.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 6347,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 6347,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Gurgaon",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
+                        "BarcodeDetails": { "Id": 3135680, "Barcode": [{ "Index": 1, "Format": "PDF417", "Content": "M1GOPAL/RAJ            Z83NNJ COKDELQP 1352 241Y00000000 100", "BarCodeInBase64": null, "JourneyWayType": 3 }] },
+                        "Title": "Mr", "FirstName": "Raj", "LastName": "Gopal", "PaxType": 1,
                         "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193363,
-                            "TicketNumber": "Z83NNJ",
-                            "IssueDate": "2024-07-06T12:44:27",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
+                        "Fare": { "PublishedFare": 6347, "TotalBaggageCharges": 0, "TotalMealCharges": 0 },
+                        "Baggage": [], "MealDynamic": [], "Ssr": [],
+                        "Ticket": { "TicketId": 2193363, "TicketNumber": "Z83NNJ", "IssueDate": "2024-07-06T12:44:27", "Status": "OK" },
                         "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135681,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1RAJ/RAM              Z83NNJ COKDELQP 1352 241Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135681,
-                        "Title": "Mstr",
-                        "FirstName": "Ram",
-                        "LastName": "Raj",
-                        "PaxType": 2,
-                        "DateOfBirth": "2018-10-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 5341,
-                            "Tax": 1006,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 319.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 1006.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 612.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 6347,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 6347,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissr",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193364,
-                            "TicketNumber": "Z83NNJ",
-                            "IssueDate": "2024-07-06T12:44:27",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135682,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1RAJ/SAM              Z83NNJ COKDELQP 1352 241Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135682,
-                        "Title": "Mstr",
-                        "FirstName": "Sam",
-                        "LastName": "Raj",
-                        "PaxType": 2,
-                        "DateOfBirth": "2018-10-06T00:00:00",
-                        "Gender": 1,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 5341,
-                            "Tax": 1006,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "UDF",
-                                    "value": 319.00
-                                },
-                                {
-                                    "key": "YR",
-                                    "value": 75.00
-                                },
-                                {
-                                    "key": "TotalTax",
-                                    "value": 1006.00
-                                },
-                                {
-                                    "key": "OtherTaxes",
-                                    "value": 612.00
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 6347,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 6347,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193365,
-                            "TicketNumber": "Z83NNJ",
-                            "IssueDate": "2024-07-06T12:44:27",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "15 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
-                    },
-                    {
-                        "BarcodeDetails": {
-                            "Id": 3135683,
-                            "Barcode": [
-                                {
-                                    "Index": 1,
-                                    "Format": "PDF417",
-                                    "Content": "M1MOL/SOORYA           Z83NNJ COKDELQP 1352 241Y00000000 100",
-                                    "BarCodeInBase64": null,
-                                    "JourneyWayType": 3
-                                }
-                            ]
-                        },
-                        "DocumentDetails": null,
-                        "GuardianDetails": null,
-                        "PaxId": 3135683,
-                        "Title": "Miss",
-                        "FirstName": "Soorya",
-                        "LastName": "Mol",
-                        "PaxType": 3,
-                        "DateOfBirth": "2023-10-04T00:00:00",
-                        "Gender": 2,
-                        "IsPANRequired": false,
-                        "IsPassportRequired": false,
-                        "PAN": "",
-                        "PassportNo": "",
-                        "AddressLine1": "Karayamuttam",
-                        "AddressLine2": "Edamuttam",
-                        "Fare": {
-                            "Currency": "INR",
-                            "BaseFare": 0,
-                            "Tax": 1500,
-                            "TaxBreakup": [
-                                {
-                                    "key": "K3",
-                                    "value": 0
-                                }
-                            ],
-                            "YQTax": 0,
-                            "AdditionalTxnFeeOfrd": 0,
-                            "AdditionalTxnFeePub": 0,
-                            "PGCharge": 0,
-                            "OtherCharges": 0,
-                            "ChargeBU": [
-                                {
-                                    "key": "TBOMARKUP",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "GLOBALPROCUREMENTCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "OTHERCHARGE",
-                                    "value": 0
-                                },
-                                {
-                                    "key": "CONVENIENCECHARGE",
-                                    "value": 0
-                                }
-                            ],
-                            "Discount": 0.00,
-                            "PublishedFare": 1500,
-                            "CommissionEarned": 0,
-                            "PLBEarned": 0,
-                            "IncentiveEarned": 0,
-                            "OfferedFare": 1500,
-                            "TdsOnCommission": 0,
-                            "TdsOnPLB": 0,
-                            "TdsOnIncentive": 0,
-                            "ServiceFee": 0,
-                            "TotalBaggageCharges": 0,
-                            "TotalMealCharges": 0,
-                            "TotalSeatCharges": 0,
-                            "TotalSpecialServiceCharges": 0
-                        },
-                        "City": "Thrissur",
-                        "CountryCode": "IN",
-                        "CountryName": "India",
-                        "Nationality": "IN",
-                        "ContactNo": "9879879877",
-                        "Email": "sandhya@tbtq.in",
-                        "IsLeadPax": false,
-                        "FFAirlineCode": null,
-                        "FFNumber": "",
-                        "Ssr": [],
-                        "Ticket": {
-                            "TicketId": 2193366,
-                            "TicketNumber": "Z83NNJ",
-                            "IssueDate": "2024-07-06T12:44:27",
-                            "ValidatingAirline": "022",
-                            "Remarks": "",
-                            "ServiceFeeDisplayType": "ShowInTax",
-                            "Status": "OK",
-                            "ConjunctionNumber": "",
-                            "TicketType": "N"
-                        },
-                        "GSTCompanyAddress": "",
-                        "GSTCompanyContactNumber": "",
-                        "GSTCompanyEmail": "",
-                        "GSTCompanyName": "",
-                        "GSTNumber": "",
-                        "SegmentAdditionalInfo": [
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "0 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            },
-                            {
-                                "FareBasis": "U8O7RBIX",
-                                "NVA": "",
-                                "NVB": "",
-                                "Baggage": "0 Kg",
-                                "Meal": "0 Platter",
-                                "Seat": "",
-                                "SpecialService": ""
-                            }
-                        ]
+                        "SegmentAdditionalInfo": [{ "FareBasis": "U8O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }, { "FareBasis": "U8O7RBIX", "Baggage": "15 Kg", "Meal": "0 Platter", "Seat": "", "SpecialService": "" }]
                     }
                 ],
-                "CancellationCharges": null,
                 "Segments": [
-                    {
-                        "Baggage": "15 Kg",
-                        "CabinBaggage": "7 Kg",
-                        "CabinClass": 2,
-                        "SupplierFareClass": null,
-                        "TripIndicator": 1,
-                        "SegmentIndicator": 1,
-                        "Airline": {
-                            "AirlineCode": "QP",
-                            "AirlineName": "Akasa Air",
-                            "FlightNumber": "1352",
-                            "FareClass": "U1",
-                            "OperatingCarrier": ""
-                        },
-                        "AirlinePNR": "",
-                        "Origin": {
-                            "Airport": {
-                                "AirportCode": "COK",
-                                "AirportName": "Cochin International Airport",
-                                "Terminal": "T1",
-                                "CityCode": "COK",
-                                "CityName": "Kochi",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "DepTime": "2024-08-28T08:55:00"
-                        },
-                        "Destination": {
-                            "Airport": {
-                                "AirportCode": "BLR",
-                                "AirportName": "Kempegowda International Airport",
-                                "Terminal": "T1",
-                                "CityCode": "BLR",
-                                "CityName": "Bangalore",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "ArrTime": "2024-08-28T10:05:00"
-                        },
-                        "Duration": 70,
-                        "GroundTime": 0,
-                        "Mile": 0,
-                        "StopOver": false,
-                        "FlightInfoIndex": "",
-                        "StopPoint": "",
-                        "StopPointArrivalTime": "0001-01-01T00:00:00",
-                        "StopPointDepartureTime": "0001-01-01T00:00:00",
-                        "Craft": "7MA",
-                        "Remark": null,
-                        "IsETicketEligible": true,
-                        "FlightStatus": "Confirmed",
-                        "Status": "HK",
-                        "FareClassification": null
-                    },
-                    {
-                        "Baggage": "15 Kg",
-                        "CabinBaggage": "7 Kg",
-                        "CabinClass": 2,
-                        "SupplierFareClass": null,
-                        "TripIndicator": 1,
-                        "SegmentIndicator": 2,
-                        "Airline": {
-                            "AirlineCode": "QP",
-                            "AirlineName": "Akasa Air",
-                            "FlightNumber": "1336",
-                            "FareClass": "U1",
-                            "OperatingCarrier": ""
-                        },
-                        "AirlinePNR": "",
-                        "Origin": {
-                            "Airport": {
-                                "AirportCode": "BLR",
-                                "AirportName": "Kempegowda International Airport",
-                                "Terminal": "T1",
-                                "CityCode": "BLR",
-                                "CityName": "Bangalore",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "DepTime": "2024-08-28T15:40:00"
-                        },
-                        "Destination": {
-                            "Airport": {
-                                "AirportCode": "DEL",
-                                "AirportName": "Indira Gandhi Airport",
-                                "Terminal": "T2",
-                                "CityCode": "DEL",
-                                "CityName": "Delhi",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "ArrTime": "2024-08-28T18:25:00"
-                        },
-                        "AccumulatedDuration": 570,
-                        "Duration": 165,
-                        "GroundTime": 0,
-                        "Mile": 0,
-                        "StopOver": false,
-                        "FlightInfoIndex": "",
-                        "StopPoint": "",
-                        "StopPointArrivalTime": "0001-01-01T00:00:00",
-                        "StopPointDepartureTime": "0001-01-01T00:00:00",
-                        "Craft": "7MZ",
-                        "Remark": null,
-                        "IsETicketEligible": true,
-                        "FlightStatus": "Confirmed",
-                        "Status": "HK",
-                        "FareClassification": null
-                    }
+                    { "Baggage": "15 Kg", "CabinBaggage": "7 Kg", "Airline": { "AirlineCode": "QP", "AirlineName": "Akasa Air", "FlightNumber": "1352", "FareClass": "U1" }, "Origin": { "Airport": { "AirportCode": "COK", "AirportName": "Cochin International Airport", "Terminal": "T1", "CityName": "Kochi" }, "DepTime": "2024-08-28T08:55:00" }, "Destination": { "Airport": { "AirportCode": "BLR", "AirportName": "Kempegowda International Airport", "Terminal": "T1", "CityName": "Bangalore" }, "ArrTime": "2024-08-28T10:05:00" }, "Duration": 70 },
+                    { "Baggage": "15 Kg", "CabinBaggage": "7 Kg", "Airline": { "AirlineCode": "QP", "AirlineName": "Akasa Air", "FlightNumber": "1336", "FareClass": "U1" }, "Origin": { "Airport": { "AirportCode": "BLR", "AirportName": "Kempegowda International Airport", "Terminal": "T1", "CityName": "Bangalore" }, "DepTime": "2024-08-28T15:40:00" }, "Destination": { "Airport": { "AirportCode": "DEL", "AirportName": "Indira Gandhi Airport", "Terminal": "T2", "CityName": "Delhi" }, "ArrTime": "2024-08-28T18:25:00" }, "Duration": 165 }
                 ],
-                "FareRules": [
-                    {
-                        "Origin": "COK",
-                        "Destination": "BLR",
-                        "Airline": "QP",
-                        "FareBasisCode": "U8O7RBIX",
-                        "FareRuleDetail": "<div style=\"font-size:12pt;font-family:&quot;Microsoft Sans Serif&quot;;\"><p style=\"font-size:8.5pt;margin:0;\">Test Rule </p></div><br /><br /><br/> <br/><ul><li>APART FROM AIRLINE CHARGES,GST+RAF+ APPLICABLE CHARGES IF ANY, WILL BE CHARGED.</li><li>MENTIONED FEE ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li></ul>",
-                        "FareRestriction": null
-                    }
-                ],
-                "MiniFareRules": [
-                    {
-                        "JourneyPoints": "",
-                        "Type": "",
-                        "From": "",
-                        "To": "",
-                        "Unit": "",
-                        "Details": ""
-                    }
-                ],
-                "PenaltyCharges": {},
-                "Status": 5,
-                "Invoice": [
-                    {
-                        "CreditNoteGSTIN": null,
-                        "GSTIN": null,
-                        "InvoiceCreatedOn": "2024-07-06T12:44:29",
-                        "InvoiceId": 8407,
-                        "InvoiceNo": "IW/2425/8407",
-                        "InvoiceAmount": 26888.00,
-                        "Remarks": "",
-                        "InvoiceStatus": 3
-                    }
-                ],
-                "InvoiceAmount": 26888.00,
-                "InvoiceNo": "IW/2425/8407",
-                "InvoiceStatus": 3,
-                "InvoiceCreatedOn": "2024-07-06T12:44:29",
-                "Remarks": "",
-                "IsWebCheckInAllowed": false
-            },
-            "TicketStatus": 1
+                "FareRules": []
+            }
         }
     }
 };
+
+// ── Styles ───────────────────────────────────────────────────
 const ticketStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
-
-  .ticket-wrapper {
-    max-width: 860px;
-    margin: 0 auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 24px 28px;
-    font-family: 'Source Sans 3', Arial, sans-serif;
-    font-size: 13px;
-    color: #222;
-    box-sizing: border-box;
-  }
-  .ticket-wrapper *, .ticket-wrapper *::before, .ticket-wrapper *::after {
-    box-sizing: border-box;
-  }
-  .ticket-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 18px;
-  }
+  .ticket-wrapper { max-width: 860px; margin: 0 auto; background: #fff; border: 1px solid #ccc; padding: 24px 28px; font-family: 'Source Sans 3', Arial, sans-serif; font-size: 13px; color: #222; box-sizing: border-box; }
+  .ticket-wrapper *, .ticket-wrapper *::before, .ticket-wrapper *::after { box-sizing: border-box; }
+  .ticket-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
   .ticket-agency-info { font-size: 12px; line-height: 1.6; }
   .ticket-agency-info strong { font-size: 13px; }
   .ticket-title-block { text-align: center; flex: 1; }
-  .ticket-title-block h1 {
-    font-size: 26px;
-    font-weight: 700;
-    color: #222;
-    letter-spacing: 1px;
-    margin: 0;
-  }
+  .ticket-title-block h1 { font-size: 26px; font-weight: 700; color: #222; letter-spacing: 1px; margin: 0; }
   .ticket-status-pnr { text-align: right; }
-  .ticket-badge-confirmed {
-    display: inline-block;
-    border: 2px solid #2e7d32;
-    color: #2e7d32;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 3px 14px;
-    border-radius: 4px;
-    margin-bottom: 6px;
-  }
+  .ticket-badge-confirmed { display: inline-block; border: 2px solid #2e7d32; color: #2e7d32; font-weight: 700; font-size: 13px; padding: 3px 14px; border-radius: 4px; margin-bottom: 6px; }
   .ticket-pnr-line { font-size: 14px; font-weight: 700; color: #d4860a; }
   .ticket-issued-line { font-size: 11.5px; color: #555; }
-
   .ticket-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
   .ticket-table th, .ticket-table td { border: 1px solid #c0c0c0; padding: 7px 10px; font-size: 12.5px; }
   .ticket-table thead th { background: #d9e4f0; font-weight: 700; color: #1a1a1a; font-size: 12.5px; }
   .ticket-section-label { background: #eef3fa; font-weight: 600; font-size: 12.5px; color: #333; }
-
   .ticket-flight-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
-  .ticket-airline-badge {
-    width: 34px; height: 34px;
-    background: #1a3f6f;
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-weight: 900; font-size: 11px;
-    flex-shrink: 0; text-align: center; line-height: 1.1;
-  }
+  .ticket-airline-badge { width: 34px; height: 34px; background: #1a3f6f; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 11px; flex-shrink: 0; text-align: center; line-height: 1.1; }
   .ticket-flight-sub { font-size: 11.5px; color: #555; font-weight: 400; }
   .ticket-airport-code { font-size: 18px; font-weight: 700; }
   .ticket-airport-name { font-size: 11px; color: #555; }
   .ticket-terminal-time { font-size: 11.5px; color: #333; }
   .ticket-dep-time { font-weight: 700; color: #111; }
   .ticket-arrow-cell { text-align: center; color: #e87722; font-size: 20px; vertical-align: middle; }
-
   .ticket-anc-header { background: #d9e4f0; font-weight: 700; }
   .ticket-anc-passenger { font-weight: 700; background: #f5f5f5; }
-
   .ticket-anc-table { table-layout: fixed; width: 100%; }
-  .ticket-anc-col-route   { width: 80px; }
-  .ticket-anc-col-baggage { width: 160px; }
-  .ticket-anc-col-seat    { width: 70px; }
-  .ticket-anc-col-meal    { width: 70px; }
-  .ticket-anc-col-ssr     { width: 90px; }
-  .ticket-anc-col-barcode { width: 160px; }
-
+  .ticket-anc-col-route { width: 80px; } .ticket-anc-col-baggage { width: 160px; }
+  .ticket-anc-col-seat { width: 70px; } .ticket-anc-col-meal { width: 70px; }
+  .ticket-anc-col-ssr { width: 90px; } .ticket-anc-col-barcode { width: 160px; }
   .ticket-anc-label { display: block; font-weight: 700; font-size: 12px; margin-bottom: 4px; }
   .ticket-anc-value { display: block; font-size: 12px; color: #333; }
   .ticket-baggage-detail { font-size: 12px; line-height: 1.7; }
-
-  .ticket-bottom-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-top: 14px;
-  }
-  .ticket-bottom-section.no-price {
-    grid-template-columns: 1fr 1fr;
-  }
+  .ticket-bottom-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 14px; }
+  .ticket-bottom-section.no-price { grid-template-columns: 1fr 1fr; }
   .ticket-important-box { font-size: 12px; line-height: 1.7; }
   .ticket-important-box .red-bold { color: #c00; font-weight: 700; }
   .ticket-important-box .bold { font-weight: 700; }
@@ -2022,9 +154,34 @@ const ticketStyles = `
   .ticket-payment-box td { border: 1px solid #ccc; padding: 5px 10px; }
   .ticket-pay-header { background: #d9e4f0; font-weight: 700; font-size: 13px; padding: 6px 10px; border: 1px solid #ccc; }
   .ticket-total-row td { font-weight: 700; background: #f5f5f5; }
+
+  /* ── WhatsApp Modal ── */
+  .wa-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(2px); animation: waFadeIn 0.18s ease; }
+  @keyframes waFadeIn { from { opacity: 0 } to { opacity: 1 } }
+  .wa-modal { background: #fff; border-radius: 16px; width: 420px; max-width: 95vw; box-shadow: 0 24px 60px rgba(0,0,0,0.22); overflow: hidden; animation: waSlideUp 0.22s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes waSlideUp { from { transform: translateY(30px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+  .wa-modal-header { background: #25D366; padding: 18px 22px; display: flex; align-items: center; gap: 12px; }
+  .wa-modal-header svg { flex-shrink: 0; }
+  .wa-modal-header h3 { margin: 0; color: #fff; font-size: 17px; font-weight: 700; font-family: 'Source Sans 3', sans-serif; }
+  .wa-modal-body { padding: 22px; }
+  .wa-field { margin-bottom: 16px; }
+  .wa-field label { display: block; font-size: 12.5px; font-weight: 700; color: #444; margin-bottom: 6px; font-family: 'Source Sans 3', sans-serif; letter-spacing: 0.3px; }
+  .wa-field input, .wa-field textarea { width: 100%; border: 1.5px solid #ddd; border-radius: 8px; padding: 10px 13px; font-size: 13.5px; font-family: inherit; transition: border-color 0.15s; outline: none; resize: none; color: #222; }
+  .wa-field input:focus, .wa-field textarea:focus { border-color: #25D366; box-shadow: 0 0 0 3px rgba(37,211,102,0.12); }
+  .wa-price-toggle { display: flex; gap: 10px; }
+  .wa-price-btn { flex: 1; padding: 9px; border: 2px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; transition: all 0.15s; color: #555; }
+  .wa-price-btn.active { border-color: #25D366; background: #f0fdf4; color: #15803d; }
+  .wa-modal-footer { padding: 0 22px 22px; display: flex; gap: 10px; }
+  .wa-btn-cancel { flex: 1; padding: 11px; border: 1.5px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; color: #666; transition: background 0.15s; }
+  .wa-btn-cancel:hover { background: #f5f5f5; }
+  .wa-btn-share { flex: 2; padding: 11px; border: none; border-radius: 8px; background: #25D366; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; }
+  .wa-btn-share:hover { background: #1ebe5d; }
+  .wa-btn-share:disabled { background: #a8e6c2; cursor: not-allowed; }
+  .wa-error { font-size: 12px; color: #dc2626; margin-top: 5px; display: block; }
+  .wa-fetching { font-size: 12px; color: #888; margin-top: 5px; }
 `;
 
-// ── Code128B encoder + canvas barcode renderer ───────────────
+// ── Code128B barcode encoder ──────────────────────────────────
 const C128B = [
   '11011001100','11001101100','11001100110','10010011000','10010001100',
   '10001001100','10011001000','10001100100','10011000100','11001001000',
@@ -2067,16 +224,12 @@ function encodeCode128B(text) {
 
 function drawBarcode(canvas, text) {
   if (!canvas || !text) return;
-  const bars   = encodeCode128B(text);
-  const barW   = 1.5;
-  const height = 48;
-  const quietW = 10;
+  const bars = encodeCode128B(text);
+  const barW = 1.5, height = 48, quietW = 10;
   const totalW = bars.length * barW + quietW * 2;
-  canvas.width  = totalW;
-  canvas.height = height;
+  canvas.width = totalW; canvas.height = height;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, totalW, height);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, totalW, height);
   ctx.fillStyle = '#000';
   let x = quietW;
   for (let i = 0; i < bars.length; i++) {
@@ -2085,7 +238,7 @@ function drawBarcode(canvas, text) {
   }
 }
 
-// ── BarcodeCell component ─────────────────────────────────────
+// ── BarcodeCell ───────────────────────────────────────────────
 const BarcodeCell = ({ passenger }) => {
   const barcodeObj = passenger?.BarcodeDetails?.Barcode?.[0];
   const canvasRef  = React.useRef(null);
@@ -2098,52 +251,100 @@ const BarcodeCell = ({ passenger }) => {
   }, [content]);
 
   if (!barcodeObj) return <span style={{ fontSize: 11, color: '#999' }}>––</span>;
-
   if (barcodeObj.BarCodeInBase64) {
-    return (
-      <img
-        src={`data:image/png;base64,${barcodeObj.BarCodeInBase64}`}
-        alt="Boarding barcode"
-        style={{ maxWidth: 150, maxHeight: 56, display: 'block', margin: '0 auto' }}
-      />
-    );
+    return <img src={`data:image/png;base64,${barcodeObj.BarCodeInBase64}`} alt="Boarding barcode" style={{ maxWidth: 150, maxHeight: 56, display: 'block', margin: '0 auto' }} />;
   }
+  return <canvas ref={canvasRef} style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 50 }} />;
+};
+
+// ── WhatsApp Share Modal ──────────────────────────────────────
+const WhatsAppShareModal = ({ isOpen, onClose, onShare, defaultMobile, isSending }) => {
+  const [mobile, setMobile]       = useState('');
+  const [message, setMessage]     = useState('');
+  const [withPrice, setWithPrice] = useState(false);
+  const [error, setError]         = useState('');
+
+  useEffect(() => {
+    if (defaultMobile) setMobile(defaultMobile);
+  }, [defaultMobile]);
+
+  if (!isOpen) return null;
+
+  const handleShare = () => {
+    const cleaned = mobile.replace(/[\s\-\(\)]/g, '');
+    if (!cleaned) { setError('Please enter a valid mobile number.'); return; }
+    if (!/^\+?[0-9]{7,15}$/.test(cleaned)) { setError('Enter a valid number with country code, e.g. +919876543210'); return; }
+    setError('');
+    onShare(withPrice, cleaned, message);
+  };
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 50 }}
-    />
+    <div className="wa-modal-overlay" onClick={onClose}>
+      <div className="wa-modal" onClick={e => e.stopPropagation()}>
+        <div className="wa-modal-header">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="14" fill="white" fillOpacity="0.25"/>
+            <path d="M14 4C8.477 4 4 8.477 4 14c0 1.82.49 3.524 1.343 4.99L4 24l5.163-1.322A9.96 9.96 0 0014 24c5.523 0 10-4.477 10-10S19.523 4 14 4zm5.07 13.9c-.213.598-1.236 1.14-1.7 1.196-.435.052-.985.074-1.59-.1-.367-.11-.838-.258-1.44-.504-2.528-1.09-4.18-3.63-4.307-3.8-.128-.17-1.04-1.383-1.04-2.638 0-1.255.658-1.872.891-2.126.234-.254.51-.318.68-.318l.49.009c.157.007.368-.06.576.44.213.513.724 1.768.786 1.896.063.128.105.277.02.447-.084.17-.127.276-.254.425-.127.148-.267.33-.382.444-.127.127-.26.265-.112.52.149.255.66 1.088 1.417 1.763.972.866 1.792 1.134 2.047 1.262.255.127.404.106.553-.064.148-.17.637-.744.807-1 .17-.255.34-.212.573-.127.234.085 1.487.701 1.742.83.255.127.425.19.488.296.063.107.063.616-.15 1.214z" fill="white"/>
+          </svg>
+          <h3>Share via WhatsApp</h3>
+        </div>
+
+        <div className="wa-modal-body">
+          <div className="wa-field">
+            <label>📱 Customer Mobile Number</label>
+            <input
+              type="tel"
+              placeholder="+91 9876543210"
+              value={mobile}
+              onChange={e => { setMobile(e.target.value); setError(''); }}
+            />
+            {error && <span className="wa-error">{error}</span>}
+            {!defaultMobile && !error && <span className="wa-fetching">Fetching from database…</span>}
+          </div>
+
+          <div className="wa-field">
+            <label>💬 Message (optional)</label>
+            <textarea
+              rows={3}
+              placeholder="Dear passenger, please find your e-ticket attached."
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+            />
+          </div>
+
+          <div className="wa-field">
+            <label>🧾 Ticket Type</label>
+            <div className="wa-price-toggle">
+              <button className={`wa-price-btn${!withPrice ? ' active' : ''}`} onClick={() => setWithPrice(false)}>Without Price</button>
+              <button className={`wa-price-btn${withPrice ? ' active' : ''}`} onClick={() => setWithPrice(true)}>With Price</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="wa-modal-footer">
+          <button className="wa-btn-cancel" onClick={onClose}>Cancel</button>
+          <button className="wa-btn-share" onClick={handleShare} disabled={isSending}>
+            {isSending ? 'Preparing…' : (
+              <>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                Send on WhatsApp
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
-// ── Reusable single-flight ticket block ──────────────────────
-const TicketBlock = ({
-  id,
-  branchData,
-  dataa,
-  datas,
-  segm,
-  lsegm,
-  segments,
-  farevl,
-  serviceprice,
-  discount,
-  markupp,
-  showPrice,
-  flightLabel,
-}) => {
-  const paxType = (z) => {
-    if (z === 1) return 'Adult';
-    if (z === 2) return 'Child';
-    if (z === 3) return 'Infant';
-    return '';
-  };
-
+// ── TicketBlock ───────────────────────────────────────────────
+const TicketBlock = ({ id, branchData, dataa, datas, segm, lsegm, segments, farevl, serviceprice, discount, markupp, showPrice, flightLabel }) => {
+  const paxType = (z) => z === 1 ? 'Adult' : z === 2 ? 'Child' : z === 3 ? 'Infant' : '';
   const fmt = (dt) => moment(dt).format('ddd, DD-MMM-YYYY HH:mm');
   const toINR = (v) => parseFloat(v || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
 
-  const totalAmount = parseFloat(farevl?.PublishedFare || 0)
+  const totalAmount =
+    parseFloat(farevl?.PublishedFare || 0)
     + parseFloat(markupp || 0)
     + parseFloat(farevl?.TotalBaggageCharges || 0)
     + parseFloat(farevl?.TotalMealCharges || 0)
@@ -2152,8 +353,6 @@ const TicketBlock = ({
 
   return (
     <div id={id} className="ticket-wrapper" style={{ marginBottom: 32 }}>
-
-      {/* ── HEADER ── */}
       <div className="ticket-header">
         <div className="ticket-agency-info">
           <img src="assets/images/SIGNATORY01.png" height="100" alt="TravelXpo" style={{ maxWidth: 160 }} /><br />
@@ -2164,8 +363,7 @@ const TicketBlock = ({
           <h1>E-Ticket</h1>
           {branchData?.data?.company_name && (
             <div style={{ fontSize: 12, color: '#555', marginTop: 4 }}>
-              {branchData.data.company_name}<br />
-              {branchData.data.company_email}
+              {branchData.data.company_name}<br />{branchData.data.company_email}
             </div>
           )}
         </div>
@@ -2180,17 +378,8 @@ const TicketBlock = ({
         </div>
       </div>
 
-      {/* ── PASSENGER TABLE ── */}
       <table className="ticket-table">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Passenger Type</th>
-            <th>Ticket No.</th>
-            <th>GST No.</th>
-          </tr>
-        </thead>
+        <thead><tr><th>First Name</th><th>Last Name</th><th>Passenger Type</th><th>Ticket No.</th><th>GST No.</th></tr></thead>
         <tbody>
           {datas.map((p, i) => (
             <tr key={i}>
@@ -2204,20 +393,10 @@ const TicketBlock = ({
         </tbody>
       </table>
 
-      {/* ── FLIGHT DETAILS TABLE ── */}
       <table className="ticket-table">
-        <thead>
-          <tr>
-            <th>Flight Details</th>
-            <th>Departure</th>
-            <th style={{ width: 40 }}></th>
-            <th style={{ textAlign: 'right' }}>Arrival</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Flight Details</th><th>Departure</th><th style={{ width: 40 }}></th><th style={{ textAlign: 'right' }}>Arrival</th></tr></thead>
         <tbody>
-          <tr>
-            <td colSpan="4" className="ticket-section-label">{flightLabel}</td>
-          </tr>
+          <tr><td colSpan="4" className="ticket-section-label">{flightLabel}</td></tr>
           {segments.map((seg, idx) => (
             <tr key={idx}>
               <td>
@@ -2248,44 +427,29 @@ const TicketBlock = ({
         </tbody>
       </table>
 
-      {/* ── ANCILLARY TABLE ── */}
       <table className="ticket-table ticket-anc-table">
         <colgroup>
-          <col className="ticket-anc-col-route" />
-          <col className="ticket-anc-col-baggage" />
-          <col className="ticket-anc-col-seat" />
-          <col className="ticket-anc-col-meal" />
-          <col className="ticket-anc-col-ssr" />
-          <col className="ticket-anc-col-barcode" />
+          <col className="ticket-anc-col-route" /><col className="ticket-anc-col-baggage" />
+          <col className="ticket-anc-col-seat" /><col className="ticket-anc-col-meal" />
+          <col className="ticket-anc-col-ssr" /><col className="ticket-anc-col-barcode" />
         </colgroup>
         <thead>
-          <tr>
-            <th colSpan="5" className="ticket-anc-header">Ancillary Details</th>
-            <th className="ticket-anc-header">Barcode</th>
-          </tr>
+          <tr><th colSpan="5" className="ticket-anc-header">Ancillary Details</th><th className="ticket-anc-header">Barcode</th></tr>
         </thead>
         <tbody>
           <tr><td colSpan="6" className="ticket-section-label">{flightLabel}</td></tr>
           {datas.map((p, i) => {
             const segInfo = p?.SegmentAdditionalInfo?.[0];
-            const paidBag = p?.Baggage?.length > 0
-              ? p.Baggage.map(b => b.Text || `${b.Weight} Kg`).join(', ')
-              : null;
+            const paidBag = p?.Baggage?.length > 0 ? p.Baggage.map(b => b.Text || `${b.Weight} Kg`).join(', ') : null;
             const meal = p?.MealDynamic?.length > 0 && p.MealDynamic[0].AirlineDescription
               ? p.MealDynamic[0].AirlineDescription
-              : (p?.MealDynamic?.[0]?.Code && p.MealDynamic[0].Code !== 'NoMeal'
-                  ? p.MealDynamic[0].Code
-                  : '––');
+              : (p?.MealDynamic?.[0]?.Code && p.MealDynamic[0].Code !== 'NoMeal' ? p.MealDynamic[0].Code : '––');
             const seat = segInfo?.Seat || '––';
             const ssr = segInfo?.SpecialService || (p?.Ssr?.length > 0 ? p.Ssr[0] : '––');
 
             return (
               <React.Fragment key={i}>
-                <tr>
-                  <td colSpan="6" className="ticket-anc-passenger">
-                    {p?.Title} {p?.FirstName} {p?.LastName}
-                  </td>
-                </tr>
+                <tr><td colSpan="6" className="ticket-anc-passenger">{p?.Title} {p?.FirstName} {p?.LastName}</td></tr>
                 <tr>
                   <td style={{ fontSize: 11, color: '#777', width: 90 }}>
                     {segm.Origin?.Airport?.AirportCode} – {lsegm.Destination?.Airport?.AirportCode}<br />
@@ -2294,26 +458,15 @@ const TicketBlock = ({
                   <td>
                     <div className="ticket-anc-label">🧳 Baggage</div>
                     <div className="ticket-baggage-detail">
-                      Cabin: {segm.CabinBaggage || segInfo?.Baggage?.split('|')[1]?.trim() || '7 Kg'}<br />
-                      Check-In: {segm.Baggage || segInfo?.Baggage?.split('|')[0]?.trim() || '15 Kg'}<br />
+                      Cabin: {segm.CabinBaggage || '7 Kg'}<br />
+                      Check-In: {segm.Baggage || '15 Kg'}<br />
                       {paidBag ? `Extra: ${paidBag}` : 'Excess: ––'}
                     </div>
                   </td>
-                  <td  style={{ verticalAlign: 'top' }}>
-                    <div className="ticket-anc-label">🪑 Seat</div>
-                    <div>{seat}</div>
-                  </td>
-                  <td  style={{ verticalAlign: 'top' }}>
-                    <div className="ticket-anc-label">🍽 Meal</div>
-                    <div>{meal}</div>
-                  </td>
-                  <td  style={{ verticalAlign: 'top' }}>
-                    <div className="ticket-anc-label"  style={{ whiteSpace: 'nowrap' }}>⭐ Special Service</div>
-                    <div>{ssr}</div>
-                  </td>
-                  <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                    <BarcodeCell passenger={p} />
-                  </td>
+                  <td style={{ verticalAlign: 'top' }}><div className="ticket-anc-label">🪑 Seat</div><div>{seat}</div></td>
+                  <td style={{ verticalAlign: 'top' }}><div className="ticket-anc-label">🍽 Meal</div><div>{meal}</div></td>
+                  <td style={{ verticalAlign: 'top' }}><div className="ticket-anc-label" style={{ whiteSpace: 'nowrap' }}>⭐ Special Service</div><div>{ssr}</div></td>
+                  <td style={{ textAlign: 'center', verticalAlign: 'middle' }}><BarcodeCell passenger={p} /></td>
                 </tr>
               </React.Fragment>
             );
@@ -2321,21 +474,13 @@ const TicketBlock = ({
         </tbody>
       </table>
 
-      {/* ── BOTTOM SECTION: 3-col with price, 2-col without ── */}
       <div className={`ticket-bottom-section${showPrice ? '' : ' no-price'}`}>
-
-        {/* Left: Important */}
         <div className="ticket-important-box">
-          <p><span className="red-bold">Important:</span> This is an Electronic Ticket. Passengers must carry a valid photo ID for check-in at the airport.</p>
-          <br />
-          <p><span className="bold">Baggage dimensions may vary depending on airline policies. Please confirm with the airline in advance.</span></p>
-          <br />
-          <p>Carriage and other services provided by the carrier are subject to conditions of carriage. Passengers travelling on a tourist visa must show a return ticket at check-in.</p>
-          <br />
+          <p><span className="red-bold">Important:</span> This is an Electronic Ticket. Passengers must carry a valid photo ID for check-in at the airport.</p><br />
+          <p><span className="bold">Baggage dimensions may vary depending on airline policies. Please confirm with the airline in advance.</span></p><br />
+          <p>Carriage and other services provided by the carrier are subject to conditions of carriage. Passengers travelling on a tourist visa must show a return ticket at check-in.</p><br />
           <p><span className="bold">Note:</span> We recommend purchasing travel insurance. Please contact your travel advisor.</p>
         </div>
-
-        {/* Centre: General Information */}
         <div className="ticket-general-info">
           <strong>General Information :</strong>
           <ul>
@@ -2347,45 +492,19 @@ const TicketBlock = ({
             <li>Report 2 hours before departure. Check-in closes 1 hour before departure.</li>
           </ul>
         </div>
-
-        {/* Right: Payment — only rendered when showPrice is true */}
         {showPrice && (
           <div className="ticket-payment-box">
             <table>
               <tbody>
                 <tr><td colSpan="2" className="ticket-pay-header">Payment Details</td></tr>
-                <tr>
-                  <td>Fare (incl. markup):</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(parseFloat(farevl?.PublishedFare || 0) + parseFloat(markupp || 0))}</td>
-                </tr>
-                <tr>
-                  <td>Transaction Fee:</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.TransactionFee)}</td>
-                </tr>
-                <tr>
-                  <td>Other Charges:</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.OtherCharges)}</td>
-                </tr>
-                <tr>
-                  <td>Baggage Charges:</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.TotalBaggageCharges)}</td>
-                </tr>
-                <tr>
-                  <td>Meal Charges:</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(farevl?.TotalMealCharges)}</td>
-                </tr>
-                <tr>
-                  <td>Service Charge:</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(serviceprice)}</td>
-                </tr>
-                <tr>
-                  <td>Discount:</td>
-                  <td style={{ textAlign: 'right' }}>- {toINR(discount)}</td>
-                </tr>
-                <tr className="ticket-total-row">
-                  <td>Total Amount:</td>
-                  <td style={{ textAlign: 'right' }}>{toINR(totalAmount)}</td>
-                </tr>
+                <tr><td>Fare (incl. markup):</td><td style={{ textAlign: 'right' }}>{toINR(parseFloat(farevl?.PublishedFare || 0) + parseFloat(markupp || 0))}</td></tr>
+                <tr><td>Transaction Fee:</td><td style={{ textAlign: 'right' }}>{toINR(farevl?.TransactionFee)}</td></tr>
+                <tr><td>Other Charges:</td><td style={{ textAlign: 'right' }}>{toINR(farevl?.OtherCharges)}</td></tr>
+                <tr><td>Baggage Charges:</td><td style={{ textAlign: 'right' }}>{toINR(farevl?.TotalBaggageCharges)}</td></tr>
+                <tr><td>Meal Charges:</td><td style={{ textAlign: 'right' }}>{toINR(farevl?.TotalMealCharges)}</td></tr>
+                <tr><td>Service Charge:</td><td style={{ textAlign: 'right' }}>{toINR(serviceprice)}</td></tr>
+                <tr><td>Discount:</td><td style={{ textAlign: 'right' }}>- {toINR(discount)}</td></tr>
+                <tr className="ticket-total-row"><td>Total Amount:</td><td style={{ textAlign: 'right' }}>{toINR(totalAmount)}</td></tr>
               </tbody>
             </table>
           </div>
@@ -2398,37 +517,47 @@ const TicketBlock = ({
 // ── Main Component ────────────────────────────────────────────
 const BookingDomesticRound = () => {
   const location = useLocation();
-  //const response = location.state?.responsebook;
-  const response = location.state?.responsebook ?? sample1;
-  //const responsereturn = location.state?.responsebookreturn;
-const responsereturn = location.state?.responsebook ?? sampleIB;
-  const navigate = useNavigate();
-  const [value, setValue] = useState('');
-  const [branchData, setBranchData] = useState('');
-  const [showPrice, setShowPrice] = useState(true);
+  const response       = location.state?.responsebook       ?? sample1;
+  const responsereturn = location.state?.responsebookreturn ?? sampleIB;
+
+  const navigate  = useNavigate();
+  const [value, setValue]               = useState('');
+  const [branchData, setBranchData]     = useState('');
+  const [showPrice, setShowPrice]       = useState(true);
+  const [showWaModal, setShowWaModal]   = useState(false);
+  const [customerMobile, setCustomerMobile] = useState('');
+  const [isSending, setIsSending]       = useState(false);
+
   const branchId = sessionStorage.getItem('branchId');
 
-  // ── Outbound flight data ──
-  const dataa = response.Response.Response;
-  const farevl = response.Response.Response.FlightItinerary.Fare;
-  const datas = response.Response.Response.FlightItinerary.Passenger;
-  const segments = response.Response.Response.FlightItinerary.Segments;
-  const segm = segments[0];
-  const lsegm = segments[segments.length - 1];
-  const serviceprice = response.price;
-  const discount = response.discount;
-  const markupp = parseFloat(response.expoPrice) + parseFloat(response.agentPrice) + parseFloat(response.subagentPrice);
+  // ── Outbound ──
+  const dataa      = response.Response.Response;
+  const farevl     = response.Response.Response.FlightItinerary.Fare;
+  const datas      = response.Response.Response.FlightItinerary.Passenger;
+  const segments   = response.Response.Response.FlightItinerary.Segments;
+  const segm       = segments[0];
+  const lsegm      = segments[segments.length - 1];
+  const serviceprice  = response.price   ?? 0;
+  const discount      = response.discount ?? 0;
+  const markupp       = parseFloat(response.expoPrice    || 0)
+                      + parseFloat(response.agentPrice   || 0)
+                      + parseFloat(response.subagentPrice || 0);
 
-  // ── Return flight data ──
-  const dataa1 = responsereturn.Response.Response;
-  const farevl1 = responsereturn.Response.Response.FlightItinerary.Fare;
-  const datas1 = responsereturn.Response.Response.FlightItinerary.Passenger;
-  const segments1 = responsereturn.Response.Response.FlightItinerary.Segments;
-  const segm1 = segments1[0];
-  const lsegm1 = segments1[segments1.length - 1];
-  const serviceprice1 = responsereturn.price;
-  const discount1 = responsereturn.discount;
-  const markupp1 = parseFloat(responsereturn.expoPrice) + parseFloat(responsereturn.agentPrice) + parseFloat(responsereturn.subagentPrice);
+  // ── Return ──
+  const dataa1     = responsereturn.Response.Response;
+  const farevl1    = responsereturn.Response.Response.FlightItinerary.Fare;
+  const datas1     = responsereturn.Response.Response.FlightItinerary.Passenger;
+  const segments1  = responsereturn.Response.Response.FlightItinerary.Segments;
+  const segm1      = segments1[0];
+  const lsegm1     = segments1[segments1.length - 1];
+  const serviceprice1 = responsereturn.price    ?? 0;
+  const discount1     = responsereturn.discount  ?? 0;
+  const markupp1      = parseFloat(responsereturn.expoPrice    || 0)
+                      + parseFloat(responsereturn.agentPrice   || 0)
+                      + parseFloat(responsereturn.subagentPrice || 0);
+
+  // Lead passenger's ContactNo as quick fallback
+  const leadPaxMobile = datas?.[0]?.ContactNo || '';
 
   useEffect(() => {
     const storedValue = localStorage.getItem('tokenValue');
@@ -2447,6 +576,65 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
     fetchAgentInfo();
   }, [branchId]);
 
+  // ── Fetch customer mobile ─────────────────────────────────
+  const fetchCustomerMobile = async () => {
+    // Priority 1: sessionStorage
+    const fromSession = sessionStorage.getItem('whatsapp');
+    if (fromSession) { setCustomerMobile(fromSession); return; }
+
+    // Priority 2: lead passenger ContactNo already in the response
+    if (leadPaxMobile) { setCustomerMobile(leadPaxMobile); return; }
+
+    // Priority 3: your backend API
+    try {
+      const bookingId = response.Response.Response.BookingId;
+      const res = await axios.post('https://b2b.travelxpo.in/api/getBookingContact', {
+        bookingId,
+        branchId,
+      });
+      const mobile =
+        res?.data?.mobile         ||
+        res?.data?.customerMobile ||
+        res?.data?.poc_mobile     ||
+        res?.data?.phone          ||
+        '';
+      setCustomerMobile(mobile);
+    } catch (err) {
+      console.error('Could not fetch customer mobile:', err);
+    }
+  };
+
+  const openWhatsAppModal = () => {
+    setCustomerMobile('');
+    setShowWaModal(true);
+    fetchCustomerMobile();
+  };
+
+  // ── Generate 2-page PDF blob (outbound + return) ──────────
+  const generatePdfBlob = async (withPrice) => {
+    setShowPrice(withPrice);
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    const pdfView1 = document.getElementById('pdf-view1');
+    const pdfView2 = document.getElementById('pdf-view2');
+
+    const [canvas1, canvas2] = await Promise.all([
+      html2canvas(pdfView1, { scale: 2, useCORS: true }),
+      html2canvas(pdfView2, { scale: 2, useCORS: true }),
+    ]);
+
+    const doc   = new jsPDF('portrait', 'pt', 'A4');
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+
+    doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 10, 10, pageW - 20, pageH - 20);
+    doc.addPage();
+    doc.addImage(canvas2.toDataURL('image/png'), 'PNG', 10, 10, pageW - 20, pageH - 20);
+
+    return doc.output('blob');
+  };
+
+  // ── Download PDF (original behaviour) ────────────────────
   const pdfDownload = async (e, withPrice) => {
     e.preventDefault();
     setShowPrice(withPrice);
@@ -2455,9 +643,9 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
     const pdfView1 = document.getElementById('pdf-view1');
     const pdfView2 = document.getElementById('pdf-view2');
 
-    html2canvas(pdfView1, { scale: 2, useCORS: true }).then((canvas1) => {
-      html2canvas(pdfView2, { scale: 2, useCORS: true }).then((canvas2) => {
-        const doc = new jsPDF('portrait', 'pt', 'A4');
+    html2canvas(pdfView1, { scale: 2, useCORS: true }).then(canvas1 => {
+      html2canvas(pdfView2, { scale: 2, useCORS: true }).then(canvas2 => {
+        const doc   = new jsPDF('portrait', 'pt', 'A4');
         const pageW = doc.internal.pageSize.getWidth();
         const pageH = doc.internal.pageSize.getHeight();
         doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 10, 10, pageW - 20, pageH - 20);
@@ -2468,6 +656,51 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
     });
   };
 
+  // ── Share to WhatsApp ─────────────────────────────────────
+  const shareToWhatsApp = async (withPrice, mobileNumber, message) => {
+    setIsSending(true);
+    const fileName = withPrice ? 'RoundTrip-Ticket-With-Price.pdf' : 'RoundTrip-Ticket-No-Price.pdf';
+
+    let cleanNumber = mobileNumber.replace(/[\s\-\(\)]/g, '');
+    if (/^[6-9]\d{9}$/.test(cleanNumber)) cleanNumber = '91' + cleanNumber;
+    if (cleanNumber.startsWith('+')) cleanNumber = cleanNumber.slice(1);
+
+    try {
+      const blob = await generatePdfBlob(withPrice);
+      const file = new File([blob], fileName, { type: 'application/pdf' });
+
+      // Mobile: native Web Share API (attaches PDF directly)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: 'Round Trip E-Ticket',
+          text: message || 'Dear passenger, please find your round trip e-ticket attached.',
+          files: [file],
+        });
+        setShowWaModal(false);
+        setIsSending(false);
+        return;
+      }
+
+      // Desktop fallback: auto-download PDF + open WhatsApp Web
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href = url; a.download = fileName; a.click();
+      URL.revokeObjectURL(url);
+
+      const encodedMsg = encodeURIComponent(
+        message || `Dear passenger, please find your round trip e-ticket (${fileName}) attached.`
+      );
+      window.open(`https://wa.me/${cleanNumber}?text=${encodedMsg}`, '_blank');
+      setShowWaModal(false);
+
+    } catch (err) {
+      console.error('WhatsApp share failed:', err);
+      alert('Could not open WhatsApp. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   return (
     <div>
       <style>{ticketStyles}</style>
@@ -2476,7 +709,7 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
 
         {/* ── Action bar ── */}
         <div className="row mb-3">
-          <div className="col-lg-6"></div>
+          <div className="col-lg-5"></div>
           <div className="col-lg-1" style={{ marginTop: '-25px' }}>
             <Link to="/dashboard">
               <h5>◄◄ <i className="fa fa-home pt-4" aria-hidden="true" style={{ color: '#333' }}></i></h5>
@@ -2492,6 +725,19 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
               Download Without Price
             </button>
           </div>
+          {/* ── WhatsApp Share Button ── */}
+          <div className="col-lg-2" style={{ marginTop: '-15px' }}>
+            <button
+              onClick={openWhatsAppModal}
+              className="btn"
+              style={{ background: '#25D366', color: '#fff', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Share on WhatsApp
+            </button>
+          </div>
         </div>
 
         {/* ── Outbound Ticket ── */}
@@ -2503,10 +749,8 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
                 <TicketBlock
                   id="pdf-view1"
                   branchData={branchData}
-                  dataa={dataa}
-                  datas={datas}
-                  segm={segm}
-                  lsegm={lsegm}
+                  dataa={dataa} datas={datas}
+                  segm={segm} lsegm={lsegm}
                   segments={segments}
                   farevl={farevl}
                   serviceprice={serviceprice}
@@ -2530,10 +774,8 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
                 <TicketBlock
                   id="pdf-view2"
                   branchData={branchData}
-                  dataa={dataa1}
-                  datas={datas1}
-                  segm={segm1}
-                  lsegm={lsegm1}
+                  dataa={dataa1} datas={datas1}
+                  segm={segm1} lsegm={lsegm1}
                   segments={segments1}
                   farevl={farevl1}
                   serviceprice={serviceprice1}
@@ -2549,6 +791,15 @@ const responsereturn = location.state?.responsebook ?? sampleIB;
         </div>
 
       </div>
+
+      {/* ── WhatsApp Modal ── */}
+      <WhatsAppShareModal
+        isOpen={showWaModal}
+        onClose={() => setShowWaModal(false)}
+        onShare={shareToWhatsApp}
+        defaultMobile={customerMobile}
+        isSending={isSending}
+      />
     </div>
   );
 };

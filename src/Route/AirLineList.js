@@ -16,6 +16,7 @@ const AirLineList = () => {
     const [data, setData] = useState(response?.Response?.Results?.[0] || []);
     const [result, setResult] = useState(response);
     const [value, setValue] = useState('');
+    const [calendarFare,setCalendarFare]=useState([]);
     const [passenStr, setPassenStr] = useState('');
     const [balance, setBalance] = useState(sessionStorage.getItem('Balance'));
     const [showOfferedFare, setShowOfferedFare] = useState(false);
@@ -29,6 +30,9 @@ const AirLineList = () => {
 
   useEffect(() => {  
     //  alert(2);
+    if (jsonResponse && jsonResponse.CalendarFare ) {
+    setCalendarFare(jsonResponse.CalendarFare);
+   }
       if (jsonResponse && jsonResponse.Response && jsonResponse.Response.Results) {
         const processedFlights = processFlights(jsonResponse.Response.Results[0]);
     //    console.log(JSON.stringify(processedFlights));
@@ -1213,7 +1217,52 @@ let cancellationCharge='';
                                                     </Link>
                                                     </div>
                                                 </div>
-                                            <br></br>                    
+                                            <br></br>
+ <div className="calendar-fare-wrapper">
+  <div className="calendar-fare-scroll">
+
+    {calendarFare?.Response?.SearchResults?.map((item, index) => {
+
+      const date = new Date(item.DepartureDate);
+
+      const day = date.toLocaleDateString("en-IN", {
+        weekday: "short",
+      });
+
+      const fullDate = date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+      });
+
+      return (
+        <div
+          key={index}
+          className={`fare-card ${
+            item.IsLowestFareOfMonth ? "lowest-fare-card" : ""
+          }`}
+        >
+          <div className="fare-day">{day}</div>
+
+          <div className="fare-date">{fullDate}</div>
+
+          <div className="fare-price">
+            ₹ {Number(item.Fare).toLocaleString("en-IN")}
+          </div>
+
+          <div className="fare-airline">
+            {item.AirlineCode}
+          </div>
+
+          {item.IsLowestFareOfMonth && (
+            <div className="lowest-tag">
+              Lowest
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</div>                                                                 
 
                                             <table id="datatable" className="table dt-responsive table-bordered nowrap airlisttable" style={{borderCollapse: "collapse", borderSpacing: "0", width: "100%",textAlign:"center"}}>
                                             <thead  style={{backgroundColor: "#184265",color:"#fff"}}>
