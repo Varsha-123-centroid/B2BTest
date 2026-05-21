@@ -18,6 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 const CustomerInfoRound = () => {
     const navigate = useNavigate();
+    const [isDomestic, setIsDomestic] = useState(true);
     const [adult,setAdult]=useState(0);
     const [child,setChild]=useState(0);
     const [infant,setInfant]=useState(0);
@@ -146,6 +147,104 @@ const CustomerInfoRound = () => {
    const [grandTotal, setGrandTotal] = useState(0.00);
    const [agentBalance, setAgentBalance] = useState(0.00);
    const [prevent, setPrevent] = useState(1);
+    const countries =[
+  { "name": "Afghanistan", "code": "AF", "phone": "+93" },
+  { "name": "Albania", "code": "AL", "phone": "+355" },
+  { "name": "Algeria", "code": "DZ", "phone": "+213" },
+  { "name": "Andorra", "code": "AD", "phone": "+376" },
+  { "name": "Angola", "code": "AO", "phone": "+244" },
+  { "name": "Argentina", "code": "AR", "phone": "+54" },
+  { "name": "Armenia", "code": "AM", "phone": "+374" },
+  { "name": "Australia", "code": "AU", "phone": "+61" },
+  { "name": "Austria", "code": "AT", "phone": "+43" },
+  { "name": "Azerbaijan", "code": "AZ", "phone": "+994" },
+  { "name": "Bahrain", "code": "BH", "phone": "+973" },
+  { "name": "Bangladesh", "code": "BD", "phone": "+880" },
+  { "name": "Belarus", "code": "BY", "phone": "+375" },
+  { "name": "Belgium", "code": "BE", "phone": "+32" },
+  { "name": "Bhutan", "code": "BT", "phone": "+975" },
+  { "name": "Bolivia", "code": "BO", "phone": "+591" },
+  { "name": "Bosnia and Herzegovina", "code": "BA", "phone": "+387" },
+  { "name": "Botswana", "code": "BW", "phone": "+267" },
+  { "name": "Brazil", "code": "BR", "phone": "+55" },
+  { "name": "Brunei", "code": "BN", "phone": "+673" },
+  { "name": "Bulgaria", "code": "BG", "phone": "+359" },
+  { "name": "Cambodia", "code": "KH", "phone": "+855" },
+  { "name": "Cameroon", "code": "CM", "phone": "+237" },
+  { "name": "Canada", "code": "CA", "phone": "+1" },
+  { "name": "Chile", "code": "CL", "phone": "+56" },
+  { "name": "China", "code": "CN", "phone": "+86" },
+  { "name": "Colombia", "code": "CO", "phone": "+57" },
+  { "name": "Costa Rica", "code": "CR", "phone": "+506" },
+  { "name": "Croatia", "code": "HR", "phone": "+385" },
+  { "name": "Cuba", "code": "CU", "phone": "+53" },
+  { "name": "Cyprus", "code": "CY", "phone": "+357" },
+  { "name": "Czech Republic", "code": "CZ", "phone": "+420" },
+  { "name": "Denmark", "code": "DK", "phone": "+45" },
+  { "name": "Dominican Republic", "code": "DO", "phone": "+1" },
+  { "name": "Egypt", "code": "EG", "phone": "+20" },
+  { "name": "Estonia", "code": "EE", "phone": "+372" },
+  { "name": "Ethiopia", "code": "ET", "phone": "+251" },
+  { "name": "Finland", "code": "FI", "phone": "+358" },
+  { "name": "France", "code": "FR", "phone": "+33" },
+  { "name": "Georgia", "code": "GE", "phone": "+995" },
+  { "name": "Germany", "code": "DE", "phone": "+49" },
+  { "name": "Ghana", "code": "GH", "phone": "+233" },
+  { "name": "Greece", "code": "GR", "phone": "+30" },
+  { "name": "Hong Kong", "code": "HK", "phone": "+852" },
+  { "name": "Hungary", "code": "HU", "phone": "+36" },
+  { "name": "Iceland", "code": "IS", "phone": "+354" },
+  { "name": "India", "code": "IN", "phone": "+91" },
+  { "name": "Indonesia", "code": "ID", "phone": "+62" },
+  { "name": "Iran", "code": "IR", "phone": "+98" },
+  { "name": "Iraq", "code": "IQ", "phone": "+964" },
+  { "name": "Ireland", "code": "IE", "phone": "+353" },
+  { "name": "Israel", "code": "IL", "phone": "+972" },
+  { "name": "Italy", "code": "IT", "phone": "+39" },
+  { "name": "Japan", "code": "JP", "phone": "+81" },
+  { "name": "Jordan", "code": "JO", "phone": "+962" },
+  { "name": "Kazakhstan", "code": "KZ", "phone": "+7" },
+  { "name": "Kenya", "code": "KE", "phone": "+254" },
+  { "name": "Kuwait", "code": "KW", "phone": "+965" },
+  { "name": "Lebanon", "code": "LB", "phone": "+961" },
+  { "name": "Luxembourg", "code": "LU", "phone": "+352" },
+  { "name": "Malaysia", "code": "MY", "phone": "+60" },
+  { "name": "Maldives", "code": "MV", "phone": "+960" },
+  { "name": "Mexico", "code": "MX", "phone": "+52" },
+  { "name": "Morocco", "code": "MA", "phone": "+212" },
+  { "name": "Myanmar", "code": "MM", "phone": "+95" },
+  { "name": "Nepal", "code": "NP", "phone": "+977" },
+  { "name": "Netherlands", "code": "NL", "phone": "+31" },
+  { "name": "New Zealand", "code": "NZ", "phone": "+64" },
+  { "name": "Nigeria", "code": "NG", "phone": "+234" },
+  { "name": "Norway", "code": "NO", "phone": "+47" },
+  { "name": "Oman", "code": "OM", "phone": "+968" },
+  { "name": "Pakistan", "code": "PK", "phone": "+92" },
+  { "name": "Philippines", "code": "PH", "phone": "+63" },
+  { "name": "Poland", "code": "PL", "phone": "+48" },
+  { "name": "Portugal", "code": "PT", "phone": "+351" },
+  { "name": "Qatar", "code": "QA", "phone": "+974" },
+  { "name": "Romania", "code": "RO", "phone": "+40" },
+  { "name": "Russia", "code": "RU", "phone": "+7" },
+  { "name": "Saudi Arabia", "code": "SA", "phone": "+966" },
+  { "name": "Singapore", "code": "SG", "phone": "+65" },
+  { "name": "South Africa", "code": "ZA", "phone": "+27" },
+  { "name": "South Korea", "code": "KR", "phone": "+82" },
+  { "name": "Spain", "code": "ES", "phone": "+34" },
+  { "name": "Sri Lanka", "code": "LK", "phone": "+94" },
+  { "name": "Sweden", "code": "SE", "phone": "+46" },
+  { "name": "Switzerland", "code": "CH", "phone": "+41" },
+  { "name": "Thailand", "code": "TH", "phone": "+66" },
+  { "name": "Turkey", "code": "TR", "phone": "+90" },
+  { "name": "Ukraine", "code": "UA", "phone": "+380" },
+  { "name": "United Arab Emirates", "code": "AE", "phone": "+971" },
+  { "name": "United Kingdom", "code": "GB", "phone": "+44" },
+  { "name": "United States", "code": "US", "phone": "+1" },
+  { "name": "Uzbekistan", "code": "UZ", "phone": "+998" },
+  { "name": "Vietnam", "code": "VN", "phone": "+84" },
+  { "name": "Yemen", "code": "YE", "phone": "+967" },
+  { "name": "Zimbabwe", "code": "ZW", "phone": "+263" }
+];
       const setEditedDateOfBirthFun = (date)=>
       {
         const dd=moment(date).format('YYYY-MM-DD');
@@ -698,6 +797,28 @@ const CustomerInfoRound = () => {
     //mnDate.setFullYear(currentDate.getFullYear() - 112);
     // setMinDate(mnDate);
     // setMaxDate(mxDate);
+  useEffect(() => {
+  if (
+    farequote?.Response?.Results?.Segments?.length > 0
+  ) {
+    const orcode =
+      farequote.Response.Results.Segments[0][0]
+        ?.Origin?.Airport?.CountryCode;
+
+    const dstcode =
+      farequote.Response.Results.Segments[0][0]
+        ?.Destination?.Airport?.CountryCode;
+
+    //alert(orcode);
+   //alert(dstcode);
+
+    if (orcode === dstcode) {
+      setIsDomestic(true);
+    } else {
+      setIsDomestic(false);
+    }
+  }
+}, [farequote]);
     useEffect(() => {
       if (Array.isArray(ssrbag) && ssrbag.length > 0) {
       const initialSelected = ssrbag.findIndex(item => item.Price === 0.00);
@@ -795,9 +916,6 @@ const CustomerInfoRound = () => {
         ppnumber: yup
           .string()
           .required('Required'),
-        expirydate: yup
-          .date('Invalid expiry date')
-          .required('Required'),
         email: yup
           .string()
           .email('Invalid email')
@@ -818,9 +936,7 @@ const CustomerInfoRound = () => {
         address1: yup
           .string()
           .required('Required'),
-        address2: yup
-          .string()
-          .required('Required'),
+
     
       });
     const initialValues = {
@@ -837,7 +953,7 @@ const CustomerInfoRound = () => {
         country:'IN',
         city:'',
         address1:'',
-        address2:'',
+   
 
       };
       
@@ -2140,7 +2256,7 @@ const renderDocumentIdInput = () => {
                             <div className="clearDiv row">
                            
                             <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
-                                <label>Email</label>
+                                <label>Email <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                     <TextField
                                         id="email"
@@ -2159,15 +2275,14 @@ const renderDocumentIdInput = () => {
                                 </div>
 
                                 <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
-                                <label>Ccode</label>
+                                <label>Code <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                     <TextField
                                         id="ccode"
                                         name="ccode"
+                                        readonly
                                         className="form-control"
                                         value={formik.values.ccode}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
                                         error={formik.touched.ccode && Boolean(formik.errors.ccode)}
                                         helperText={formik.touched.ccode && formik.errors.ccode}
                                     /> 
@@ -2176,7 +2291,7 @@ const renderDocumentIdInput = () => {
                                 </div>
 
                                 <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
-                                <label>mobile</label>
+                                <label>mobile <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                     <TextField
                                         id="mobile"
@@ -2194,25 +2309,48 @@ const renderDocumentIdInput = () => {
                                 </div>
 
                                 <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
-                                <label>country</label>
+                                <label>Country <span className="text-danger">*</span></label>
                                     <div className="input_icon">
-                                    <TextField
-                                        id="country"
-                                        name="country"
-                                        className="form-control"
-                                        value={formik.values.country}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.country && Boolean(formik.errors.country)}
+                                                                 <select
+    id="country"
+    name="country"
+    className="form-control"
+    value={formik.values.country}
+    error={formik.touched.country && Boolean(formik.errors.country)}
                                         helperText={formik.touched.country && formik.errors.country}
-                                    /> 
+    onChange={(e) => {
+
+      const selectedCountry = countries.find(
+        (c) => c.code === e.target.value
+      );
+
+      formik.setFieldValue("country", selectedCountry.code);
+
+      formik.setFieldValue("ccode", selectedCountry.phone);
+
+    }}
+    onBlur={formik.handleBlur}
+  >
+
+    <option value="">Select Country</option>
+
+    {countries.map((country) => (
+      <option
+        key={country.code}
+        value={country.code}
+      >
+        {country.name}
+      </option>
+    ))}
+
+  </select> 
                                
                                     </div>
                                 </div>
                             </div>
                             <div className="clearDiv row">
                                 <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
-                                    <label>City</label>
+                                    <label>City <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                     <TextField
                                         id="city"
@@ -2229,7 +2367,7 @@ const renderDocumentIdInput = () => {
                                 </div>
 
                                 <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
-                                     <label>Address1</label>
+                                     <label>Address1 <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                     <TextField
                                         id="address1"
@@ -2271,7 +2409,7 @@ const renderDocumentIdInput = () => {
                             <div class="row">
                             
                                 <div className="col-lg-2 col-md-2 col-sm-2 col-xs-2 form-group"> 
-                                    <label>Title</label>
+                                    <label>Title <span className="text-danger">*</span></label>
                                    <div className="input_icon">
                                     <Select
                                         labelId="demo-simple-select-label"
@@ -2299,7 +2437,7 @@ const renderDocumentIdInput = () => {
                                     </div> 
 
                                 <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
-                                    <label>First Name</label>
+                                    <label>First Name <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                         <TextField
                                             id="customerfName"
@@ -2317,7 +2455,7 @@ const renderDocumentIdInput = () => {
                                 </div>
                                
                                 <div className="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-group">
-                                    <label>Last Name</label>
+                                    <label>Last Name <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                         <TextField
                                             id="customerlName"
@@ -2334,7 +2472,7 @@ const renderDocumentIdInput = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
-                                <label>Dob</label>
+                                <label>Dob <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                     <DatePicker
                                         id="dob"
@@ -2361,24 +2499,48 @@ const renderDocumentIdInput = () => {
                            </div>
                          <div class="row">  
                             <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
-                                <label>nationality</label>
+                                <label>Nationality <span className="text-danger">*</span></label>
                                     <div className="input_icon">
-                                    <TextField
-                                        id="nationality"
-                                        name="nationality"
-                                        className="form-control"
-                                        value={formik.values.nationality}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        error={formik.touched.nationality && Boolean(formik.errors.nationality)}
-                                        helperText={formik.touched.nationality && formik.errors.nationality}
-                                    /> 
+                                    <select
+    id="nationality"
+    name="nationality"
+    className="form-control"
+    value={formik.values.nationality}
+     error={formik.touched.nationality && Boolean(formik.errors.nationality)}
+     helperText={formik.touched.nationality && formik.errors.nationality}
+                                    
+    onChange={(e) => {
+
+      const selectedCountry = countries.find(
+        (c) => c.code === e.target.value
+      );
+
+      formik.setFieldValue("nationality", selectedCountry.code);
+
+    }}
+    onBlur={formik.handleBlur}
+  >
+
+    <option value="">Select Country</option>
+
+    {countries.map((country) => (
+      <option
+        key={country.code}
+        value={country.code}
+      >
+        {country.name}
+      </option>
+    ))}
+
+  </select> 
                                   
                                 </div>
                            </div>
                             
                                 <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
-                                    <label>Passport Number</label>
+                                    <label>
+                                      {isDomestic ? "ID Proof Number" : "Passport Number"} <span className="text-danger">*</span>
+                                    </label>
                                     <div className="input_icon">
                                         <TextField
                                             id="ppnumber"
@@ -2393,8 +2555,9 @@ const renderDocumentIdInput = () => {
                                         {/* <input type="text" className="form-control" name="txt_current_password_text" id="txt_current_password_text"  autocomplete="none" /> */}
                                     </div>
                                 </div>              
+                               {!isDomestic && (
                                 <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
-                                     <label>Expiry Date</label>
+                                     <label>Expiry Date <span className="text-danger">*</span></label>
                                     <div className="input_icon">
                                     <DatePicker
                                           id="expirydate"
@@ -2415,6 +2578,7 @@ const renderDocumentIdInput = () => {
                                
                                </div>
                                 </div>
+                               )}
                                 {isLCC && (
                 <div className="col-lg-12 mt-5 detailsview">
                   <div className="card">
@@ -2770,8 +2934,10 @@ const renderDocumentIdInput = () => {
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Date of Birth</th>
-                                        <th>Passport Number</th>
+                                        <th>{isDomestic ? "ID Proof Number" : "Passport Number"}</th>
+                                        {!isDomestic && (
                                         <th>Expiry Date</th>
+                                        )}
                                         <th>Action</th>
                                     </thead>
                                     <tbody>
@@ -2782,7 +2948,9 @@ const renderDocumentIdInput = () => {
                                         <td>{passenger.LastName}</td>
                                         <td>{moment(passenger.DateOfBirth).format('DD/MM/YYYY')}</td>
                                         <td>{passenger.PassportNo}</td>
+                                        {!isDomestic && (
                                         <td>{moment(passenger.PassportExpiry).format('DD/MM/YYYY')}</td>
+                                        )}
                                         <td><a  href="javasript:void(0);" onClick={() => openModalR(passenger,index)}>Edit</a></td>
                                         
                                         </tr>
@@ -2902,13 +3070,14 @@ const renderDocumentIdInput = () => {
          </div>
          <div className="row">
             <div className="col-lg-6 form-group" >
-            <label>Passport/ID Proof Number:
+            <label>{isDomestic ? "ID Proof Number" : "Passport Number"}:
             </label>
             </div>
             <div className="col-lg-4 form-group" >
             <input type="text" value={editedPPNumber} onChange={(e) => setEditedPPNumber(e.target.value)} />
          </div>
          </div>
+         {!isDomestic && (
          <div className="row">
             <div className="col-lg-6 form-group" >
             <label>Passport Exopire Date : 
@@ -2930,6 +3099,7 @@ const renderDocumentIdInput = () => {
             {/* <input type="date" value={editedPPExpireDate} onChange={(e) => setEditedPPExpireDate(e.target.value)} /> */}
          </div>
          </div>
+         )}
                 
 {isLCC && (
                 <div className="col-lg-12 mt-5 detailsview">

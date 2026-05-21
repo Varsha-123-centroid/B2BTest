@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Slider from '@mui/material/Slider';
 import moment from 'moment/moment';
+import { FaSort, FaArrowUp, FaArrowDown } from "react-icons/fa";
 const AirlineListRound = () => {
     const location = useLocation();
     const responseget1 = location.state?.responsee; 
@@ -25,6 +26,9 @@ const AirlineListRound = () => {
     let markup = sessionStorage.getItem('Markup');
     let markuppercent = sessionStorage.getItem('Markuppercent');
     const [showModalMessage, setShowModalMessage] = useState(false);
+  const [departAsc, setDepartAsc] = useState(true);
+  const [fareAsc, setFareAsc] = useState(true);
+  const [durationAsc, setDurationAsc] = useState(true);
     useEffect(() => {  
       //  alert(2);
         if (jsonResponse && jsonResponse.Response && jsonResponse.Response.Results) {
@@ -197,12 +201,10 @@ const openModalAlert = () => {
       const formattedDate = [day, month, year].join('-');
       const [miniTime, setMiniTime] = useState(formattedDate +" :: "+timePart);
   
-      const shortDuration = data.reduce((minTime, result) => {
-  
-        const shortTime = result.Segments[0][0].Duration;
-        
-        return shortTime < minTime ? shortTime : minTime;
-      },  data[0].Segments[0][0].Duration);
+      const shortDuration = data.reduce((minDur, result) => {
+  const dur = result.Segments[0].reduce((sum, seg) => sum + seg.Duration, 0);
+  return dur < minDur ? dur : minDur;
+}, Infinity);
   
   
       const [shortDur, setShortDur] = useState(shortDuration);
@@ -906,7 +908,82 @@ const openModalAlert = () => {
       setSelectedRow(x);
       setShowModal(true); 
     };
-    console.log("end"); 
+     const sortByEarlyDepart = () => {
+    if (!responseget?.Response?.Results) return;
+
+    /* 1️⃣ sort each inner array */
+    const sortedResults = responseget.Response.Results.map((inner) =>
+      [...inner].sort((a, b) => {
+        const diff =
+          new Date(a.Segments[0][0].Origin.DepTime) -
+          new Date(b.Segments[0][0].Origin.DepTime);
+
+        return departAsc ? diff : -diff; // flip sign for descending
+      })
+    );
+
+    /* 2️⃣ rebuild the wrapper immutably */
+    const updatedResponse = {
+      ...responseget,
+      Response: { ...responseget.Response, Results: sortedResults },
+    };
+
+    /* 3️⃣ your original state updates */
+    setResponse(updatedResponse);
+    setData(updatedResponse.Response.Results[0]);
+    setResult(updatedResponse);
+
+    /* 4️⃣ flip the flag for the next click */
+    setDepartAsc((prev) => !prev);
+  };
+
+  const sortByFare = () => {
+    if (!responseget?.Response?.Results) return;
+
+    const sortedResults = responseget.Response.Results.map((inner) =>
+      [...inner].sort((a, b) => {
+        const diff = (a.Fare?.PublishedFare ?? 0) - (b.Fare?.PublishedFare ?? 0);
+        return fareAsc ? diff : -diff;          // flip sign for descending
+      })
+    );
+
+    const updatedResponse = {
+      ...responseget,
+      Response: { ...responseget.Response, Results: sortedResults },
+    };
+
+    setResponse(updatedResponse);
+    setData(updatedResponse.Response.Results[0]);
+    setResult(updatedResponse);
+
+    setFareAsc((prev) => !prev);                // toggle for next click
+  };
+    const sortByDuration = () => {
+    if (!responseget?.Response?.Results) return;
+
+    const sortedResults = responseget.Response.Results.map((inner) =>
+      [...inner].sort((a, b) => {
+        // Duration from first segment of the first leg
+        // TBO normally returns it in minutes as a number
+        const durA = (a.Segments?.[0] ?? []).reduce((sum, seg) => sum + Number(seg.Duration ?? 0), 0);
+        const durB = (b.Segments?.[0] ?? []).reduce((sum, seg) => sum + Number(seg.Duration ?? 0), 0);
+
+        const diff = durA - durB;           // shortest first
+        return durationAsc ? diff : -diff;  // flip sign for longest-first
+      })
+    );
+
+    const updatedResponse = {
+      ...responseget,
+      Response: { ...responseget.Response, Results: sortedResults },
+    };
+
+    setResponse(updatedResponse);
+    setData(updatedResponse.Response.Results[0]);
+    setResult(updatedResponse);
+
+    setDurationAsc((prev) => !prev);        // toggle for next click
+  }; 
   return (
         <div>  
          
@@ -1180,14 +1257,43 @@ const openModalAlert = () => {
                                         <div className="col-md-9">
                                         
                                         <div className="clearDiv row">
-                                            <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
-                                                <p className="headlines  bg-success"><span className="bg-success text text-white p-1 mb-1">Best Price :: </span> <b class="text-white">{leastPrice+parseFloat(leastPrice*markuppercent+markup)}  </b> </p>
+                                            <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group"
+                                             style={{
+                              cursor: "pointer",
+                              userSelect: "none"
+                            }}
+                            onClick={sortByFare}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => e.key === "Enter" && sortByFare()}
+                                            >
+                                                <p className="headlines  bg-success"><span className="bg-success text text-white p-1 mb-1"> {fareAsc ? <FaArrowUp /> : <FaArrowDown />} Best Price :: </span> <b class="text-white">{leastPrice+parseFloat(leastPrice*markuppercent+markup)}  </b> </p>
                                             </div>
-                                            <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group">
-                                                <p className="headlines bg-danger"><span className="bg-danger text text-white p-1 mb-1">Early Departure :: </span><b class="text-white">{miniTime}  </b></p>
+                                            <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group"
+                                            style={{
+                              cursor: "pointer",
+                              userSelect: "none"
+                            }}
+                            onClick={sortByEarlyDepart}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => e.key === "Enter" && sortByEarlyDepart()}
+                                            >
+                                                <p className="headlines bg-danger"><span className="bg-danger text text-white p-1 mb-1"> {departAsc ? <FaArrowUp /> : <FaArrowDown />} Early Departure :: </span><b class="text-white">{miniTime}  </b></p>
                                             </div>
-                                            <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group ">
-                                                <p className="headlines bg-warning"><span className="bg-warning text text-white p-1 mb-1">Shortest Duration :: </span><b class="text-white">{shortDur} </b></p>
+                                            <div className="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-group "
+                                             style={{
+                              cursor: "pointer",
+                              userSelect: "none"
+                            }}
+                            onClick={sortByDuration}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => e.key === "Enter" && sortByDuration()}
+                                            >
+                                                <p className="headlines bg-warning"><span className="bg-warning text text-white p-1 mb-1"> {durationAsc ? <FaArrowUp /> : <FaArrowDown />} Shortest Duration :: </span><b class="text-white">{Math.floor(shortDur / 60)} H, {shortDur % 60} m </b>
+                                               
+                                                </p>
                                             </div> 
                                         </div>
                                         
@@ -1464,7 +1570,7 @@ const openModalAlert = () => {
             currency: 'INR'
           })}
         </td>
-      )}
+      )} 
               <td style={{ textAlign: "center" }}>
                  {parseFloat(option.Fare.PublishedFare).toLocaleString('en-IN', {style: 'currency',currency: 'INR'})}
               </td>
